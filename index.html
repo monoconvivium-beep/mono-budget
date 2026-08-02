@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
+    />
+    <title>MONO MONEY — il libretto delle spese da tasca</title>
+    <meta
+      name="description"
+      content="Dì la spesa a voce e MONO MONEY la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono."
+    />
+    <meta name="author" content="MONO — gastronomia, Torino" />
+    <meta name="theme-color" content="#3F5741" />
+
+    <!-- Installazione sul telefono -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="MONO MONEY" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icona-192.png" />
+
+    <meta property="og:title" content="MONO MONEY — il libretto delle spese da tasca" />
+    <meta
+      property="og:description"
+      content="Un tocco, una spesa: dettatura in italiano, categorie automatiche, conti del mese e dell'anno. Tutto sul telefono."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!--
+      🔒 I caratteri sono SERVITI DA NOI, non da Google.
+      Chiamare fonts.googleapis.com manderebbe l'indirizzo IP di ogni cliente a
+      Google a ogni apertura, e l'app promette che non esce niente. In più:
+      un carattere che arriva da fuori è una cosa che un giorno può non arrivare.
+      Vedi public/font/caratteri.css.
+    -->
+    <link rel="stylesheet" href="/font/caratteri.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

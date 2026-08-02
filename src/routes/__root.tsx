@@ -1,32 +1,27 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { Outlet, Link, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
 
-import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+/**
+ * ⚠️ Qui NON c'è più il guscio con <html>, <head> e <Scripts>: quello serviva
+ * quando le pagine venivano composte da un server. Adesso l'intestazione sta
+ * tutta in `index.html` e l'app parte nel browser — vedi `src/main.tsx`.
+ */
 
-function NotFoundComponent() {
+function PaginaNonTrovata() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Questa pagina non c&apos;è</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          L&apos;indirizzo è sbagliato oppure la pagina è stata spostata.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Torna alla home
           </Link>
         </div>
       </div>
@@ -34,21 +29,21 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function PaginaRotta({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Questa pagina non si è aperta
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Qualcosa è andato storto. Riprova, oppure torna alla home.
+          {" "}
+          <strong>I tuoi movimenti sono al sicuro</strong>: stanno su questo telefono e non si
+          perdono.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -58,13 +53,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Riprova
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Torna alla home
           </a>
         </div>
       </div>
@@ -73,76 +68,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1",
-      },
-      { title: "MONO MONEY — il libretto delle spese da tasca" },
-      {
-        name: "description",
-        content:
-          "Dì la spesa a voce e MONO MONEY la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono.",
-      },
-      { name: "author", content: "MONO — gastronomia, Torino" },
-      { name: "theme-color", content: "#3F5741" },
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-title", content: "MONO MONEY" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { property: "og:title", content: "MONO MONEY — il libretto delle spese da tasca" },
-      {
-        property: "og:description",
-        content:
-          "Un tocco, una spesa: dettatura in italiano, categorie automatiche, conti del mese e dell'anno. Tutto offline.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap",
-      },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: "/icona-192.png" },
-    ],
-  }),
-
-  shellComponent: RootShell,
   component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
+  notFoundComponent: PaginaNonTrovata,
+  errorComponent: PaginaRotta,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      {/* Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente. */}
       <Outlet />
     </QueryClientProvider>
   );
