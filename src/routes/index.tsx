@@ -97,6 +97,11 @@ function Home() {
           </ul>
         )}
       </section>
+
+      <p className="mt-4 px-2 text-center text-xs leading-relaxed text-muted-foreground">
+        Importi, categorie e saldo restano su questo telefono: nessun account, nessun server,
+        nessuna chiamata di rete. Un regalo di MONO, gastronomia a Torino.
+      </p>
     </Guscio>
   );
 }
