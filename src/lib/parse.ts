@@ -531,6 +531,14 @@ function soloCentesimi(pezzo: string): number | null {
   return n;
 }
 
+/** Il pezzo inizia con un numero minore di cento? ("sessanta caffè") */
+function primoNumeroPiccolo(pezzo: string): number | null {
+  const t0 = tokenizza(pezzo)[0] ?? "";
+  const n = /^\d+$/.test(t0) ? parseInt(t0, 10) : parolaANumero(t0);
+  if (n === null || n >= 100) return null;
+  return n;
+}
+
 /**
  * Interpreta una frase dettata e restituisce i movimenti riconosciuti.
  * La parola "e" separa due spese, ma solo quando la seconda parte è una spesa.
@@ -548,11 +556,13 @@ export function interpreta(frase: string, regole: RegolaImparata[] = []): Movime
       continue;
     }
     const precedente = gruppi[gruppi.length - 1] ?? "";
-    const cent = soloCentesimi(pezzo);
-    const precHaEuro = tokenizza(precedente).some((t) => EURO.has(t));
+    const tokenPrec = tokenizza(precedente);
+    // "quattro euro" + "sessanta" -> centesimi, non una seconda spesa.
+    const precFinisceConEuro = EURO.has(tokenPrec[tokenPrec.length - 1] ?? "");
+    const cent = soloCentesimi(pezzo) ?? primoNumeroPiccolo(pezzo);
     const haImporto = estraiImporto(tokenizza(pezzo)) !== null;
 
-    if (cent !== null && precHaEuro) {
+    if (cent !== null && precFinisceConEuro) {
       gruppi[gruppi.length - 1] = precedente + " e " + pezzo;
     } else if (!haImporto) {
       gruppi[gruppi.length - 1] = precedente + " e " + pezzo;
