@@ -547,7 +547,7 @@ export function interpreta(frase: string, regole: RegolaImparata[] = []): Movime
       gruppi.push(pezzo);
       continue;
     }
-    const precedente = gruppi[gruppi.length - 1];
+    const precedente = gruppi[gruppi.length - 1] ?? "";
     const cent = soloCentesimi(pezzo);
     const precHaEuro = tokenizza(precedente).some((t) => EURO.has(t));
     const haImporto = estraiImporto(tokenizza(pezzo)) !== null;
