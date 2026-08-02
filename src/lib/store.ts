@@ -12,8 +12,8 @@ export interface Movimento {
   metodo: Metodo;
   testo: string;
   /** nel cestino */
-  cestinato?: boolean;
-  cestinatoIl?: string;
+  cestinato?: boolean | undefined;
+  cestinatoIl?: string | undefined;
 }
 
 export interface Regola {
