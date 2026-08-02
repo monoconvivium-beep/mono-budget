@@ -44,8 +44,12 @@ export default defineConfig({
     tailwindcss(),
     tsConfigPaths(),
   ],
-  // Il dominio sarà tutto nostro (money.monobottega.it), quindi la radice è "/".
-  base: "/",
+  /**
+   * Dove vive l'app. Sul suo dominio è la radice; sulle pagine di GitHub è una
+   * sottocartella col nome del progetto. Si passa da fuori con `MONO_BASE`, così
+   * lo stesso codice va bene in tutti e due i posti senza modifiche.
+   */
+  base: process.env["MONO_BASE"] ?? "/",
   build: {
     outDir: "dist",
     // Nessuna mappa dei sorgenti in produzione: pesa e qui non serve a nessuno.

@@ -3,6 +3,7 @@ import { Guscio } from "@/components/Guscio";
 import { Dettatura } from "@/components/Dettatura";
 import { RigaMovimento } from "@/components/RigaMovimento";
 import { Aiuto } from "@/components/Aiuto";
+import { InstallaApp } from "@/components/InstallaApp";
 import { euro } from "@/lib/parse";
 import { attivi, MESI, somma, stessoMese, useStato } from "@/lib/store";
 
@@ -79,6 +80,11 @@ function Home() {
       <div className="mt-4">
         <Dettatura />
       </div>
+
+      {/* Sta subito sotto il microfono, non in fondo: chi ha appena provato la
+          dettatura è il momento in cui vuole tenersela. Sparisce da sola una
+          volta installata. */}
+      <InstallaApp />
 
       <section className="scheda mt-4 p-4">
         <div className="mb-1 flex items-center justify-between">

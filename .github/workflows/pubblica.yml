@@ -1,0 +1,64 @@
+# Pubblica MONO MONEY sulle pagine di GitHub.
+#
+# 🔑 Perché qui e non altrove: l'app è un regalo ai clienti e deve restare
+# gratis per sempre. Le pagine di GitHub servono file fermi, senza niente da
+# tenere acceso e senza scadenze. Non c'è nessun server da pagare.
+#
+# ⚠️ Perché funzioni, sul repository servono due cose, una volta sola:
+#   1. il repository deve essere PUBBLICO (le pagine gratuite valgono solo lì);
+#   2. Settings → Pages → Source: "GitHub Actions".
+name: Pubblica
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Una pubblicazione alla volta, e non si interrompe a metà.
+concurrency:
+  group: pagine
+  cancel-in-progress: false
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Le prove PRIMA di costruire: se il parser sbaglia un importo, meglio
+      # accorgersene qui che sul telefono di un cliente.
+      - run: npm test
+
+      - name: Costruisci
+        env:
+          # Le pagine di progetto stanno in una sottocartella col nome del repo.
+          MONO_BASE: /${{ github.event.repository.name }}/
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  pubblica:
+    needs: costruisci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pagine.outputs.page_url }}
+    steps:
+      - id: pagine
+        uses: actions/deploy-pages@v4

@@ -30,3 +30,17 @@ createRoot(radice).render(
     <RouterProvider router={router} />
   </StrictMode>,
 );
+
+/**
+ * Il guardiano che tiene l'app da parte, così si apre anche senza rete.
+ * ⚠️ Solo in produzione: in sviluppo servirebbe pagine vecchie e si passerebbe
+ * il tempo a chiedersi perché una correzione non si vede.
+ */
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    // Dalla radice dell'app, non da "/": funziona anche in una sottocartella.
+    void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
+      scope: import.meta.env.BASE_URL,
+    });
+  });
+}

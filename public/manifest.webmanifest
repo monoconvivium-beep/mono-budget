@@ -1,17 +1,20 @@
 {
-  "name": "MONO MONEY — libretto delle spese",
+  "name": "MONO MONEY — il libretto delle spese da tasca",
   "short_name": "MONO MONEY",
-  "description": "Il libretto delle spese da tasca. Dì la spesa a voce, i conti restano sul tuo telefono.",
-  "lang": "it",
-  "start_url": "/",
-  "scope": "/",
+  "description": "Dì la spesa a voce e MONO MONEY la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono.",
+  "id": ".",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#3F5741",
   "theme_color": "#3F5741",
+  "lang": "it",
+  "dir": "ltr",
+  "categories": ["finance", "productivity"],
   "icons": [
-    { "src": "/icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icona-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

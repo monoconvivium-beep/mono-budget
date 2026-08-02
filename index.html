@@ -18,9 +18,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="MONO MONEY" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/icona-192.png" />
+    <!-- %BASE_URL% lo sostituisce la costruzione: così l'app funziona sia sul
+         suo dominio, sia dentro una sottocartella (es. le pagine di GitHub). -->
+    <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
+    <link rel="apple-touch-icon" href="%BASE_URL%icona-180.png" />
 
     <meta property="og:title" content="MONO MONEY — il libretto delle spese da tasca" />
     <meta
@@ -37,7 +39,7 @@
       un carattere che arriva da fuori è una cosa che un giorno può non arrivare.
       Vedi public/font/caratteri.css.
     -->
-    <link rel="stylesheet" href="/font/caratteri.css" />
+    <link rel="stylesheet" href="%BASE_URL%font/caratteri.css" />
   </head>
   <body>
     <div id="root"></div>
