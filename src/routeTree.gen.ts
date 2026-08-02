@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnoRouteImport } from './routes/anno'
 import { Route as AscoltoRouteImport } from './routes/ascolto'
 import { Route as DiarioRouteImport } from './routes/diario'
+import { Route as MonoRouteImport } from './routes/mono'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const DiarioRoute = DiarioRouteImport.update({
   path: '/diario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MonoRoute = MonoRouteImport.update({
+  id: '/mono',
+  path: '/mono',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
   '/diario': typeof DiarioRoute
+  '/mono': typeof MonoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
   '/diario': typeof DiarioRoute
+  '/mono': typeof MonoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
   '/diario': typeof DiarioRoute
+  '/mono': typeof MonoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anno' | '/ascolto' | '/diario'
+  fullPaths: '/' | '/anno' | '/ascolto' | '/diario' | '/mono'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anno' | '/ascolto' | '/diario'
-  id: '__root__' | '/' | '/anno' | '/ascolto' | '/diario'
+  to: '/' | '/anno' | '/ascolto' | '/diario' | '/mono'
+  id: '__root__' | '/' | '/anno' | '/ascolto' | '/diario' | '/mono'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   AnnoRoute: typeof AnnoRoute
   AscoltoRoute: typeof AscoltoRoute
   DiarioRoute: typeof DiarioRoute
+  MonoRoute: typeof MonoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mono': {
+      id: '/mono'
+      path: '/mono'
+      fullPath: '/mono'
+      preLoaderRoute: typeof MonoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnnoRoute: AnnoRoute,
   AscoltoRoute: AscoltoRoute,
   DiarioRoute: DiarioRoute,
+  MonoRoute: MonoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
