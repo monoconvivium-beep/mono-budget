@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Download, Upload, Trash2 } from "lucide-react";
+import { Download, Upload, Trash2, FileSpreadsheet } from "lucide-react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { COLORI_CATEGORIA, CATEGORIE, euro } from "@/lib/parse";
-import { azioni, useStato } from "@/lib/store";
+import { versoCsv } from "@/lib/statistiche";
+import { attivi, azioni, useStato } from "@/lib/store";
 
 export const Route = createFileRoute("/mono")({
   head: () => ({
@@ -32,15 +33,30 @@ function Mono() {
   const [obiettivo, setObiettivo] = useState(String(stato.obiettivo));
   const fileRef = useRef<HTMLInputElement>(null);
 
-  function scarica() {
-    const blob = new Blob([azioni.esporta()], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+  const oggi = () => new Date().toISOString().slice(0, 10);
+
+  /** Un file scaricato, senza passare da nessun server. */
+  function salvaFile(contenuto: string, nome: string, tipo: string) {
+    const url = URL.createObjectURL(new Blob([contenuto], { type: tipo }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `mono-money-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = nome;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function scarica() {
+    salvaFile(azioni.esporta(), `mono-money-backup-${oggi()}.json`, "application/json");
     setMessaggio("Backup salvato: contiene tutti gli anni.");
+  }
+
+  function esportaFoglio() {
+    // Il cestino resta fuori: quello che hai buttato non deve tornare in un conto.
+    const righe = attivi(stato.movimenti);
+    salvaFile(versoCsv(righe), `mono-money-movimenti-${oggi()}.csv`, "text/csv;charset=utf-8");
+    setMessaggio(
+      `Esportati ${righe.length} movimenti. Il file si apre con Excel, Numbers o Fogli Google.`,
+    );
   }
 
   async function ripristina(file: File) {
@@ -113,7 +129,7 @@ function Mono() {
       <section className="scheda mt-4 p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg">Backup e ripristino</h2>
-          <Aiuto testo="Il file contiene TUTTI gli anni, non solo quello in corso: cambiando telefono non perdi niente." />
+          <Aiuto testo="Il backup contiene TUTTI gli anni e serve a rimettere tutto su un telefono nuovo. Il CSV invece si apre con Excel o Fogli Google, per farci i tuoi conti." />
         </div>
         <div className="mt-3 flex flex-col gap-2">
           <button
@@ -129,6 +145,13 @@ function Mono() {
             className="tocco gap-2 rounded-2xl border border-border px-4 font-semibold"
           >
             <Upload className="h-5 w-5" /> Ripristina da file
+          </button>
+          <button
+            type="button"
+            onClick={esportaFoglio}
+            className="tocco gap-2 rounded-2xl border border-border px-4 font-semibold"
+          >
+            <FileSpreadsheet className="h-5 w-5" /> Esporta per Excel (CSV)
           </button>
           <input
             ref={fileRef}

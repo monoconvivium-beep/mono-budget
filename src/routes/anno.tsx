@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
+import { DoveVannoISoldi } from "@/components/DoveVannoISoldi";
 import { euro } from "@/lib/parse";
 import { attivi, MESI, useStato } from "@/lib/store";
+import { dellAnno, delMese } from "@/lib/statistiche";
 
 export const Route = createFileRoute("/anno")({
   head: () => ({
@@ -33,6 +35,18 @@ function Anno() {
     return [...set].sort((a, b) => b - a);
   }, [attivo]);
   const [anno, setAnno] = useState(new Date().getFullYear());
+  /**
+   * Quale periodo guarda la torta. `null` = tutto l'anno.
+   * Il mese in corso è quello che interessa quasi sempre, quindi parte da lì —
+   * ma solo se l'anno mostrato è quello di adesso.
+   */
+  const [mesePerLaTorta, setMesePerLaTorta] = useState<number | null>(
+    new Date().getMonth(),
+  );
+  const annoCorrente = anno === new Date().getFullYear();
+  const mesePeriodo = annoCorrente ? mesePerLaTorta : null;
+  const periodo =
+    mesePeriodo === null ? dellAnno(attivo, anno) : delMese(attivo, anno, mesePeriodo);
 
   const mesi = MESI.map((nome, i) => {
     const lista = attivo.filter((m) => {
@@ -77,6 +91,33 @@ function Anno() {
         </div>
       )}
 
+      {annoCorrente && (
+        <div className="mb-3 flex gap-2">
+          {(
+            [
+              [new Date().getMonth(), `${MESI[new Date().getMonth()]}`],
+              [null, "Tutto l'anno"],
+            ] as const
+          ).map(([valore, etichetta]) => (
+            <button
+              key={String(valore)}
+              type="button"
+              onClick={() => setMesePerLaTorta(valore)}
+              className={`pillola tocco flex-1 justify-center text-sm font-semibold capitalize ${
+                mesePerLaTorta === valore
+                  ? "bg-accent text-accent-foreground"
+                  : "border border-border text-muted-foreground"
+              }`}
+            >
+              {etichetta}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <DoveVannoISoldi movimenti={periodo} />
+
+      <h2 className="mt-6 mb-3 px-1 text-lg">Mese per mese</h2>
       <div className="space-y-3">
         {mesi.map((m) => (
           <section key={m.i} className={m.vuoto ? "scheda-tenue p-4" : "scheda p-4"}>
