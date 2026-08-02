@@ -1,0 +1,222 @@
+import { useSyncExternalStore } from "react";
+import type { Categoria, Metodo, Tipo } from "./parse";
+
+export interface Movimento {
+  id: string;
+  /** ISO datetime */
+  data: string;
+  importo: number;
+  categoria: Categoria;
+  etichetta: string;
+  tipo: Tipo;
+  metodo: Metodo;
+  testo: string;
+  /** nel cestino */
+  cestinato?: boolean | undefined;
+  cestinatoIl?: string | undefined;
+}
+
+export interface Regola {
+  chiave: string;
+  categoria: Categoria;
+}
+
+export interface Stato {
+  versione: 1;
+  tema: "chiaro" | "scuro";
+  obiettivo: number;
+  movimenti: Movimento[];
+  regole: Regola[];
+}
+
+const CHIAVE = "mono-money-v1";
+
+const iniziale: Stato = {
+  versione: 1,
+  tema: "scuro",
+  obiettivo: 300,
+  movimenti: [],
+  regole: [],
+};
+
+let stato: Stato = iniziale;
+let caricato = false;
+const ascoltatori = new Set<() => void>();
+
+function leggi(): Stato {
+  if (typeof window === "undefined") return iniziale;
+  try {
+    const raw = window.localStorage.getItem(CHIAVE);
+    if (!raw) return iniziale;
+    const dati = JSON.parse(raw) as Partial<Stato>;
+    return {
+      ...iniziale,
+      ...dati,
+      movimenti: Array.isArray(dati.movimenti) ? dati.movimenti : [],
+      regole: Array.isArray(dati.regole) ? dati.regole : [],
+    };
+  } catch {
+    return iniziale;
+  }
+}
+
+function salva() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CHIAVE, JSON.stringify(stato));
+  } catch {
+    /* spazio esaurito: i dati restano in memoria */
+  }
+}
+
+function notifica() {
+  ascoltatori.forEach((f) => f());
+}
+
+function iscrivi(f: () => void) {
+  if (!caricato) {
+    caricato = true;
+    stato = leggi();
+  }
+  ascoltatori.add(f);
+  return () => ascoltatori.delete(f);
+}
+
+function istantanea(): Stato {
+  if (!caricato && typeof window !== "undefined") {
+    caricato = true;
+    stato = leggi();
+  }
+  return stato;
+}
+
+function aggiorna(f: (s: Stato) => Stato) {
+  stato = f(stato);
+  salva();
+  notifica();
+}
+
+export function useStato(): Stato {
+  return useSyncExternalStore(iscrivi, istantanea, () => iniziale);
+}
+
+function nuovoId() {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+export const azioni = {
+  aggiungi(m: Omit<Movimento, "id" | "data"> & { data?: string }) {
+    const mov: Movimento = { id: nuovoId(), data: m.data ?? new Date().toISOString(), ...m };
+    aggiorna((s) => ({ ...s, movimenti: [mov, ...s.movimenti] }));
+    return mov;
+  },
+  cestina(id: string) {
+    aggiorna((s) => ({
+      ...s,
+      movimenti: s.movimenti.map((m) =>
+        m.id === id ? { ...m, cestinato: true, cestinatoIl: new Date().toISOString() } : m,
+      ),
+    }));
+  },
+  ripristina(id: string) {
+    aggiorna((s) => ({
+      ...s,
+      movimenti: s.movimenti.map((m) =>
+        m.id === id ? { ...m, cestinato: false, cestinatoIl: undefined } : m,
+      ),
+    }));
+  },
+  eliminaPerSempre(id: string) {
+    aggiorna((s) => ({ ...s, movimenti: s.movimenti.filter((m) => m.id !== id) }));
+  },
+  svuotaCestino() {
+    aggiorna((s) => ({ ...s, movimenti: s.movimenti.filter((m) => !m.cestinato) }));
+  },
+  cambiaCategoria(id: string, categoria: Categoria, imparaDa?: string) {
+    aggiorna((s) => {
+      const regole = [...s.regole];
+      const chiave = (imparaDa ?? "").trim().toLowerCase();
+      if (chiave && chiave.length > 2) {
+        const i = regole.findIndex((r) => r.chiave === chiave);
+        if (i >= 0) regole[i] = { chiave, categoria };
+        else regole.push({ chiave, categoria });
+      }
+      return {
+        ...s,
+        regole,
+        movimenti: s.movimenti.map((m) => (m.id === id ? { ...m, categoria } : m)),
+      };
+    });
+  },
+  togliRegola(chiave: string) {
+    aggiorna((s) => ({ ...s, regole: s.regole.filter((r) => r.chiave !== chiave) }));
+  },
+  impostaTema(tema: Stato["tema"]) {
+    aggiorna((s) => ({ ...s, tema }));
+  },
+  impostaObiettivo(obiettivo: number) {
+    aggiorna((s) => ({ ...s, obiettivo }));
+  },
+  /** Backup completo: TUTTI gli anni, non solo quello corrente. */
+  esporta(): string {
+    return JSON.stringify({ ...istantanea(), esportatoIl: new Date().toISOString() }, null, 2);
+  },
+  importa(testo: string): { ok: boolean; messaggio: string } {
+    try {
+      const dati = JSON.parse(testo) as Partial<Stato>;
+      if (!Array.isArray(dati.movimenti)) return { ok: false, messaggio: "File non valido." };
+      aggiorna((s) => ({
+        ...s,
+        tema: dati.tema ?? s.tema,
+        obiettivo: typeof dati.obiettivo === "number" ? dati.obiettivo : s.obiettivo,
+        movimenti: dati.movimenti as Movimento[],
+        regole: Array.isArray(dati.regole) ? (dati.regole as Regola[]) : s.regole,
+      }));
+      return {
+        ok: true,
+        messaggio: `Ripristinati ${(dati.movimenti as Movimento[]).length} movimenti.`,
+      };
+    } catch {
+      return { ok: false, messaggio: "Non riesco a leggere questo file." };
+    }
+  },
+};
+
+/* --------------------------------------------------------------- utilità */
+
+export const MESI = [
+  "gennaio",
+  "febbraio",
+  "marzo",
+  "aprile",
+  "maggio",
+  "giugno",
+  "luglio",
+  "agosto",
+  "settembre",
+  "ottobre",
+  "novembre",
+  "dicembre",
+];
+
+export function attivi(movimenti: Movimento[]) {
+  return movimenti.filter((m) => !m.cestinato);
+}
+
+export function somma(movimenti: Movimento[], tipo: Tipo) {
+  return movimenti.filter((m) => m.tipo === tipo).reduce((t, m) => t + m.importo, 0);
+}
+
+export function stessoMese(iso: string, anno: number, mese: number) {
+  const d = new Date(iso);
+  return d.getFullYear() === anno && d.getMonth() === mese;
+}
+
+export function oraBreve(iso: string) {
+  return new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+}
+
+export function dataBreve(iso: string) {
+  const d = new Date(iso);
+  return `${d.getDate()} ${MESI[d.getMonth()]?.slice(0, 3)}`;
+}

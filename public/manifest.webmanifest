@@ -1,0 +1,17 @@
+{
+  "name": "MONO MONEY — libretto delle spese",
+  "short_name": "MONO MONEY",
+  "description": "Il libretto delle spese da tasca. Dì la spesa a voce, i conti restano sul tuo telefono.",
+  "lang": "it",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#3F5741",
+  "theme_color": "#3F5741",
+  "icons": [
+    { "src": "/icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

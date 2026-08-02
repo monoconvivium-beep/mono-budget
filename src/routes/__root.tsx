@@ -76,24 +76,47 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1",
+      },
+      { title: "MONO MONEY — il libretto delle spese da tasca" },
+      {
+        name: "description",
+        content:
+          "Dì la spesa a voce e MONO MONEY la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono.",
+      },
+      { name: "author", content: "MONO — gastronomia, Torino" },
+      { name: "theme-color", content: "#3F5741" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "MONO MONEY" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { property: "og:title", content: "MONO MONEY — il libretto delle spese da tasca" },
+      {
+        property: "og:description",
+        content:
+          "Un tocco, una spesa: dettatura in italiano, categorie automatiche, conti del mese e dell'anno. Tutto offline.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap",
+      },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/icona-192.png" },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
