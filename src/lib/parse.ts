@@ -278,8 +278,10 @@ const DECINE: Record<string, number> = {
 export function parolaANumero(parola: string): number | null {
   const p = parola.toLowerCase().replace(/[^a-zàèéìòù]/g, "");
   if (!p) return null;
-  if (p in UNITA) return UNITA[p];
-  if (p in DECINE) return DECINE[p];
+  const u0 = UNITA[p];
+  if (u0 !== undefined) return u0;
+  const d0 = DECINE[p];
+  if (d0 !== undefined) return d0;
   if (p === "cento") return 100;
   if (p === "mille") return 1000;
 
@@ -288,12 +290,13 @@ export function parolaANumero(parola: string): number | null {
     const radice = dec.slice(0, -1); // vent, trent, quarant...
     if (p.startsWith(radice) && p.length > radice.length) {
       const resto = p.slice(radice.length);
-      if (resto === "uno" || resto === "otto") return val + UNITA[resto];
+      if (resto === "uno" || resto === "otto") return val + (UNITA[resto] ?? 0);
       if (resto.startsWith("i") || resto.startsWith("a")) {
-        const r2 = resto.slice(1);
-        if (r2 in UNITA && UNITA[r2] < 10) return val + UNITA[r2];
+        const r2 = UNITA[resto.slice(1)];
+        if (r2 !== undefined && r2 < 10) return val + r2;
       }
-      if (resto in UNITA && UNITA[resto] < 10) return val + UNITA[resto];
+      const r3 = UNITA[resto];
+      if (r3 !== undefined && r3 < 10) return val + r3;
       if (resto === "tré" || resto === "tre") return val + 3;
     }
   }
@@ -345,10 +348,11 @@ function estraiImporto(token: string[]): Importo | null {
   let centesimiEspliciti = false;
 
   for (let i = 0; i < token.length; i++) {
-    const t = token[i];
+    const t = token[i] ?? "";
     const numDec = t.match(/^(\d+)[.,](\d{1,2})$/);
     if (numDec) {
-      valore = parseInt(numDec[1], 10) + parseInt(numDec[2].padEnd(2, "0"), 10) / 100;
+      valore =
+        parseInt(numDec[1] ?? "0", 10) + parseInt((numDec[2] ?? "0").padEnd(2, "0"), 10) / 100;
       conDecimali = true;
       usati.add(i);
       break;
@@ -373,7 +377,7 @@ function estraiImporto(token: string[]): Importo | null {
   // "quattro euro e sessanta" / "quattro euro sessanta" -> 4,60
   if (!conDecimali) {
     for (let i = primo + 1; i < Math.min(token.length, primo + 5); i++) {
-      const t = token[i];
+      const t = token[i] ?? "";
       if (EURO.has(t) || t === "e" || t === "con" || t === "virgola") continue;
       const n = /^\d+$/.test(t) ? parseInt(t, 10) : parolaANumero(t);
       if (n === null) break;
@@ -521,7 +525,8 @@ function creaMovimento(frase: string, regole: RegolaImparata[]): MovimentoBozza 
 function soloCentesimi(pezzo: string): number | null {
   const token = tokenizza(pezzo);
   if (token.length !== 1) return null;
-  const n = /^\d+$/.test(token[0]) ? parseInt(token[0], 10) : parolaANumero(token[0]);
+  const t0 = token[0] ?? "";
+  const n = /^\d+$/.test(t0) ? parseInt(t0, 10) : parolaANumero(t0);
   if (n === null || n >= 100) return null;
   return n;
 }
