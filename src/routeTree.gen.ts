@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AscoltoRouteImport } from './routes/ascolto'
+import { Route as DiarioRouteImport } from './routes/diario'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const AscoltoRoute = AscoltoRouteImport.update({
   path: '/ascolto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiarioRoute = DiarioRouteImport.update({
+  id: '/diario',
+  path: '/diario',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ascolto': typeof AscoltoRoute
+  '/diario': typeof DiarioRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ascolto': typeof AscoltoRoute
+  '/diario': typeof DiarioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ascolto': typeof AscoltoRoute
+  '/diario': typeof DiarioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/ascolto'
+  fullPaths: '/' | '/ascolto' | '/diario'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/ascolto'
-  id: '__root__' | '/' | '/ascolto'
+  to: '/' | '/ascolto' | '/diario'
+  id: '__root__' | '/' | '/ascolto' | '/diario'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AscoltoRoute: typeof AscoltoRoute
+  DiarioRoute: typeof DiarioRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AscoltoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diario': {
+      id: '/diario'
+      path: '/diario'
+      fullPath: '/diario'
+      preLoaderRoute: typeof DiarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AscoltoRoute: AscoltoRoute,
+  DiarioRoute: DiarioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
