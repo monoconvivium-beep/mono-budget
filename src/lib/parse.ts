@@ -579,9 +579,22 @@ export function interpreta(frase: string, regole: RegolaImparata[] = []): Movime
   return risultati;
 }
 
-/** Formatta un importo in euro, alla italiana. */
+/**
+ * Formatta un importo in euro, alla italiana.
+ *
+ * ⚠️ `useGrouping: true` non è un vezzo. Senza, l'italiano **non mette il
+ * punto sotto le diecimila**: verrebbe «1500,00 €» invece di «1.500,00 €».
+ * È la regola dei numeri, ma non è come si scrivono i soldi qui — su una busta
+ * paga o uno scontrino il punto c'è sempre, e una cifra senza sembra un errore
+ * di battitura proprio dove non ci si può permettere di sembrare approssimativi.
+ */
 export function euro(n: number): string {
   return (
-    n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"
+    n.toLocaleString("it-IT", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      // `true` vale "sempre": verificato nel browser, dà 1.500,00.
+      useGrouping: true,
+    }) + " €"
   );
 }

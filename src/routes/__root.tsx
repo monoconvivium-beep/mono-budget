@@ -1,6 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
 
+import { Benvenuto } from "@/components/Benvenuto";
+import { useStato } from "@/lib/store";
+
 /**
  * ⚠️ Qui NON c'è più il guscio con <html>, <head> e <Scripts>: quello serviva
  * quando le pagine venivano composte da un server. Adesso l'intestazione sta
@@ -75,11 +78,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { benvenutoVisto } = useStato();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente. */}
-      <Outlet />
+      {/* La presentazione prende tutto lo schermo, una volta sola. Sta qui e non
+          dentro la Home perché non deve avere la barra in basso: chi la vede la
+          prima volta non ha ancora niente da guardare nelle altre schede. */}
+      {benvenutoVisto ? (
+        // Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente.
+        <Outlet />
+      ) : (
+        <Benvenuto />
+      )}
     </QueryClientProvider>
   );
 }

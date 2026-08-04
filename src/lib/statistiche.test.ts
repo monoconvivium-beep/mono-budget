@@ -1,7 +1,19 @@
 import { describe, expect, it } from "vitest";
 
+import { euro } from "./parse";
 import { dellAnno, delMese, perCategoria, riepilogo, versoCsv } from "./statistiche";
 import type { Movimento } from "./store";
+
+describe("come si scrivono i soldi", () => {
+  it("mette il punto delle migliaia anche sotto le diecimila", () => {
+    // La regola dei numeri italiana non lo mette («1500,00»), ma i soldi si
+    // scrivono così su ogni scontrino e ogni busta paga.
+    expect(euro(1500)).toBe("1.500,00 €");
+    expect(euro(4.8)).toBe("4,80 €");
+    expect(euro(0)).toBe("0,00 €");
+    expect(euro(1234567.5)).toBe("1.234.567,50 €");
+  });
+});
 
 function mov(p: Partial<Movimento> & { importo: number }): Movimento {
   return {

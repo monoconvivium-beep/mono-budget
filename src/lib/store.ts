@@ -27,6 +27,8 @@ export interface Stato {
   obiettivo: number;
   movimenti: Movimento[];
   regole: Regola[];
+  /** La schermata d'ingresso si vede una volta sola, poi mai più. */
+  benvenutoVisto: boolean;
 }
 
 const CHIAVE = "mono-money-v1";
@@ -37,6 +39,7 @@ const iniziale: Stato = {
   obiettivo: 300,
   movimenti: [],
   regole: [],
+  benvenutoVisto: false,
 };
 
 let stato: Stato = iniziale;
@@ -153,6 +156,13 @@ export const azioni = {
   },
   impostaTema(tema: Stato["tema"]) {
     aggiorna((s) => ({ ...s, tema }));
+  },
+  chiudiBenvenuto() {
+    aggiorna((s) => ({ ...s, benvenutoVisto: true }));
+  },
+  /** Per rileggere la presentazione dalla scheda MONO, quando si vuole. */
+  riapriBenvenuto() {
+    aggiorna((s) => ({ ...s, benvenutoVisto: false }));
   },
   impostaObiettivo(obiettivo: number) {
     aggiorna((s) => ({ ...s, obiettivo }));

@@ -7,7 +7,7 @@ const voci = [
   { to: "/", etichetta: "Home", Icona: Home },
   { to: "/diario", etichetta: "Diario", Icona: BookOpen },
   { to: "/ascolto", etichetta: "Ascolto", Icona: Mic, centro: true },
-  { to: "/anno", etichetta: "Anno", Icona: CalendarRange },
+  { to: "/anno", etichetta: "Bilanci", Icona: CalendarRange },
   { to: "/mono", etichetta: "MONO", Icona: Store },
 ];
 

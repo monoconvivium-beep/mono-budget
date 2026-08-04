@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Download, Upload, Trash2, FileSpreadsheet } from "lucide-react";
+import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen } from "lucide-react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { COLORI_CATEGORIA, CATEGORIE, euro } from "@/lib/parse";
@@ -50,6 +50,29 @@ function Mono() {
     setMessaggio("Backup salvato: contiene tutti gli anni.");
   }
 
+  /**
+   * «Regalala a qualcuno» — la condivisione che spiega.
+   * ⚠️ Non si manda solo il collegamento: da solo non dice cos'è né che è
+   * gratis, e un collegamento nudo in una chat non lo apre nessuno.
+   */
+  async function condividi() {
+    const testo =
+      "MONO MONEY — il libretto delle spese da tasca. Dici «quarantasei farmacia» e la spesa è scritta. Gratis, e i tuoi conti restano sul tuo telefono. Un omaggio di MONO, gastronomia a Torino.";
+    const url = window.location.origin + import.meta.env.BASE_URL;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "MONO MONEY — La tua voce conta.", text: testo, url });
+        return;
+      } catch {
+        // Ha chiuso il foglio di condivisione: non è un errore, non si dice niente.
+        return;
+      }
+    }
+    await navigator.clipboard.writeText(`${testo}\n${url}`);
+    setMessaggio("Copiato: ora puoi incollarlo dove vuoi.");
+  }
+
   function esportaFoglio() {
     // Il cestino resta fuori: quello che hai buttato non deve tornare in un conto.
     const righe = attivi(stato.movimenti);
@@ -66,13 +89,34 @@ function Mono() {
 
   return (
     <Guscio titolo="MONO" sottotitolo="Gastronomia — Torino">
-      <section className="scheda-bosco p-5">
-        <h2 className="text-xl">I tuoi conti restano tuoi</h2>
-        <p className="mt-2 text-sm leading-relaxed opacity-90">
-          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account,
-          nessun server, nessuna chiamata di rete: MONO non vede e non riceve niente. L'unico modo
-          per portarli altrove sei tu, con il file di backup qui sotto.
+      {/* Il marchio e il payoff: chi arriva qui deve ricordarsi di chi è il regalo. */}
+      <section className="scheda-bosco p-5 text-center">
+        <p className="text-[10px] font-semibold tracking-[0.2em] text-oro uppercase">
+          Un omaggio utile di MONO
         </p>
+        <h2 className="mt-2 text-3xl leading-none">
+          MONO <span className="text-oro">MONEY</span>
+        </h2>
+        <p className="mt-3 text-lg">La tua voce conta.</p>
+        <p className="mt-2 text-sm leading-relaxed opacity-85">
+          Il tuo borsellino, senza password. Gratis, per sempre.
+        </p>
+      </section>
+
+      <section className="scheda mt-4 p-4">
+        <h2 className="text-lg">I tuoi conti restano tuoi</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account,
+          nessun server, nessuna chiamata di rete: <strong>MONO non riceve niente</strong>, nemmeno
+          il tuo nome. L'unico modo per portarli altrove sei tu, col file di backup qui sotto.
+        </p>
+        <button
+          type="button"
+          onClick={condividi}
+          className="tocco mt-4 w-full gap-2 rounded-2xl border border-border px-4 font-semibold"
+        >
+          <Share2 className="h-5 w-5" /> Regalala a qualcuno
+        </button>
       </section>
 
       <section className="scheda mt-4 p-4">
@@ -229,9 +273,16 @@ function Mono() {
           di 4,60) te lo propone, decidi tu.
         </p>
         <p className="mt-2">
-          Per installarla: dal telefono, menu del browser → «Aggiungi a schermata Home».
+          I conti si leggono nella scheda <strong>Bilanci</strong>: il mese ti dice com'è andata
+          adesso, l'anno ti fa vedere la storia, e la torta dove sono finiti i soldi.
         </p>
-        <p className="mt-2">Un regalo di MONO, bottega di gastronomia a Torino.</p>
+        <button
+          type="button"
+          onClick={() => azioni.riapriBenvenuto()}
+          className="tocco mt-4 w-full gap-2 rounded-2xl border border-border px-4 font-semibold text-foreground"
+        >
+          <BookOpen className="h-5 w-5" /> Rileggi la presentazione
+        </button>
       </section>
     </Guscio>
   );
