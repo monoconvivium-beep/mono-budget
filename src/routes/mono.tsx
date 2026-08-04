@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen } from "lucide-react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
+import { MarchioMono } from "@/components/MarchioMono";
 import { COLORI_CATEGORIA, CATEGORIE, euro } from "@/lib/parse";
 import { versoCsv } from "@/lib/statistiche";
 import { attivi, azioni, useStato } from "@/lib/store";
@@ -102,6 +103,8 @@ function Mono() {
           Il tuo borsellino, senza password. Gratis, per sempre.
         </p>
       </section>
+
+      <MarchioMono />
 
       <section className="scheda mt-4 p-4">
         <h2 className="text-lg">I tuoi conti restano tuoi</h2>

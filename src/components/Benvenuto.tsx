@@ -41,7 +41,22 @@ export function Benvenuto() {
     >
       <div className="mx-auto w-full max-w-md">
         <header className="text-center">
-          <p className="text-xs font-semibold tracking-[0.2em] text-oro uppercase">
+          {/* Il logo ufficiale della bottega, per primo: prima si vede da chi
+              arriva il regalo, poi cos'è. */}
+          {/* ⚠️ Due versioni, non una: il logo ufficiale è scuro e sul verde
+              bosco sparisce; quello chiaro sul cashmere sparisce uguale.
+              Qui il fondo cambia col tema, quindi cambia anche il logo.
+              (Nel blocco MONO invece il fondo è sempre verde: là è fisso.) */}
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale${
+              tema === "scuro" ? "-chiaro" : ""
+            }.svg`}
+            alt="MONO — Bottega Gastronomica"
+            className="mx-auto h-12 w-auto"
+            width={190}
+            height={48}
+          />
+          <p className="mt-5 text-xs font-semibold tracking-[0.2em] text-oro uppercase">
             Un omaggio utile di MONO
           </p>
 

@@ -385,7 +385,19 @@ function estraiImporto(token: string[]): Importo | null {
       const eCentesimi = dopo ? CENT.has(dopo) : false;
       const primaCeEuro = token.slice(primo, i).some((x) => EURO.has(x));
       const virgola = token[i - 1] === "virgola";
-      if (n < 100 && (eCentesimi || primaCeEuro || virgola)) {
+      /**
+       * «Quattro e sessanta» sono 4,60, non quattro spese e sessanta spese.
+       *
+       * 🔑 Vale **solo se la prima cifra è sotto cento**: è così che si dice un
+       * prezzo. «Cento e venti» invece non è 100,20 — nessuno legge un prezzo
+       * così — e infatti lì non si unisce.
+       * ⚠️ Conseguenza accettata: «dieci e dieci» diventa 10,10 e non due spese
+       * da dieci. Va bene, perché adesso **un tocco = una spesa**: due spese si
+       * dettano in due volte, e chi dice «dieci e dieci» in un colpo solo sta
+       * quasi sempre leggendo un prezzo.
+       */
+      const prezzoConCentesimi = valore < 100;
+      if (n < 100 && (eCentesimi || primaCeEuro || virgola || prezzoConCentesimi)) {
         valore = valore + n / 100;
         conDecimali = true;
         usati.add(i);
@@ -562,7 +574,24 @@ export function interpreta(frase: string, regole: RegolaImparata[] = []): Movime
     const cent = soloCentesimi(pezzo) ?? primoNumeroPiccolo(pezzo);
     const haImporto = estraiImporto(tokenizza(pezzo)) !== null;
 
-    if (cent !== null && precFinisceConEuro) {
+    /**
+     * «Quattro e sessanta» = 4,60, non due spese.
+     *
+     * 🔑 La domanda giusta si fa su quello che viene **PRIMA** della «e», non
+     * dopo: «quattro», da solo, non è una spesa — è mezzo prezzo, e quello che
+     * segue sono i suoi centesimi. Se invece prima c'è già una spesa intera
+     * («dieci euro bar»), allora la «e» separa davvero.
+     * ⚠️ Guardare il pezzo DOPO non funziona: in «quattro e sessanta al bar» il
+     * pezzo dopo è «sessanta al bar», che sembra una spesa in tutto e per tutto.
+     * ⚠️ «Cento e venti» resta fuori da solo: `soloCentesimi` scarta i numeri da
+     * cento in su, e un prezzo con i centesimi comincia sempre sotto.
+     */
+    const precEMezzoPrezzo = soloCentesimi(precedente) !== null;
+    const sonoCentesimi = precEMezzoPrezzo && primoNumeroPiccolo(pezzo) !== null;
+
+    if (sonoCentesimi) {
+      gruppi[gruppi.length - 1] = precedente + " e " + pezzo;
+    } else if (cent !== null && precFinisceConEuro) {
       gruppi[gruppi.length - 1] = precedente + " e " + pezzo;
     } else if (!haImporto) {
       gruppi[gruppi.length - 1] = precedente + " e " + pezzo;

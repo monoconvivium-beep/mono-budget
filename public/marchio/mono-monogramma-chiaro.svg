@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MONO icona piatto">
+  <!--
+    Alias di icon-plate-color: usato come icona app PWA.
+    Stesse geometrie — forchetta a sinistra (esce in alto), cucchiaio a destra (esce in basso).
+  -->
+  <defs>
+    <clipPath id="outer-i">
+      <circle cx="256" cy="256" r="252"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="256" cy="256" r="252" fill="#F4ECDD"/>
+  <circle cx="256" cy="256" r="240" fill="#CBA75A"/>
+  <circle cx="256" cy="256" r="196" fill="#F4ECDD"/>
+
+  <!-- FORCHETTA -->
+  <g fill="#CBA75A" clip-path="url(#outer-i)">
+    <rect x="190" y="4" width="22" height="184" rx="11"/>
+    <path d="M 190,182 L 212,182
+             C 224,188 244,208 244,234
+             C 244,256 240,268 238,271
+             L 164,271
+             C 160,268 156,256 156,234
+             C 156,208 176,188 190,182 Z"/>
+    <rect x="164" y="269" width="11" height="126" rx="5"/>
+    <rect x="185" y="269" width="11" height="134" rx="5"/>
+    <rect x="206" y="269" width="11" height="134" rx="5"/>
+    <rect x="227" y="269" width="11" height="126" rx="5"/>
+  </g>
+
+  <!-- CUCCHIAIO -->
+  <g fill="#CBA75A" clip-path="url(#outer-i)">
+    <ellipse cx="322" cy="222" rx="58" ry="86"/>
+    <rect x="309" y="302" width="26" height="206" rx="13"/>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" role="img" aria-label="MONO Bottega Gastronomica logo verticale">
+  <!--
+    Pag 2: logo verticale primario.
+    Piatto grande in alto (forchetta + cucchiaio identici all'icona, scale 0.5).
+    Wordmark "mono" + BOTTEGA / GASTRONOMICA sotto.
+  -->
+  <defs>
+    <clipPath id="plate-v">
+      <circle cx="150" cy="138" r="128"/>
+    </clipPath>
+  </defs>
+
+  <!-- ══ PIATTO GRANDE ══ -->
+  <circle cx="150" cy="138" r="128" fill="#F4ECDD"/>
+  <circle cx="150" cy="138" r="120" fill="#CBA75A"/>
+  <circle cx="150" cy="138" r="98"  fill="#F4ECDD"/>
+
+  <!-- Forchetta + cucchiaio scalati dall'icona 512px (scale 0.5, centro 150,138) -->
+  <g clip-path="url(#plate-v)">
+    <g transform="translate(150,138) scale(0.5) translate(-256,-256)" fill="#CBA75A">
+      <!-- FORCHETTA -->
+      <rect x="190" y="4" width="22" height="184" rx="11"/>
+      <path d="M 190,182 L 212,182
+               C 224,188 244,208 244,234
+               C 244,256 240,268 238,271
+               L 164,271
+               C 160,268 156,256 156,234
+               C 156,208 176,188 190,182 Z"/>
+      <rect x="164" y="269" width="11" height="126" rx="5"/>
+      <rect x="185" y="269" width="11" height="134" rx="5"/>
+      <rect x="206" y="269" width="11" height="134" rx="5"/>
+      <rect x="227" y="269" width="11" height="126" rx="5"/>
+      <!-- CUCCHIAIO -->
+      <ellipse cx="322" cy="222" rx="58" ry="86"/>
+      <rect x="309" y="302" width="26" height="206" rx="13"/>
+    </g>
+  </g>
+
+  <!-- ══ WORDMARK "mono" piccolo ══ -->
+  <!-- "m" bubble -->
+  <rect x="16"  y="284" width="58" height="50" rx="14" fill="#CBA75A"/>
+  <rect x="20"  y="288" width="50" height="42" rx="11" fill="#F4ECDD"/>
+  <rect x="26"  y="308" width="12" height="26" rx="6"  fill="#F4ECDD"/>
+  <rect x="52"  y="308" width="12" height="26" rx="6"  fill="#F4ECDD"/>
+
+  <!-- prima "o" — piatto forchetta (piccola) -->
+  <circle cx="103" cy="309" r="26" fill="#CBA75A"/>
+  <circle cx="103" cy="309" r="21" fill="#F4ECDD"/>
+  <!-- forchetta semplificata a questa scala -->
+  <rect x="102" y="295" width="3" height="10" rx="1" fill="#CBA75A"/>
+  <rect x="97"  y="304" width="12" height="3" rx="1" fill="#CBA75A"/>
+  <rect x="97"  y="293" width="2"  height="12" rx="1" fill="#CBA75A"/>
+  <rect x="101" y="293" width="2"  height="12" rx="1" fill="#CBA75A"/>
+  <rect x="105" y="293" width="2"  height="12" rx="1" fill="#CBA75A"/>
+  <rect x="109" y="293" width="2"  height="12" rx="1" fill="#CBA75A"/>
+
+  <!-- "n" bubble -->
+  <rect x="135" y="284" width="56" height="50" rx="14" fill="#CBA75A"/>
+  <rect x="139" y="288" width="48" height="42" rx="11" fill="#F4ECDD"/>
+  <rect x="165" y="308" width="12" height="26" rx="6"  fill="#F4ECDD"/>
+
+  <!-- seconda "o" — piatto cucchiaio (piccola) -->
+  <circle cx="225" cy="309" r="26" fill="#CBA75A"/>
+  <circle cx="225" cy="309" r="21" fill="#F4ECDD"/>
+  <ellipse cx="225" cy="297" rx="7" ry="9"    fill="#CBA75A"/>
+  <rect x="222"  y="304" width="4"  height="16" rx="2" fill="#CBA75A"/>
+
+  <!-- ══ BOTTEGA ══ -->
+  <text x="150" y="378"
+    font-family="'Libre Baskerville', Baskerville, Georgia, serif"
+    font-size="32" font-weight="700" fill="#F4ECDD" text-anchor="middle">BOTTEGA</text>
+
+  <!-- lineette gold -->
+  <line x1="28"  y1="396" x2="48"  y2="396" stroke="#CBA75A" stroke-width="2" stroke-linecap="round"/>
+  <line x1="252" y1="396" x2="272" y2="396" stroke="#CBA75A" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- ══ GASTRONOMICA ══ -->
+  <text x="150" y="401"
+    font-family="'Libre Baskerville', Baskerville, Georgia, serif"
+    font-size="12" font-weight="400" fill="#F4ECDD" text-anchor="middle" letter-spacing="3">GASTRONOMICA</text>
+</svg>
