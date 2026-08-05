@@ -13,21 +13,31 @@ export function RigaMovimento({
    * si perdono, una scheda staccata si legge da lontano.
    */
   scheda = false,
+  /** Quanto aspetta prima di entrare, per farle arrivare a scaletta. */
+  ritardoMs = 0,
 }: {
   m: Movimento;
   conData?: boolean;
   modificabile?: boolean;
   cestino?: boolean;
   scheda?: boolean;
+  ritardoMs?: number;
 }) {
   return (
     <li
       className={
         scheda
-          ? "scheda flex items-center gap-3 border-l-4 py-2.5 pr-2 pl-3"
+          ? "scheda entra flex items-center gap-3 border-l-4 py-2.5 pr-2 pl-3"
           : "flex items-center gap-3 border-b border-border py-3 last:border-0"
       }
-      style={scheda ? { borderLeftColor: COLORI_CATEGORIA[m.categoria] } : undefined}
+      style={
+        scheda
+          ? {
+              borderLeftColor: COLORI_CATEGORIA[m.categoria],
+              animationDelay: `${ritardoMs}ms`,
+            }
+          : undefined
+      }
     >
       {!scheda && (
         <span

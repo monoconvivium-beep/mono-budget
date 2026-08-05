@@ -201,3 +201,36 @@
     opacity: 0;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   I MOVIMENTI — quelli che fanno sembrare un'app "costosa".
+   Sono pochi, corti e sempre nella stessa direzione: le cose entrano dal
+   basso e si posano. Un'animazione lunga o che rimbalza si nota due volte e
+   poi dà fastidio tutti i giorni.
+   ⚠️ Chi ha chiesto meno movimento nelle impostazioni del telefono non ne
+   vede nessuno: è una preferenza di accessibilità, non un capriccio.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes mono-entra {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* La ciambella non "appare": si compone. Parte piccola e ruotata di un quarto,
+   e si assesta - l'occhio la legge come un disegno che si chiude. */
+@keyframes mono-disegna {
+  from { opacity: 0; transform: rotate(-90deg) scale(0.86); }
+  to   { opacity: 1; transform: none; }
+}
+
+@utility entra {
+  animation: mono-entra 0.32s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@utility disegna {
+  animation: mono-disegna 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entra, .disegna { animation: none; }
+}

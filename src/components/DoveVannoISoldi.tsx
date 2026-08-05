@@ -56,7 +56,7 @@ export function DoveVannoISoldi({
       <section className="scheda mt-4 flex items-center gap-4 p-4">
         <div className="relative h-24 w-24 shrink-0">
           <div
-            className="h-full w-full rounded-full"
+            className="disegna h-full w-full rounded-full"
             role="img"
             aria-label={`Uscite per categoria: ${voci
               .map((v) => `${v.categoria} ${Math.round(v.quota * 100)}%`)

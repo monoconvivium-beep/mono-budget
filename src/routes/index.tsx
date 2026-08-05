@@ -94,8 +94,16 @@ function Home() {
           </p>
         ) : (
           <ul className="space-y-2">
-            {movimenti.slice(0, 8).map((m) => (
-              <RigaMovimento key={m.id} m={m} scheda />
+            {movimenti.slice(0, 8).map((m, i) => (
+              <RigaMovimento
+                key={m.id}
+                m={m}
+                scheda
+                /* A scaletta: entrano una dopo l'altra, non tutte insieme.
+                   Si ferma alla quarta — oltre diventa un'attesa, non un
+                   movimento, e chi apre l'app vuole leggere, non guardare. */
+                ritardoMs={Math.min(i, 3) * 60}
+              />
             ))}
           </ul>
         )}

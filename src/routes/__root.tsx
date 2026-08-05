@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
 
+import { Avvio } from "@/components/Avvio";
 import { Benvenuto } from "@/components/Benvenuto";
 import { Iscrizione } from "@/components/Iscrizione";
 import { useStato } from "@/lib/store";
@@ -83,6 +84,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Avvio>
       {/* La presentazione prende tutto lo schermo, una volta sola. Sta qui e non
           dentro la Home perché non deve avere la barra in basso: chi la vede la
           prima volta non ha ancora niente da guardare nelle altre schede. */}
@@ -97,6 +99,7 @@ function RootComponent() {
         // Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente.
         <Outlet />
       )}
+      </Avvio>
     </QueryClientProvider>
   );
 }
