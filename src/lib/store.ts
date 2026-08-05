@@ -29,6 +29,12 @@ export interface Stato {
   regole: Regola[];
   /** La schermata d'ingresso si vede una volta sola, poi mai più. */
   benvenutoVisto: boolean;
+  /**
+   * Il nome di chi si è iscritto. Vuoto = non ancora iscritto, e l'app non si
+   * apre. ⚠️ Qui resta solo il nome, per salutare: gli altri dati sono andati
+   * in rubrica e non serve tenerne una copia sul telefono.
+   */
+  iscrittoCome: string;
 }
 
 const CHIAVE = "mono-money-v1";
@@ -47,6 +53,7 @@ const iniziale: Stato = {
   movimenti: [],
   regole: [],
   benvenutoVisto: false,
+  iscrittoCome: "",
 };
 
 let stato: Stato = iniziale;
@@ -166,6 +173,10 @@ export const azioni = {
   },
   chiudiBenvenuto() {
     aggiorna((s) => ({ ...s, benvenutoVisto: true }));
+  },
+  /** Iscrizione riuscita: da qui in poi l'app si apre e non la richiede più. */
+  iscritto(nome: string) {
+    aggiorna((s) => ({ ...s, iscrittoCome: nome || "cliente" }));
   },
   /** Per rileggere la presentazione dalla scheda MONO, quando si vuole. */
   riapriBenvenuto() {

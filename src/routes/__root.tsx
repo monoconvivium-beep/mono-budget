@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
 
 import { Benvenuto } from "@/components/Benvenuto";
+import { Iscrizione } from "@/components/Iscrizione";
 import { useStato } from "@/lib/store";
 
 /**
@@ -78,18 +79,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { benvenutoVisto } = useStato();
+  const { benvenutoVisto, iscrittoCome } = useStato();
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* La presentazione prende tutto lo schermo, una volta sola. Sta qui e non
           dentro la Home perché non deve avere la barra in basso: chi la vede la
           prima volta non ha ancora niente da guardare nelle altre schede. */}
-      {benvenutoVisto ? (
+      {/* Tre porte in fila, e l'ordine conta: prima si capisce cos'è e che è
+          gratis, POI si lasciano i dati. Chiedere prima di aver dato qualcosa
+          fa chiudere l'app, e i dati non li raccogli lo stesso. */}
+      {!benvenutoVisto ? (
+        <Benvenuto />
+      ) : !iscrittoCome ? (
+        <Iscrizione />
+      ) : (
         // Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente.
         <Outlet />
-      ) : (
-        <Benvenuto />
       )}
     </QueryClientProvider>
   );
