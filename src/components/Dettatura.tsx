@@ -34,7 +34,18 @@ function creaRiconoscimento(): Riconoscimento | null {
  * continuous = false, un solo risultato definitivo, poi conferma a mano.
  * Non si trasforma mai un importo di nascosto e non si salva senza conferma.
  */
-export function Dettatura({ grande = false }: { grande?: boolean }) {
+export function Dettatura({
+  grande = false,
+  /**
+   * «barra» = il pulsante largo della Home: più facile da centrare col pollice
+   * di un cerchio, e non ruba mezzo schermo. «cerchio» resta per la schermata
+   * Ascolto, dove il microfono È la pagina.
+   */
+  forma = "cerchio",
+}: {
+  grande?: boolean;
+  forma?: "cerchio" | "barra";
+}) {
   const { regole } = useStato();
   const [fase, setFase] = useState<Fase>("pronto");
   const [errore, setErrore] = useState("");
@@ -123,41 +134,69 @@ export function Dettatura({ grande = false }: { grande?: boolean }) {
   }
 
   return (
-    <section className={grande ? "scheda p-5" : "scheda p-4"}>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className={grande ? "text-2xl" : "text-lg"}>Dì una spesa</h2>
-        <Aiuto testo="Un tocco = una spesa. Tocca, dì una spesa sola, poi confermi. Per i centesimi dì «quattro euro e sessanta»." />
-      </div>
-
-      <div className="flex flex-col items-center gap-3 py-2">
-        <div className="relative">
-          {fase === "ascolto" && (
-            <span className="absolute inset-0 rounded-full bg-accent onda-microfono" />
-          )}
-          <button
-            type="button"
-            onClick={fase === "ascolto" ? () => rif.current?.stop() : avvia}
-            aria-label={fase === "ascolto" ? "Sto ascoltando" : "Tocca e dì una spesa"}
-            className={`relative flex items-center justify-center rounded-full shadow-rialzata transition-transform active:scale-95 ${
-              grande ? "h-40 w-40" : "h-28 w-28"
-            } ${fase === "ascolto" ? "bg-accent text-accent-foreground" : "bg-oro text-oro-foreground"}`}
-          >
-            <Mic className={grande ? "h-16 w-16" : "h-11 w-11"} />
-          </button>
+    <section className={forma === "barra" ? "" : grande ? "scheda p-5" : "scheda p-4"}>
+      {forma !== "barra" && (
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className={grande ? "text-2xl" : "text-lg"}>Dì una spesa</h2>
+          <Aiuto testo="Un tocco = una spesa. Tocca, dì una spesa sola, poi confermi. Per i centesimi dì «quattro euro e sessanta»." />
         </div>
-        <p className="text-center text-sm text-muted-foreground">
-          {fase === "ascolto"
-            ? "Sto ascoltando… dì una spesa sola."
-            : supportato
-              ? "Tocca il microfono e dì una spesa."
-              : "Dettatura non disponibile: scrivi qui sotto."}
-        </p>
-        {ascoltato && (
-          <p className="text-center text-sm">
-            Ho sentito: <span className="italic">«{ascoltato}»</span>
+      )}
+
+      {forma === "barra" ? (
+        <button
+          type="button"
+          onClick={fase === "ascolto" ? () => rif.current?.stop() : avvia}
+          className={`relative flex min-h-[64px] w-full items-center justify-center gap-3 rounded-2xl text-lg font-semibold shadow-rialzata transition-transform active:scale-[0.98] ${
+            fase === "ascolto"
+              ? "bg-accent text-accent-foreground"
+              : "bg-[var(--scuro-scheda)] text-[var(--scuro-testo)]"
+          }`}
+        >
+          {fase === "ascolto" && (
+            <span className="absolute inset-0 rounded-2xl bg-accent onda-microfono" />
+          )}
+          <Mic className="relative h-6 w-6" />
+          <span className="relative">
+            {fase === "ascolto" ? "Sto ascoltando…" : "Dì una spesa"}
+          </span>
+        </button>
+      ) : (
+        <div className="flex flex-col items-center gap-3 py-2">
+          <div className="relative">
+            {fase === "ascolto" && (
+              <span className="absolute inset-0 rounded-full bg-accent onda-microfono" />
+            )}
+            <button
+              type="button"
+              onClick={fase === "ascolto" ? () => rif.current?.stop() : avvia}
+              aria-label={fase === "ascolto" ? "Sto ascoltando" : "Tocca e dì una spesa"}
+              className={`relative flex items-center justify-center rounded-full shadow-rialzata transition-transform active:scale-95 ${
+                grande ? "h-40 w-40" : "h-28 w-28"
+              } ${fase === "ascolto" ? "bg-accent text-accent-foreground" : "bg-oro text-oro-foreground"}`}
+            >
+              <Mic className={grande ? "h-16 w-16" : "h-11 w-11"} />
+            </button>
+          </div>
+          <p className="text-center text-sm text-muted-foreground">
+            {fase === "ascolto"
+              ? "Sto ascoltando… dì una spesa sola."
+              : supportato
+                ? "Tocca il microfono e dì una spesa."
+                : "Dettatura non disponibile: scrivi qui sotto."}
           </p>
-        )}
-      </div>
+          {ascoltato && (
+            <p className="text-center text-sm">
+              Ho sentito: <span className="italic">«{ascoltato}»</span>
+            </p>
+          )}
+        </div>
+      )}
+
+      {forma === "barra" && ascoltato && (
+        <p className="mt-3 text-center text-sm">
+          Ho sentito: <span className="italic">«{ascoltato}»</span>
+        </p>
+      )}
 
       {fase === "errore" && (
         <p className="mt-2 rounded-2xl border border-border bg-card-soft p-3 text-sm">{errore}</p>

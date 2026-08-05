@@ -35,7 +35,14 @@ const CHIAVE = "mono-money-v1";
 
 const iniziale: Stato = {
   versione: 1,
-  tema: "scuro",
+  /**
+   * Cashmere di partenza — scelta sua del 4/8.
+   * 🔑 Il verde bosco non sparisce: diventa **l'accento**, e sta su un blocco
+   * solo per schermata (quello che deve saltare all'occhio). Un fondo scuro
+   * dappertutto schiacciava tutto sullo stesso piano, e il logo ufficiale —
+   * che è scuro — non ci stava.
+   */
+  tema: "chiaro",
   obiettivo: 300,
   movimenti: [],
   regole: [],

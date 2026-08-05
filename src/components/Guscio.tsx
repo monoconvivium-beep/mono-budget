@@ -16,11 +16,14 @@ export function Guscio({
   sottotitolo,
   children,
   azione,
+  /** Sostituisce il titolo grande: sulla Home ci va il marchio, non una scritta. */
+  intestazione,
 }: {
   titolo: string;
   sottotitolo?: string;
   children: ReactNode;
   azione?: ReactNode;
+  intestazione?: ReactNode;
 }) {
   const { tema } = useStato();
   const percorso = useRouterState({ select: (s) => s.location.pathname });
@@ -35,12 +38,14 @@ export function Guscio({
     <div className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
         <header className="mb-5 flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-3xl leading-none">{titolo}</h1>
-            {sottotitolo && (
-              <p className="mt-1.5 text-sm text-muted-foreground">{sottotitolo}</p>
-            )}
-          </div>
+          {intestazione ?? (
+            <div>
+              <h1 className="text-3xl leading-none">{titolo}</h1>
+              {sottotitolo && (
+                <p className="mt-1.5 text-sm text-muted-foreground">{sottotitolo}</p>
+              )}
+            </div>
+          )}
           {azione}
         </header>
         {children}
@@ -56,7 +61,9 @@ export function Guscio({
                   <Link
                     to={to}
                     aria-label="Ascolto"
-                    className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-oro text-oro-foreground shadow-rialzata"
+                    // Verde bosco, non oro: sul fondo cashmere l'oro su chiaro
+                    // non stacca abbastanza, e questo è il gesto principale.
+                    className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-[var(--scuro-scheda)] text-[var(--scuro-testo)] shadow-rialzata"
                   >
                     <Icona className="h-6 w-6" />
                     <span className="mt-0.5 text-[10px] font-semibold tracking-wide">

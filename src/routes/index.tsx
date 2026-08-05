@@ -1,110 +1,107 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Guscio } from "@/components/Guscio";
-import { Dettatura } from "@/components/Dettatura";
-import { RigaMovimento } from "@/components/RigaMovimento";
+
 import { Aiuto } from "@/components/Aiuto";
+import { Dettatura } from "@/components/Dettatura";
+import { DoveVannoISoldi } from "@/components/DoveVannoISoldi";
+import { Guscio } from "@/components/Guscio";
 import { InstallaApp } from "@/components/InstallaApp";
+import { RigaMovimento } from "@/components/RigaMovimento";
 import { euro } from "@/lib/parse";
-import { attivi, MESI, somma, stessoMese, useStato } from "@/lib/store";
+import { delMese } from "@/lib/statistiche";
+import { attivi, MESI, somma, useStato } from "@/lib/store";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "MONO MONEY — il libretto delle spese da tasca" },
-      {
-        name: "description",
-        content:
-          "Dì «quarantasei farmacia» e la spesa è scritta, in categoria, con i conti del mese. Tutto resta sul tuo telefono. Un regalo di MONO, Torino.",
-      },
-      { property: "og:title", content: "MONO MONEY — il libretto delle spese da tasca" },
-      {
-        property: "og:description",
-        content:
-          "Spese dettate a voce, categorie automatiche, conti del mese e dell'anno. I tuoi dati non lasciano il telefono.",
-      },
-    ],
-  }),
-  component: Home,
-});
+export const Route = createFileRoute("/")({ component: Home });
 
+/**
+ * LA HOME — impaginazione «B», scelta guardando i provini il 4/8/2026.
+ *
+ * L'ordine non è casuale, è la domanda che uno si fa aprendo l'app:
+ *   1. dov'è finito il mese?      → la torta, in cima
+ *   2. quanto entra e quanto resta? → la striscia verde coi tre numeri
+ *   3. devo segnare una spesa      → la barra larga
+ *   4. cos'ho segnato finora       → le ultime spese
+ *
+ * 🔑 Il verde bosco sta su **un blocco solo**: se lo mettessi su tutto,
+ * non salterebbe all'occhio più niente.
+ */
 function Home() {
   const stato = useStato();
   const movimenti = attivi(stato.movimenti);
   const ora = new Date();
-  const delMese = movimenti.filter((m) => stessoMese(m.data, ora.getFullYear(), ora.getMonth()));
-  const uscite = somma(delMese, "uscita");
-  const entrate = somma(delMese, "entrata");
+  const delMeseCorrente = delMese(movimenti, ora.getFullYear(), ora.getMonth());
+
+  const uscite = somma(delMeseCorrente, "uscita");
+  const entrate = somma(delMeseCorrente, "entrata");
+  const daParte = Math.max(0, entrate - uscite);
   const oggi = movimenti
     .filter((m) => new Date(m.data).toDateString() === ora.toDateString() && m.tipo === "uscita")
     .reduce((t, m) => t + m.importo, 0);
-  const risparmio = Math.max(0, entrate - uscite);
-  const avanzamento =
-    stato.obiettivo > 0 ? Math.min(100, Math.round((risparmio / stato.obiettivo) * 100)) : 0;
+
+  const marchio = `${import.meta.env.BASE_URL}marchio/mono-orizzontale${
+    stato.tema === "scuro" ? "-chiaro" : ""
+  }.svg`;
 
   return (
-    <Guscio titolo="MONO MONEY" sottotitolo={`${MESI[ora.getMonth()]} ${ora.getFullYear()}`}>
-      <section className="scheda-bosco p-5">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold tracking-widest uppercase opacity-80">
-            Obiettivo di risparmio
-          </p>
-          <Aiuto testo="Quanto vorresti mettere da parte questo mese: entrate meno uscite. Lo cambi nella scheda MONO." />
+    <Guscio
+      titolo="MONO MONEY"
+      intestazione={
+        <div className="flex w-full items-center justify-between">
+          <img src={marchio} alt="MONO — Bottega Gastronomica" className="h-5 w-auto" />
+          <span className="text-sm text-muted-foreground">
+            {MESI[ora.getMonth()]} {ora.getFullYear()}
+          </span>
         </div>
-        <p className="numero mt-2 text-4xl">{euro(risparmio)}</p>
-        <p className="mt-1 text-sm opacity-80">
-          su {euro(stato.obiettivo)} · {avanzamento}%
-        </p>
-        <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-black/20">
-          <div
-            className="h-full rounded-full bg-oro transition-all"
-            style={{ width: `${avanzamento}%` }}
-          />
-        </div>
-      </section>
+      }
+    >
+      {/* 1. Dov'è finito il mese */}
+      <DoveVannoISoldi movimenti={delMeseCorrente} compatta />
 
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      {/* 2. I tre numeri — l'unico blocco verde della schermata */}
+      <section className="scheda-bosco mt-4 flex gap-2 p-4">
         {[
-          { titolo: "USCITE", valore: uscite },
-          { titolo: "ENTRATE", valore: entrate },
-          { titolo: "OGGI", valore: oggi },
+          { titolo: "Entrate", valore: entrate },
+          { titolo: "Da parte", valore: daParte },
+          { titolo: "Oggi", valore: oggi },
         ].map((r) => (
-          <div key={r.titolo} className="scheda p-3 text-center">
-            <p className="text-[10px] font-semibold tracking-widest text-muted-foreground">
+          <div key={r.titolo} className="flex-1 text-center">
+            <p className="text-[10px] font-semibold tracking-widest uppercase opacity-65">
               {r.titolo}
             </p>
-            <p className="numero mt-1 text-lg leading-tight">{euro(r.valore)}</p>
+            <p className="numero mt-1 text-base leading-tight">{euro(r.valore)}</p>
           </div>
         ))}
-      </div>
+      </section>
 
+      {/* 3. Segnare una spesa */}
       <div className="mt-4">
-        <Dettatura />
+        <Dettatura forma="barra" />
       </div>
 
-      {/* Sta subito sotto il microfono, non in fondo: chi ha appena provato la
-          dettatura è il momento in cui vuole tenersela. Sparisce da sola una
-          volta installata. */}
+      {/* Sta qui perché è il momento in cui uno ha appena provato la voce:
+          è allora che la vuole tenere. Sparisce da sola una volta installata. */}
       <InstallaApp />
 
-      <section className="scheda mt-4 p-4">
-        <div className="mb-1 flex items-center justify-between">
+      {/* 4. Cos'ho segnato */}
+      <section className="mt-6">
+        <div className="mb-2 flex items-center justify-between px-1">
           <h2 className="text-lg">Ultime spese</h2>
           <Aiuto testo="Le × mettono il movimento nel cestino: lo recuperi dal Diario." />
         </div>
+
         {movimenti.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            Ancora nessun movimento. Tocca il microfono e dì la prima spesa.
+          <p className="scheda p-6 text-center text-sm text-muted-foreground">
+            Ancora nessun movimento. Tocca «Dì una spesa» e dì la prima.
           </p>
         ) : (
-          <ul>
+          <ul className="space-y-2">
             {movimenti.slice(0, 8).map((m) => (
-              <RigaMovimento key={m.id} m={m} />
+              <RigaMovimento key={m.id} m={m} scheda />
             ))}
           </ul>
         )}
       </section>
 
-      <p className="mt-4 px-2 text-center text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-5 px-2 text-center text-xs leading-relaxed text-muted-foreground">
         Importi, categorie e saldo restano su questo telefono: nessun account, nessun server,
         nessuna chiamata di rete. Un regalo di MONO, gastronomia a Torino.
       </p>

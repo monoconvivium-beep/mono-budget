@@ -33,11 +33,65 @@ function spicchi(voci: readonly { quota: number; colore: string }[]): string {
     .join(", ");
 }
 
-export function DoveVannoISoldi({ movimenti }: { movimenti: readonly Movimento[] }) {
+export function DoveVannoISoldi({
+  movimenti,
+  /**
+   * Versione della Home: torta e prime quattro categorie affiancate, senza
+   * l'elenco lungo e senza il cambio entrate/uscite. Serve a rispondere in un
+   * secondo alla domanda «dov'è finito il mese»; il resto sta nei Bilanci.
+   */
+  compatta = false,
+}: {
+  movimenti: readonly Movimento[];
+  compatta?: boolean;
+}) {
   const [tipo, setTipo] = useState<Tipo>("uscita");
   const voci = perCategoria(movimenti, tipo);
   const conti = riepilogo(movimenti);
   const totale = tipo === "uscita" ? conti.uscite : conti.entrate;
+
+  if (compatta) {
+    if (!voci.length) return null;
+    return (
+      <section className="scheda mt-4 flex items-center gap-4 p-4">
+        <div className="relative h-24 w-24 shrink-0">
+          <div
+            className="h-full w-full rounded-full"
+            role="img"
+            aria-label={`Uscite per categoria: ${voci
+              .map((v) => `${v.categoria} ${Math.round(v.quota * 100)}%`)
+              .join(", ")}`}
+            style={{
+              background: `conic-gradient(from -90deg, ${spicchi(voci)})`,
+              WebkitMaskImage: "radial-gradient(circle, transparent 57%, #000 58%)",
+              maskImage: "radial-gradient(circle, transparent 57%, #000 58%)",
+            }}
+          />
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-[9px] font-semibold tracking-widest text-muted-foreground uppercase">
+              Uscite
+            </span>
+            <span className="numero text-sm leading-tight">{euro(conti.uscite)}</span>
+          </div>
+        </div>
+
+        <ul className="min-w-0 flex-1">
+          {voci.slice(0, 4).map((v) => (
+            <li key={v.categoria} className="flex items-center gap-2 py-[3px] text-sm">
+              <span
+                className="h-2.5 w-2.5 shrink-0 rounded-full"
+                style={{ backgroundColor: v.colore }}
+              />
+              <span className="min-w-0 flex-1 truncate">{v.categoria}</span>
+              <span className="text-xs text-muted-foreground">
+                {Math.round(v.quota * 100)}%
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
 
   return (
     <section className="scheda mt-4 p-4">

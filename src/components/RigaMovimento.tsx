@@ -7,19 +7,35 @@ export function RigaMovimento({
   conData = false,
   modificabile = false,
   cestino = false,
+  /**
+   * Ogni movimento in una sua scheda, col colore della categoria sul fianco.
+   * È la forma della Home: sul fondo cashmere le righe separate da un filo
+   * si perdono, una scheda staccata si legge da lontano.
+   */
+  scheda = false,
 }: {
   m: Movimento;
   conData?: boolean;
   modificabile?: boolean;
   cestino?: boolean;
+  scheda?: boolean;
 }) {
   return (
-    <li className="flex items-center gap-3 border-b border-border py-3 last:border-0">
-      <span
-        aria-hidden
-        className="h-9 w-1.5 shrink-0 rounded-full"
-        style={{ backgroundColor: COLORI_CATEGORIA[m.categoria] }}
-      />
+    <li
+      className={
+        scheda
+          ? "scheda flex items-center gap-3 border-l-4 py-2.5 pr-2 pl-3"
+          : "flex items-center gap-3 border-b border-border py-3 last:border-0"
+      }
+      style={scheda ? { borderLeftColor: COLORI_CATEGORIA[m.categoria] } : undefined}
+    >
+      {!scheda && (
+        <span
+          aria-hidden
+          className="h-9 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: COLORI_CATEGORIA[m.categoria] }}
+        />
+      )}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{m.etichetta || m.categoria}</p>
         {modificabile ? (
