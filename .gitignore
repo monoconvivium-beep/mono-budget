@@ -20,6 +20,16 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Roba di servizio per guardare le schermate in locale.
+#
+# `public/__prova.html` mette nel browser un'iscrizione finta e qualche
+# movimento, così si arriva alle schermate vere senza passare dall'iscrizione
+# — che scriverebbe in rubrica un contatto che non esiste.
+# ⚠️ Resta FUORI dal deposito apposta: tutto quello che sta in public/ finisce
+# online, e online quella pagina scavalcherebbe l'iscrizione per chiunque.
+public/__prova.html
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -46,7 +46,9 @@ function Home() {
       titolo="MONO MONEY"
       intestazione={
         <div className="flex w-full items-center justify-between">
-          <img src={marchio} alt="MONO — Bottega Gastronomica" className="h-5 w-auto" />
+          {/* Alto 40 px, non più 20: sotto questa misura «Bottega Gastronomica»
+              è una macchia grigia, e tanto valeva non metterla. */}
+          <img src={marchio} alt="MONO — Bottega Gastronomica" className="h-10 w-auto" />
           <span className="text-sm text-muted-foreground">
             {MESI[ora.getMonth()]} {ora.getFullYear()}
           </span>

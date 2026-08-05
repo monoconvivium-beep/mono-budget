@@ -42,9 +42,24 @@ export function Dettatura({
    * Ascolto, dove il microfono È la pagina.
    */
   forma = "cerchio",
+  /**
+   * Parte ad ascoltare da solo appena la schermata si apre.
+   *
+   * 🔑 Chiesto il 5/8/2026: per dire una spesa ci volevano DUE tocchi — uno
+   * sul microfono verde in fondo per arrivare qui, e uno sul cerchio dorato
+   * per far partire l'ascolto. Il primo tocco è già la richiesta: chi apre
+   * questa schermata vuole parlare, non guardare un microfono spento.
+   *
+   * ⚠️ Parte UNA volta sola, all'apertura. Non si riavvia da solo dopo una
+   * spesa: quello sarebbe l'ascolto continuo da un'altra porta, ed è il
+   * difetto che ha bruciato giorni interi su Android — ogni risultato
+   * «definitivo» era il precedente allungato.
+   */
+  avvioAutomatico = false,
 }: {
   grande?: boolean;
   forma?: "cerchio" | "barra";
+  avvioAutomatico?: boolean;
 }) {
   const { regole } = useStato();
   const [fase, setFase] = useState<Fase>("pronto");
@@ -106,8 +121,29 @@ export function Dettatura({
     setErrore("");
     setAscoltato("");
     setFase("ascolto");
-    r.start();
+
+    /**
+     * ⚠️ `start()` sa tirare eccezioni: microfono già acceso, permesso negato,
+     * pagina non sicura. Prima nessuno le prendeva perché a chiamarlo era
+     * sempre un dito; adesso può partire da solo all'apertura, e una
+     * schermata bianca al posto del microfono sarebbe il modo peggiore di
+     * dirlo. Meglio la frase che spiega e il cerchio che resta toccabile.
+     */
+    try {
+      r.start();
+    } catch {
+      setFase("errore");
+      setErrore("Non sono riuscito ad accendere il microfono. Tocca il cerchio e riprova.");
+    }
   }, [analizza]);
+
+  /** Un avvio solo, all'apertura della schermata: mai un riavvio automatico. */
+  const giaAvviato = useRef(false);
+  useEffect(() => {
+    if (!avvioAutomatico || giaAvviato.current) return;
+    giaAvviato.current = true;
+    avvia();
+  }, [avvioAutomatico, avvia]);
 
   function conferma(i: number) {
     const b = bozze[i];
@@ -149,7 +185,13 @@ export function Dettatura({
       {forma !== "barra" && (
         <div className="mb-3 flex items-center justify-between">
           <h2 className={grande ? "text-2xl" : "text-lg"}>Dì una spesa</h2>
-          <Aiuto testo="Un tocco = una spesa. Tocca, dì una spesa sola, poi confermi. Per i centesimi dì «quattro euro e sessanta»." />
+          <Aiuto
+            testo={
+              avvioAutomatico
+                ? "Il microfono si accende da solo quando apri questa schermata: parla pure. Una spesa sola per volta, poi confermi. Per i centesimi dì «quattro euro e sessanta»."
+                : "Un tocco = una spesa. Tocca, dì una spesa sola, poi confermi. Per i centesimi dì «quattro euro e sessanta»."
+            }
+          />
         </div>
       )}
 
@@ -199,7 +241,9 @@ export function Dettatura({
             {fase === "ascolto"
               ? "Sto ascoltando… dì una spesa sola."
               : supportato
-                ? "Tocca il microfono e dì una spesa."
+                ? avvioAutomatico
+                  ? "Tocca il cerchio per riascoltare."
+                  : "Tocca il microfono e dì una spesa."
                 : "Dettatura non disponibile: scrivi qui sotto."}
           </p>
           {ascoltato && (

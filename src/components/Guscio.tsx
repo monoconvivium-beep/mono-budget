@@ -44,29 +44,46 @@ export function Guscio({
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
-        <header className="mb-5 flex items-start justify-between gap-3">
-          {intestazione ?? (
-            <div className="flex min-w-0 items-center gap-3">
-              {/* 🔑 Il sorriso c'è in OGNI schermata, non solo sulla Home.
-                  Un marchio si ricorda perché torna, non perché è grande una
-                  volta sola: qui è piccolo e sempre allo stesso posto. */}
-              <img
-                // Tema unico cashmere: il sorriso è quello scuro, l'originale.
-                src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
-                alt="MONO"
-                className="h-9 w-auto shrink-0"
-                width={36}
-                height={36}
-              />
-              <div className="min-w-0">
-                <h1 className="truncate text-3xl leading-none">{titolo}</h1>
-                {sottotitolo && (
-                  <p className="mt-1.5 truncate text-sm text-muted-foreground">{sottotitolo}</p>
-                )}
-              </div>
+        <header className="mb-5">
+          {intestazione ? (
+            <div className="flex items-start justify-between gap-3">
+              {intestazione}
+              {azione}
             </div>
+          ) : (
+            <>
+              {/**
+               * IL MARCHIO INTERO, BEN IN VISTA — chiesto il 5/8/2026.
+               *
+               * Prima qui c'era solo la M col sorriso alta 36 px accanto al
+               * titolo: il marchio c'era ma le parole «Bottega Gastronomica»
+               * no, e a quella misura non si sarebbero lette comunque.
+               * 🔑 Alto 56 px la scritta si legge davvero: sotto questa misura
+               * il marchio non è discreto, è illeggibile — e un marchio che
+               * non si legge non sta dicendo niente a nessuno.
+               * Il sorriso non si ripete qui sotto: è già dentro questo.
+               */}
+              <div className="mb-4 flex justify-center border-b border-border pb-4">
+                <img
+                  // Tema unico cashmere: il marchio è quello scuro, l'originale.
+                  src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+                  alt="MONO — Bottega Gastronomica"
+                  className="h-14 w-auto"
+                  width={92}
+                  height={56}
+                />
+              </div>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h1 className="truncate text-3xl leading-none">{titolo}</h1>
+                  {sottotitolo && (
+                    <p className="mt-1.5 truncate text-sm text-muted-foreground">{sottotitolo}</p>
+                  )}
+                </div>
+                {azione}
+              </div>
+            </>
           )}
-          {azione}
         </header>
         {children}
 

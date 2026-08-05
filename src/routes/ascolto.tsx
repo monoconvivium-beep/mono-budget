@@ -23,8 +23,11 @@ export const Route = createFileRoute("/ascolto")({
 
 function Ascolto() {
   return (
-    <Guscio titolo="Ascolto" sottotitolo="Un tocco = una spesa">
-      <Dettatura grande />
+    <Guscio titolo="Ascolto" sottotitolo="Si accende da solo: parla pure">
+      {/* Si arriva qui col microfono verde in fondo: quel tocco È la richiesta
+          di parlare. Chiedere un secondo tocco sul cerchio dorato era chiedere
+          due volte la stessa cosa. */}
+      <Dettatura grande avvioAutomatico />
 
       <section className="scheda mt-4 p-4 text-sm leading-relaxed">
         <h2 className="mb-2 text-lg">Come dirlo bene</h2>
