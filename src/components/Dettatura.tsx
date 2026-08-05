@@ -155,7 +155,14 @@ export function Dettatura({
           {fase === "ascolto" && (
             <span className="absolute inset-0 rounded-2xl bg-accent onda-microfono" />
           )}
-          <Mic className="relative h-6 w-6" />
+          {/* La M col sorriso al posto dell'icona del microfono: il gesto
+              principale dell'app porta il marchio, e lo si tocca ogni giorno. */}
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-sorriso-chiaro.svg`}
+            alt=""
+            aria-hidden="true"
+            className="relative h-7 w-auto"
+          />
           <span className="relative">
             {fase === "ascolto" ? "Sto ascoltando…" : "Dì una spesa"}
           </span>

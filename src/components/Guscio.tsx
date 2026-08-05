@@ -39,11 +39,25 @@ export function Guscio({
       <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
         <header className="mb-5 flex items-start justify-between gap-3">
           {intestazione ?? (
-            <div>
-              <h1 className="text-3xl leading-none">{titolo}</h1>
-              {sottotitolo && (
-                <p className="mt-1.5 text-sm text-muted-foreground">{sottotitolo}</p>
-              )}
+            <div className="flex min-w-0 items-center gap-3">
+              {/* 🔑 Il sorriso c'è in OGNI schermata, non solo sulla Home.
+                  Un marchio si ricorda perché torna, non perché è grande una
+                  volta sola: qui è piccolo e sempre allo stesso posto. */}
+              <img
+                src={`${import.meta.env.BASE_URL}marchio/mono-sorriso${
+                  tema === "scuro" ? "-chiaro" : ""
+                }.svg`}
+                alt="MONO"
+                className="h-9 w-auto shrink-0"
+                width={36}
+                height={36}
+              />
+              <div className="min-w-0">
+                <h1 className="truncate text-3xl leading-none">{titolo}</h1>
+                {sottotitolo && (
+                  <p className="mt-1.5 truncate text-sm text-muted-foreground">{sottotitolo}</p>
+                )}
+              </div>
             </div>
           )}
           {azione}

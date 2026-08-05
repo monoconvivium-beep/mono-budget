@@ -56,11 +56,16 @@ export function Benvenuto() {
             width={190}
             height={48}
           />
-          <p className="mt-5 text-xs font-semibold tracking-[0.2em] text-oro uppercase">
-            Un omaggio utile di MONO
+          <p className="mt-6 text-xs font-semibold tracking-[0.2em] text-oro uppercase">
+            Un omaggio utile di
+          </p>
+          <p className="mt-1 text-sm font-semibold tracking-[0.12em] uppercase">
+            MONO · Bottega Gastronomica
           </p>
 
-          <h1 className="mt-3 text-4xl leading-none">
+          {/* Il marchio dell'app sotto quello della bottega: prima chi lo regala,
+              poi cosa regala. */}
+          <h1 className="mt-6 text-4xl leading-none">
             <span className="block">MONO</span>
             <span className="block text-oro">MONEY</span>
           </h1>
