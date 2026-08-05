@@ -122,28 +122,10 @@ function Mono() {
         </button>
       </section>
 
-      <section className="scheda mt-4 p-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg">Tema</h2>
-          <Aiuto testo="Lo scuro (verde bosco) è pensato per la sera e consuma meno batteria." />
-        </div>
-        <div className="mt-3 flex gap-2">
-          {(["scuro", "chiaro"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => azioni.impostaTema(t)}
-              className={`pillola tocco flex-1 justify-center font-semibold ${
-                stato.tema === t
-                  ? "bg-accent text-accent-foreground"
-                  : "border border-border text-muted-foreground"
-              }`}
-            >
-              {t === "scuro" ? "Verde bosco" : "Cashmere"}
-            </button>
-          ))}
-        </div>
-      </section>
+      {/* ⚠️ Qui c'era l'interruttore chiaro/scuro. Tolto di proposito il 4/8:
+          tema unico, cashmere col verde come accento. Un marchio non chiede a
+          chi lo usa di scegliersi il vestito, e due temi volevano dire due app
+          da curare — con nessuna delle due curata fino in fondo. */}
 
       <section className="scheda mt-4 p-4">
         <div className="flex items-center justify-between">

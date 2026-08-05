@@ -25,14 +25,21 @@ export function Guscio({
   azione?: ReactNode;
   intestazione?: ReactNode;
 }) {
-  const { tema } = useStato();
   const percorso = useRouterState({ select: (s) => s.location.pathname });
 
+  /**
+   * TEMA UNICO — deciso il 4/8. Cashmere di fondo, verde bosco come accento.
+   *
+   * 🔑 L'interruttore chiaro/scuro è stato tolto di proposito: un marchio non
+   * chiede a chi lo usa di scegliersi il vestito. Due temi volevano dire due
+   * app da curare, e nessuna delle due curata fino in fondo.
+   * ⚠️ Il campo `tema` resta nel salvataggio per non rompere i backup già fatti.
+   */
+  const tema = "chiaro" as const;
+
   useEffect(() => {
-    const root = document.documentElement;
-    if (tema === "scuro") root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [tema]);
+    document.documentElement.classList.remove("dark");
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,9 +51,8 @@ export function Guscio({
                   Un marchio si ricorda perché torna, non perché è grande una
                   volta sola: qui è piccolo e sempre allo stesso posto. */}
               <img
-                src={`${import.meta.env.BASE_URL}marchio/mono-sorriso${
-                  tema === "scuro" ? "-chiaro" : ""
-                }.svg`}
+                // Tema unico cashmere: il sorriso è quello scuro, l'originale.
+                src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
                 alt="MONO"
                 className="h-9 w-auto shrink-0"
                 width={36}

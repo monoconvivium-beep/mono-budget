@@ -30,7 +30,12 @@ export const COLORI_CATEGORIA: Record<Categoria, string> = {
   Trasporti: "#262321",
   Salute: "#A83A28",
   Abbonamenti: "#E27A60",
-  Shopping: "#CBA75A",
+  /**
+   * ⚠️ Prugna, non oro. Prima Shopping e Spesa alimentare avevano lo stesso
+   * `#CBA75A`: nella torta due fette con lo stesso colore non sono un dettaglio
+   * estetico, sono un grafico che mente — chi guarda le legge come una sola.
+   */
+  Shopping: "#6E4B63",
   "Tempo libero": "#7E9247",
   Altro: "#8A8578",
 };
