@@ -4,6 +4,7 @@ import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen } from "luc
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { MarchioMono } from "@/components/MarchioMono";
+import { PassalaAUnAmico } from "@/components/PassalaAUnAmico";
 import { COLORI_CATEGORIA, CATEGORIE, euro } from "@/lib/parse";
 import { versoCsv } from "@/lib/statistiche";
 import { attivi, azioni, useStato } from "@/lib/store";
@@ -103,6 +104,8 @@ function Mono() {
           Il tuo borsellino, senza password. Gratis, per sempre.
         </p>
       </section>
+
+      <PassalaAUnAmico />
 
       <MarchioMono />
 
