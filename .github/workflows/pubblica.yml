@@ -41,10 +41,12 @@ jobs:
       # accorgersene qui che sul telefono di un cliente.
       - run: npm test
 
+      # 🏠 Da qui in poi l'app vive sul suo dominio, money.monobottega.it, quindi
+      # la radice è "/" e MONO_BASE non si passa più.
+      # ⚠️ È `public/CNAME` a dire a GitHub qual è il dominio: se lo si toglie,
+      # GitHub scollega il dominio e l'app torna nella sottocartella — con tutti
+      # i telefoni che l'hanno installata puntati a un indirizzo che non c'è più.
       - name: Costruisci
-        env:
-          # Le pagine di progetto stanno in una sottocartella col nome del repo.
-          MONO_BASE: /${{ github.event.repository.name }}/
         run: npm run build
 
       - uses: actions/configure-pages@v5
