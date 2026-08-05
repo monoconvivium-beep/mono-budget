@@ -76,6 +76,9 @@
   --ring: oklch(0.745 0.105 84.7);
   --scuro-scheda: oklch(0.468 0.049 146.7);
   --scuro-testo: oklch(0.945 0.022 83.3);
+  /* Terracotta pieno per i blocchi da toccare — vedi `scheda-azione`. */
+  --azione-scheda: #a34e2e;
+  --azione-testo: oklch(0.945 0.022 83.3);
 }
 
 .dark {
@@ -149,10 +152,32 @@
   border: 1px solid var(--color-border);
 }
 
-/* Scheda verde bosco, anche nel tema chiaro (obiettivo di risparmio). */
+/**
+ * Scheda verde bosco. ⚠️ DA OGGI È L'ECCEZIONE, NON LA REGOLA (5/8/2026).
+ * Sua indicazione: «predomina il cashmere, poi il terracotta; il verde in
+ * alcuni punti». Regola pratica: **un solo blocco verde per schermata**, e
+ * solo dove si parla di MONO o di quanto resta da parte — mai su un'azione.
+ * Le azioni sono terracotta: `scheda-azione` qui sotto.
+ */
 @utility scheda-bosco {
   background-color: var(--scuro-scheda);
   color: var(--scuro-testo);
+  border-radius: 24px;
+  box-shadow: var(--shadow-rialzata);
+  border: 1px solid oklch(0.945 0.022 83.3 / 0.14);
+}
+
+/**
+ * Scheda terracotta: l'accento di MONO, quello che si tocca.
+ * ⚠️ NON è il terracotta di marchio (#B85C38) ma un filo più profondo: il
+ * cashmere sul terracotta di marchio dà **3,9:1**, sotto la soglia per il
+ * testo piccolo; questo dà **4,9:1**. Il terracotta di marchio resta sui
+ * bottoni e sulle pillole, dove il testo è grande e grasso.
+ * Stessa logica del `goldDeep` dei token dell'app grande.
+ */
+@utility scheda-azione {
+  background-color: var(--azione-scheda);
+  color: var(--azione-testo);
   border-radius: 24px;
   box-shadow: var(--shadow-rialzata);
   border: 1px solid oklch(0.945 0.022 83.3 / 0.14);

@@ -37,19 +37,24 @@ export function Avvio({ children }: { children: React.ReactNode }) {
 
   return (
     <div
+      /**
+       * CASHMERE, non più verde bosco (5/8/2026). Due ragioni, tutte e due
+       * sue: il marchio va mostrato **originale**, e l'originale è scuro —
+       * sul verde spariva e toccava usare la versione svuotata. E l'icona
+       * dell'app adesso è su cashmere: così la schermata d'avvio è la
+       * continuazione dell'icona, non un lampo verde in mezzo.
+       */
       className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6"
-      style={{ backgroundColor: "var(--scuro-scheda)" }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <img
-        src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale-chiaro.svg`}
+        src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
         alt="MONO — Bottega Gastronomica"
-        className="entra h-14 w-auto"
-        width={220}
-        height={56}
+        className="entra w-[68%] max-w-[260px]"
       />
       <p
         className="entra text-sm tracking-[0.18em] uppercase"
-        style={{ color: "var(--scuro-testo)", opacity: 0.7, animationDelay: "120ms" }}
+        style={{ color: "var(--color-muted-foreground)", animationDelay: "120ms" }}
       >
         La tua voce conta
       </p>

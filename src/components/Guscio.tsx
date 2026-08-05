@@ -18,12 +18,19 @@ export function Guscio({
   azione,
   /** Sostituisce il titolo grande: sulla Home ci va il marchio, non una scritta. */
   intestazione,
+  /**
+   * Il marchio grande come sulla Home invece della fascia alta 56 px.
+   * Chiesto per l'Ascolto il 5/8: è la schermata dove uno arriva per parlare,
+   * e il marchio deve pesare quanto il gesto.
+   */
+  marchioGrande = false,
 }: {
   titolo: string;
   sottotitolo?: string;
   children: ReactNode;
   azione?: ReactNode;
   intestazione?: ReactNode;
+  marchioGrande?: boolean;
 }) {
   const percorso = useRouterState({ select: (s) => s.location.pathname });
 
@@ -63,14 +70,16 @@ export function Guscio({
                * non si legge non sta dicendo niente a nessuno.
                * Il sorriso non si ripete qui sotto: è già dentro questo.
                */}
-              <div className="mb-4 flex justify-center border-b border-border pb-4">
+              <div
+                className={`mb-4 flex justify-center border-b border-border ${
+                  marchioGrande ? "pb-5" : "pb-4"
+                }`}
+              >
                 <img
                   // Tema unico cashmere: il marchio è quello scuro, l'originale.
                   src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
                   alt="MONO — Bottega Gastronomica"
-                  className="h-14 w-auto"
-                  width={92}
-                  height={56}
+                  className={marchioGrande ? "w-[76%] max-w-[280px]" : "h-14 w-auto"}
                 />
               </div>
               <div className="flex items-start justify-between gap-3">
@@ -110,9 +119,10 @@ export function Guscio({
                   <Link
                     to={to}
                     aria-label="Ascolto"
-                    // Verde bosco, non oro: sul fondo cashmere l'oro su chiaro
-                    // non stacca abbastanza, e questo è il gesto principale.
-                    className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-[var(--scuro-scheda)] text-[var(--scuro-testo)] shadow-rialzata"
+                    // Terracotta: è il gesto principale dell'app, e da oggi il
+                    // colore delle azioni è il terracotta. Il verde resta al
+                    // blocco dei numeri, uno per schermata.
+                    className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-[var(--azione-scheda)] text-[var(--azione-testo)] shadow-rialzata"
                   >
                     <Icona className="h-6 w-6" />
                     <span className="mt-0.5 text-[10px] font-semibold tracking-wide">

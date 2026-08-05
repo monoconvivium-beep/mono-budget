@@ -42,17 +42,19 @@ const PORTE = [
 export function MarchioMono() {
   return (
     <section className="scheda mt-4 overflow-hidden p-0">
-      <div className="scheda-bosco rounded-none p-5 text-center">
-        {/* Il logo ufficiale, nella versione chiara: quella scura sul verde
-            bosco sparirebbe. */}
+      {/**
+       * Fondo cashmere caldo e non più verde bosco: qui il marchio dev'essere
+       * quello ORIGINALE (sua regola del 5/8), e l'originale è scuro — sul
+       * verde spariva. Il filo terracotta in cima tiene il blocco staccato
+       * dal resto senza spegnere il marchio.
+       */}
+      <div className="rounded-none border-t-4 border-t-[var(--azione-scheda)] bg-card-soft p-5 text-center">
         <img
-          src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale-chiaro.svg`}
+          src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
           alt="MONO — Bottega Gastronomica"
-          className="mx-auto h-14 w-auto"
-          width={220}
-          height={56}
+          className="mx-auto w-[62%] max-w-[220px]"
         />
-        <p className="mt-4 text-sm leading-relaxed opacity-85">
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
           MONO MONEY è un omaggio di <strong>MONO</strong>, bottega di gastronomia a Torino.
           Nessuno ti chiede niente in cambio: se ti trovi bene, passa a trovarci.
         </p>

@@ -95,7 +95,7 @@ export function Iscrizione() {
             type="checkbox"
             checked={dati.consensoMarketing}
             onChange={(e) => setDati((d) => ({ ...d, consensoMarketing: e.target.checked }))}
-            className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--scuro-scheda)]"
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--azione-scheda)]"
           />
           <span className="text-sm leading-relaxed">
             Voglio ricevere da MONO le novità, il menu del giorno e i vantaggi riservati.
@@ -124,7 +124,7 @@ export function Iscrizione() {
         <button
           type="submit"
           disabled={invio}
-          className="mt-5 flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-[var(--scuro-scheda)] px-5 text-lg font-semibold text-[var(--scuro-testo)] disabled:opacity-60"
+          className="mt-5 flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-[var(--azione-scheda)] px-5 text-lg font-semibold text-[var(--azione-testo)] disabled:opacity-60"
         >
           {invio ? "Un momento…" : "Entra"}
         </button>

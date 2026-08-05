@@ -57,7 +57,7 @@ export function PassalaAUnAmico() {
           <button
             type="button"
             onClick={() => setAperto(true)}
-            className="tocco mt-3 w-full gap-2 rounded-2xl bg-[var(--scuro-scheda)] px-4 font-semibold text-[var(--scuro-testo)]"
+            className="tocco mt-3 w-full gap-2 rounded-2xl bg-[var(--azione-scheda)] px-4 font-semibold text-[var(--azione-testo)]"
           >
             <QrCode className="h-5 w-5" /> Mostra il codice
           </button>

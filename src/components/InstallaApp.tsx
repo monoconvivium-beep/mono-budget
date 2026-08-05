@@ -77,7 +77,7 @@ export function InstallaApp() {
   /* ------------------------------------------------- Android e computer */
   if (evento) {
     return (
-      <section className="scheda-bosco mt-4 p-5">
+      <section className="scheda-azione mt-4 p-5">
         <h2 className="text-lg">Mettila sul telefono</h2>
         <p className="mt-1 text-sm opacity-85">
           Diventa un&apos;icona come le altre app: si apre con un tocco, anche senza rete.
@@ -96,7 +96,7 @@ export function InstallaApp() {
   /* ------------------------------------------------------------ iPhone */
   if (iphone) {
     return (
-      <section className="scheda-bosco mt-4 p-5">
+      <section className="scheda-azione mt-4 p-5">
         <h2 className="text-lg">Mettila sul telefono</h2>
         <p className="mt-1 text-sm opacity-85">
           Su iPhone l&apos;installazione la deve avviare Safari: sono due tocchi.
