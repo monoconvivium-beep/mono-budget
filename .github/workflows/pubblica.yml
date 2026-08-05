@@ -41,12 +41,21 @@ jobs:
       # accorgersene qui che sul telefono di un cliente.
       - run: npm test
 
-      # 🏠 Da qui in poi l'app vive sul suo dominio, money.monobottega.it, quindi
-      # la radice è "/" e MONO_BASE non si passa più.
-      # ⚠️ È `public/CNAME` a dire a GitHub qual è il dominio: se lo si toglie,
-      # GitHub scollega il dominio e l'app torna nella sottocartella — con tutti
-      # i telefoni che l'hanno installata puntati a un indirizzo che non c'è più.
+      # 🏠 LA RADICE DELL'APP.
+      #
+      # ⚠️ ERRORE GIA' FATTO, DA NON RIFARE: il file `public/CNAME` **non basta**
+      # per attaccare il dominio quando si pubblica con GitHub Actions. Quel
+      # trucco vale solo per la pubblicazione da ramo; qui il dominio va scritto
+      # a mano in Settings → Pages → Custom domain, e finché non c'è, GitHub
+      # risponde 404 su money.monobottega.it e continua a servire l'app nella
+      # sottocartella. Mettendo la radice a "/" prima di quel passaggio, l'app
+      # cerca il programma in un posto dove non c'è: pagina bianca.
+      #
+      # Quindi: la sottocartella resta finché il dominio non è agganciato in
+      # Settings. Il giorno che c'è, si toglie questa riga e basta.
       - name: Costruisci
+        env:
+          MONO_BASE: /${{ github.event.repository.name }}/
         run: npm run build
 
       - uses: actions/configure-pages@v5
