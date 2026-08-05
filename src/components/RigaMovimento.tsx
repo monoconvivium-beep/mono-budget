@@ -1,6 +1,6 @@
 import { COLORI_CATEGORIA, euro, CATEGORIE, type Categoria } from "@/lib/parse";
 import { azioni, dataBreve, oraBreve, type Movimento } from "@/lib/store";
-import { X, RotateCcw, Trash2 } from "lucide-react";
+import { X, RotateCcw, Trash2, ChevronDown } from "lucide-react";
 
 export function RigaMovimento({
   m,
@@ -49,19 +49,63 @@ export function RigaMovimento({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{m.etichetta || m.categoria}</p>
         {modificabile ? (
-          <select
-            value={m.categoria}
-            onChange={(e) =>
-              azioni.cambiaCategoria(m.id, e.target.value as Categoria, m.etichetta)
-            }
-            className="mt-1 rounded-full border border-border bg-card-soft px-2 py-1 text-xs text-muted-foreground"
-          >
-            {CATEGORIE.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          /**
+           * LA CATEGORIA È UNA PILLOLA COL SUO COLORE, non una tendina grigia.
+           *
+           * 🔑 Sua scelta del 5/8/2026, guardando il Diario: undici righe con
+           * undici tendine grigie in colonna facevano sembrare l'elenco delle
+           * spese un modulo da compilare. Adesso si legge come un elenco.
+           *
+           * ⚠️ Sotto resta la stessa `select` di prima — tolta la vernice, non
+           * il funzionamento: un tocco solo e si apre la lista del telefono.
+           * Farne un bottone che apre una tendina finta voleva dire due tocchi,
+           * ed è esattamente il difetto appena tolto dal microfono.
+           */
+          <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+            {/**
+             * ⚠️ La `select` sta SOPRA la pillola, invisibile e larga quanto lei.
+             * Una tendina vera si allarga sempre quanto l'opzione più lunga —
+             * «Spesa alimentare» — così «Bar» veniva largo uguale e tutte le
+             * righe finivano incolonnate come le caselle di un modulo. Qui la
+             * pillola si stringe sulla parola che c'è scritta, e il tocco
+             * arriva lo stesso alla tendina del telefono: un tocco solo.
+             * Il campo invisibile è più alto della pillola (−inset-y-2): il
+             * dito prende 40 px anche se la pillola ne è alta 24.
+             */}
+            <span
+              className="relative inline-flex items-center gap-1.5 rounded-full py-1 pr-2 pl-2.5 font-semibold text-foreground"
+              style={{
+                backgroundColor: `color-mix(in oklab, ${COLORI_CATEGORIA[m.categoria]} 22%, transparent)`,
+              }}
+            >
+              <span
+                aria-hidden
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: COLORI_CATEGORIA[m.categoria] }}
+              />
+              {m.categoria}
+              <ChevronDown aria-hidden className="h-3 w-3 opacity-60" />
+              <select
+                value={m.categoria}
+                onChange={(e) =>
+                  azioni.cambiaCategoria(m.id, e.target.value as Categoria, m.etichetta)
+                }
+                aria-label={`Categoria di ${m.etichetta || m.categoria}`}
+                className="absolute inset-x-0 -inset-y-2 w-full opacity-0"
+              >
+                {CATEGORIE.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </span>
+            <span>
+              {conData ? `${dataBreve(m.data)} ` : ""}
+              {oraBreve(m.data)}
+              {m.metodo ? ` · ${m.metodo}` : ""}
+            </span>
+          </span>
         ) : (
           <p className="text-xs text-muted-foreground">
             {m.categoria} · {conData ? `${dataBreve(m.data)} ` : ""}
