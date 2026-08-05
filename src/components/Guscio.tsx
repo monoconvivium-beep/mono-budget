@@ -69,6 +69,18 @@ export function Guscio({
           {azione}
         </header>
         {children}
+
+        {/* La firma, in fondo a OGNI schermata. Discreta, ma sempre lì: è così
+            che un marchio si posa addosso a chi usa una cosa tutti i giorni. */}
+        <p className="mt-8 flex items-center justify-center gap-2 text-[11px] tracking-wide text-muted-foreground">
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+            alt=""
+            aria-hidden="true"
+            className="h-4 w-auto opacity-70"
+          />
+          MONO · Bottega Gastronomica · Torino
+        </p>
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">

@@ -112,6 +112,17 @@ export function Dettatura({
   function conferma(i: number) {
     const b = bozze[i];
     if (!b) return;
+
+    /**
+     * Una vibrazione corta quando la spesa è segnata.
+     * 🔑 Non è un vezzo: è la conferma che il gesto è andato a buon fine senza
+     * dover guardare lo schermo — al bar, con una mano sola, uno tocca e rimette
+     * il telefono in tasca. 35 millisecondi: si sente, non infastidisce.
+     * ⚠️ Su iPhone non succede niente (Apple non lo consente al browser) e va
+     * bene così: è un di più, non l'unica conferma. Sullo schermo si vede.
+     */
+    navigator.vibrate?.(35);
+
     azioni.aggiungi({
       importo: b.importo,
       categoria: b.categoria,
