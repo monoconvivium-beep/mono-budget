@@ -65,14 +65,21 @@ export function ripulisciTelefono(grezzo: string): string {
 
 export type Esito = { ok: true } | { ok: false; messaggio: string };
 
-/** Scrive l'iscrizione nella rubrica di MONO. */
-export async function iscrivi(d: Iscritto): Promise<Esito> {
+/**
+ * Scrive l'iscrizione nella rubrica di MONO.
+ *
+ * `nota` è la targa del passaparola (`lib/origine.ts`): da quale banco o da
+ * quale amico arriva l'iscrizione. Finisce nella colonna `notes` — è un dato
+ * sull'ISCRIZIONE, come consent_source: dei soldi continua a non passare niente.
+ */
+export async function iscrivi(d: Iscritto, nota?: string | null): Promise<Esito> {
   if (!INDIRIZZO || !CHIAVE) {
     return { ok: false, messaggio: "Manca la configurazione: avvisa MONO." };
   }
 
   const email = d.email.trim().toLowerCase();
   const corpo = {
+    ...(nota ? { notes: nota } : {}),
     first_name: d.nome.trim(),
     last_name: d.cognome.trim(),
     email_original: d.email.trim(),

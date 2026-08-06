@@ -11,8 +11,15 @@ import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ricordaProvenienza } from "./lib/origine";
 import { getRouter } from "./router";
 import "./styles.css";
+
+/**
+ * PRIMA del router: le targhe del passaparola (`?da=`, `?amico=`) vanno lette
+ * dall'indirizzo com'è arrivato — il router poi lo riscrive pulito.
+ */
+ricordaProvenienza();
 
 const router = getRouter();
 

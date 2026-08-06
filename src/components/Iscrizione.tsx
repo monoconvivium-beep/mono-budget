@@ -13,6 +13,7 @@
 import { useState } from "react";
 
 import { controlla, iscrivi, type Campo, type Iscritto } from "@/lib/iscrizione";
+import { notaProvenienza, provenienzaSalvata } from "@/lib/origine";
 import { azioni } from "@/lib/store";
 
 const CAMPI: { campo: Campo; etichetta: string; tipo: string; auto: string }[] = [
@@ -43,7 +44,8 @@ export function Iscrizione() {
     if (Object.keys(trovati).length) return;
 
     setInvio(true);
-    const esito = await iscrivi(dati);
+    // La targa del passaparola, se c'è: da quale banco o amico è arrivato qui.
+    const esito = await iscrivi(dati, notaProvenienza(provenienzaSalvata()));
     setInvio(false);
 
     if (esito.ok) azioni.iscritto(dati.nome.trim());

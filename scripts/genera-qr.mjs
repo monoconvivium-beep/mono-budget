@@ -10,16 +10,26 @@
  * programma non entra nessuna libreria, e non si chiede il QR a un servizio
  * esterno — che vorrebbe dire dirgli che qualcuno sta condividendo l'app.
  *
- * Uso:  node scripts/genera-qr.mjs [indirizzo]
- * ⚠️ Serve il pacchetto `qrcode`, che NON è una dipendenza dell'app:
- *    npx --yes qrcode ...  oppure  npm i -D qrcode  solo per lanciarlo.
+ * Uso:  node scripts/genera-qr.mjs [indirizzo] [nome-file]
+ *   node scripts/genera-qr.mjs                         → qr-mono-money.svg (pulito)
+ *   node scripts/genera-qr.mjs "https://money.monobottega.it/?da=passaparola" qr-passaparola.svg
+ *
+ * 🔑 I QR sono DUE e non vanno confusi:
+ *  - `qr-mono-money.svg`  → l'indirizzo pulito. È quello STAMPATO sul
+ *    cavaliere del banco: se un giorno si ristampa, meglio rigenerarlo con
+ *    `?da=banco` così anche il banco si conta.
+ *  - `qr-passaparola.svg` → porta `?da=passaparola`, è quello DENTRO l'app
+ *    («Passala a un amico»): chi si iscrive da lì risulta portato dal
+ *    passaparola anche senza codice personale.
+ *
+ * ⚠️ Serve il pacchetto `qrcode` (è nei devDependencies, non entra nell'app).
  */
 import { writeFileSync } from "node:fs";
 
 import QRCode from "qrcode";
 
 const INDIRIZZO = process.argv[2] ?? "https://money.monobottega.it/";
-const USCITA = new URL("../public/marchio/qr-mono-money.svg", import.meta.url);
+const USCITA = new URL(`../public/marchio/${process.argv[3] ?? "qr-mono-money.svg"}`, import.meta.url);
 
 const svg = await QRCode.toString(INDIRIZZO, {
   type: "svg",
