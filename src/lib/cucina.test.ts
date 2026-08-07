@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { BASI, interpretaIngrediente, interpretaPasso, trovaBase } from "./cucina";
+import { BASI, FAMIGLIE_BASI, interpretaIngrediente, interpretaPasso, trovaBase } from "./cucina";
 
 describe("interpretaIngrediente — dal parlato alla riga di ricettario", () => {
   it("converte numero in parole e misura: l'esempio del provino", () => {
@@ -84,14 +84,48 @@ describe("interpretaPasso — il procedimento", () => {
 });
 
 describe("le basi dello chef", () => {
-  it("sono tre, quelle decise: pasticcera, inglese, pan di Spagna", () => {
-    expect(BASI.map((b) => b.slug)).toEqual(["crema-pasticcera", "crema-inglese", "pan-di-spagna"]);
+  it("sono il canone allargato: almeno 15, con le tre di partenza e le due chieste da lui", () => {
+    expect(BASI.length).toBeGreaterThanOrEqual(15);
+    const slugs = BASI.map((b) => b.slug);
+    for (const s of [
+      "crema-pasticcera",
+      "crema-inglese",
+      "pan-di-spagna",
+      "crostata-alla-frutta",
+      "mousse-al-cioccolato",
+    ]) {
+      expect(slugs).toContain(s);
+    }
+  });
+
+  it("gli slug sono unici: due nomi che si somigliano valgono meno di zero", () => {
+    const slugs = BASI.map((b) => b.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("ogni base appartiene a una famiglia vera, e nessuna famiglia resta vuota", () => {
+    for (const b of BASI) expect(FAMIGLIE_BASI).toContain(b.famiglia);
+    for (const f of FAMIGLIE_BASI) {
+      expect(BASI.some((b) => b.famiglia === f)).toBe(true);
+    }
   });
 
   it("ognuna ha ingredienti e passi, nessuna scatola vuota", () => {
     for (const b of BASI) {
-      expect(b.ingredienti.length).toBeGreaterThan(2);
-      expect(b.passi.length).toBeGreaterThan(2);
+      expect(b.ingredienti.length).toBeGreaterThanOrEqual(2);
+      expect(b.passi.length).toBeGreaterThanOrEqual(3);
+      expect(b.dosi.length).toBeGreaterThan(3);
+      expect(b.sotto.length).toBeGreaterThan(5);
+    }
+  });
+
+  it("le righe delle basi sono già nel formato del ricettario: l'interprete non le cambierebbe", () => {
+    /* Se una dose fosse scritta «300 grammi di zucchero», l'interprete la
+       riscriverebbe diversa da com'è stampata: le basi devono dare l'esempio. */
+    for (const b of BASI) {
+      for (const r of b.ingredienti) {
+        expect(interpretaIngrediente(r)).toBe(r);
+      }
     }
   });
 

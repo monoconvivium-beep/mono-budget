@@ -13,12 +13,18 @@
  * indirizzo.
  */
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Cake, ChefHat, CupSoda, Droplet, Mic, Plus } from "lucide-react";
+import { Cake, ChefHat, Croissant, Droplet, IceCream, Mic, Plus, Sparkles } from "lucide-react";
 
 import { Aiuto } from "@/components/Aiuto";
 import { EditorRicetta } from "@/components/EditorRicetta";
 import { Guscio } from "@/components/Guscio";
-import { BASI, MOTTO, trovaBase, type RicettaBase } from "@/lib/cucina";
+import {
+  basiPerFamiglia,
+  MOTTO,
+  trovaBase,
+  type FamigliaBase,
+  type RicettaBase,
+} from "@/lib/cucina";
 import { useStato, type Ricetta } from "@/lib/store";
 
 export const Route = createFileRoute("/ricette")({
@@ -81,7 +87,14 @@ function Ricettario() {
 
 /* ------------------------------------------------------------ la copertina */
 
-const ICONE_BASI = [Droplet, CupSoda, Cake] as const;
+/** Un'icona per famiglia, non per ricetta: con 15 basi sarebbe un mercato. */
+const ICONE_FAMIGLIE: Record<FamigliaBase, typeof ChefHat> = {
+  "Le creme": Droplet,
+  "Gli impasti": Croissant,
+  "I dolci al cucchiaio": IceCream,
+  "Le finiture": Sparkles,
+  "I classici": Cake,
+};
 
 function Copertina({ ricette }: { ricette: Ricetta[] }) {
   return (
@@ -92,38 +105,45 @@ function Copertina({ ricette }: { ricette: Ricetta[] }) {
       azione={
         <Aiuto
           suScuro
-          testo="Sopra ci sono le basi dello chef, pronte da leggere. Sotto ci sono le tue: le detti a voce una riga per volta, o le scrivi, e restano solo sul tuo telefono."
+          testo="Sopra ci sono le basi dello chef, pronte da leggere, divise per famiglie. Sotto ci sono le tue: le detti a voce una riga per volta, o le scrivi, e restano solo sul tuo telefono."
         />
       }
     >
       <p className={OCCHIELLO}>Dolce · le basi dello chef</p>
       <p className="mt-0.5 font-serif text-[15px] text-[#F0DFB6] italic">«{MOTTO}»</p>
 
-      <ul className="scheda mt-2.5 overflow-hidden">
-        {BASI.map((b, i) => {
-          const Icona = ICONE_BASI[i] ?? ChefHat;
-          return (
-            <li key={b.slug} className="border-b border-[#F0E8D5] last:border-0">
-              <Link
-                to="/ricette"
-                search={{ apri: b.slug }}
-                className="flex min-h-[56px] items-center gap-3 px-3.5 py-2.5 active:bg-muted"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-                  <Icona className="h-4.5 w-4.5 text-[#8a6d1f]" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-bold">{b.nome}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{b.sotto}</span>
-                </span>
-                <span className="pillola bg-[#F4E7C8] text-[10px] font-bold tracking-wide text-[#7A5E1A] uppercase">
-                  Base
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      {basiPerFamiglia().map(({ famiglia, basi }) => {
+        const Icona = ICONE_FAMIGLIE[famiglia];
+        return (
+          <div key={famiglia}>
+            <p className="mt-4 mb-1.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.12em] text-[rgba(244,236,221,0.85)] uppercase">
+              <Icona className="h-3.5 w-3.5" aria-hidden />
+              {famiglia}
+            </p>
+            <ul className="scheda overflow-hidden">
+              {basi.map((b) => (
+                <li key={b.slug} className="border-b border-[#F0E8D5] last:border-0">
+                  <Link
+                    to="/ricette"
+                    search={{ apri: b.slug }}
+                    className="flex min-h-[52px] items-center gap-3 px-3.5 py-2 active:bg-muted"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[15px] font-bold">{b.nome}</span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {b.sotto}
+                      </span>
+                    </span>
+                    <span aria-hidden className="text-[#B9AD93]">
+                      ›
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
 
       <p className={`mt-6 ${OCCHIELLO}`}>Salato · le tue ricette</p>
 
