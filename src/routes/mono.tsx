@@ -105,6 +105,10 @@ function Mono() {
         </p>
       </section>
 
+      {/* Prima le porte verso MONO (l'app vera si scarica da lì), poi il
+          ricettario, poi il passaparola: l'ordine è il funnel. */}
+      <MarchioMono />
+
       {/* Il ricettario: il regalo dentro il regalo. Rosso, come la sua pagina. */}
       <Link
         to="/ricette"
@@ -125,8 +129,6 @@ function Mono() {
       </Link>
 
       <PassalaAUnAmico />
-
-      <MarchioMono />
 
       <section className="scheda mt-4 p-4">
         <h2 className="text-lg">I tuoi conti restano tuoi</h2>
