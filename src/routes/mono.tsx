@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen } from "lucide-react";
+import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen, ChefHat } from "lucide-react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { MarchioMono } from "@/components/MarchioMono";
@@ -105,6 +105,25 @@ function Mono() {
         </p>
       </section>
 
+      {/* Il ricettario: il regalo dentro il regalo. Rosso, come la sua pagina. */}
+      <Link
+        to="/ricette"
+        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
+          <ChefHat className="h-5 w-5 text-[#8a6d1f]" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Ricette</span>
+          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
+            Le basi di pasticceria dello chef, e le tue dette a voce
+          </span>
+        </span>
+        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+          ›
+        </span>
+      </Link>
+
       <PassalaAUnAmico />
 
       <MarchioMono />
@@ -112,9 +131,9 @@ function Mono() {
       <section className="scheda mt-4 p-4">
         <h2 className="text-lg">I tuoi conti restano tuoi</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account,
-          nessun server, nessuna chiamata di rete: <strong>MONO non riceve niente</strong>, nemmeno
-          il tuo nome. L'unico modo per portarli altrove sei tu, col file di backup qui sotto.
+          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account, nessun
+          server, nessuna chiamata di rete: <strong>MONO non riceve niente</strong>, nemmeno il tuo
+          nome. L'unico modo per portarli altrove sei tu, col file di backup qui sotto.
         </p>
         <button
           type="button"
@@ -256,9 +275,9 @@ function Mono() {
         <h2 className="mb-2 text-lg text-foreground">Come funziona</h2>
         <p>
           Tocchi il microfono, dici <strong>una</strong> spesa e l'ascolto si chiude da solo. MONO
-          MONEY ti mostra importo, categoria e testo: salva solo dopo la tua conferma, e non
-          cambia mai un importo di nascosto. Se un numero sembra letto tutto attaccato (460 invece
-          di 4,60) te lo propone, decidi tu.
+          MONEY ti mostra importo, categoria e testo: salva solo dopo la tua conferma, e non cambia
+          mai un importo di nascosto. Se un numero sembra letto tutto attaccato (460 invece di 4,60)
+          te lo propone, decidi tu.
         </p>
         <p className="mt-2">
           I conti si leggono nella scheda <strong>Bilanci</strong>: il mese ti dice com'è andata

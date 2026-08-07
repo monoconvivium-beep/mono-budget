@@ -56,10 +56,18 @@ export function Dettatura({
    * «definitivo» era il precedente allungato.
    */
   avvioAutomatico = false,
+  /**
+   * La categoria del contesto: ci arriva il ponte dal ricettario («Segna la
+   * spesa degli ingredienti» → Spesa alimentare). Vale SOLO quando il parser
+   * non ha riconosciuto niente di suo — se uno dice «farmacia», la farmacia
+   * vince — e la tendina resta modificabile come sempre.
+   */
+  categoriaPreferita,
 }: {
   grande?: boolean;
   forma?: "cerchio" | "barra";
   avvioAutomatico?: boolean;
+  categoriaPreferita?: Categoria | undefined;
 }) {
   const { regole } = useStato();
   const [fase, setFase] = useState<Fase>("pronto");
@@ -84,10 +92,18 @@ export function Dettatura({
         );
         return;
       }
-      setBozze(risultati);
+      setBozze(
+        categoriaPreferita
+          ? risultati.map((b) =>
+              b.categoriaIncerta
+                ? { ...b, categoria: categoriaPreferita, categoriaIncerta: false }
+                : b,
+            )
+          : risultati,
+      );
       setFase("conferma");
     },
-    [regole],
+    [regole, categoriaPreferita],
   );
 
   const avvia = useCallback(() => {

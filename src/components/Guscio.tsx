@@ -24,6 +24,14 @@ export function Guscio({
    * e il marchio deve pesare quanto il gesto.
    */
   marchioGrande = false,
+  /**
+   * «rosso» = il vestito del RICETTARIO, e solo suo (scelto da lui l'8/8:
+   * «il rosso in palette con l'app, coi bottoni dorati»). Terracotta pieno
+   * come fondo di pagina — la mossa delle pagine food dell'app grande —
+   * schede chiare sopra, e il marchio originale sulla sua targa cashmere,
+   * perché sul rosso sparirebbe e la versione svuotata non si usa.
+   */
+  fondo = "cashmere",
 }: {
   titolo: string;
   sottotitolo?: string;
@@ -31,6 +39,7 @@ export function Guscio({
   azione?: ReactNode;
   intestazione?: ReactNode;
   marchioGrande?: boolean;
+  fondo?: "cashmere" | "rosso";
 }) {
   const percorso = useRouterState({ select: (s) => s.location.pathname });
 
@@ -48,8 +57,13 @@ export function Guscio({
     document.documentElement.classList.remove("dark");
   }, []);
 
+  const rosso = fondo === "rosso";
+
   return (
-    <div className="min-h-screen bg-background">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: rosso ? "var(--azione-scheda)" : "var(--color-background)" }}
+    >
       <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
         <header className="mb-5">
           {intestazione ? (
@@ -71,22 +85,44 @@ export function Guscio({
                * Il sorriso non si ripete qui sotto: è già dentro questo.
                */}
               <div
-                className={`mb-4 flex justify-center border-b border-border ${
-                  marchioGrande ? "pb-5" : "pb-4"
-                }`}
+                className={`mb-4 flex justify-center ${
+                  rosso ? "border-b border-[rgba(244,236,221,0.28)]" : "border-b border-border"
+                } ${marchioGrande ? "pb-5" : "pb-4"}`}
               >
-                <img
-                  // Tema unico cashmere: il marchio è quello scuro, l'originale.
-                  src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
-                  alt="MONO — Bottega Gastronomica"
-                  className={marchioGrande ? "w-[76%] max-w-[280px]" : "h-14 w-auto"}
-                />
+                {rosso ? (
+                  /* Il marchio è SEMPRE l'originale: sul rosso siede sulla sua
+                     targa cashmere — lo stesso dischetto della barra della voce. */
+                  <span className="rounded-2xl bg-[var(--color-background)] px-4 py-2">
+                    <img
+                      src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+                      alt="MONO — Bottega Gastronomica"
+                      className="h-11 w-auto"
+                    />
+                  </span>
+                ) : (
+                  <img
+                    // Tema unico cashmere: il marchio è quello scuro, l'originale.
+                    src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+                    alt="MONO — Bottega Gastronomica"
+                    className={marchioGrande ? "w-[76%] max-w-[280px]" : "h-14 w-auto"}
+                  />
+                )}
               </div>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h1 className="truncate text-3xl leading-none">{titolo}</h1>
+                  <h1
+                    className={`truncate text-3xl leading-none ${rosso ? "text-[var(--azione-testo)]" : ""}`}
+                  >
+                    {titolo}
+                  </h1>
                   {sottotitolo && (
-                    <p className="mt-1.5 truncate text-sm text-muted-foreground">{sottotitolo}</p>
+                    <p
+                      className={`mt-1.5 truncate text-sm ${
+                        rosso ? "text-[rgba(244,236,221,0.78)]" : "text-muted-foreground"
+                      }`}
+                    >
+                      {sottotitolo}
+                    </p>
                   )}
                 </div>
                 {azione}
@@ -97,14 +133,21 @@ export function Guscio({
         {children}
 
         {/* La firma, in fondo a OGNI schermata. Discreta, ma sempre lì: è così
-            che un marchio si posa addosso a chi usa una cosa tutti i giorni. */}
-        <p className="mt-8 flex items-center justify-center gap-2 text-[11px] tracking-wide text-muted-foreground">
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
-            alt=""
-            aria-hidden="true"
-            className="h-4 w-auto opacity-70"
-          />
+            che un marchio si posa addosso a chi usa una cosa tutti i giorni.
+            Sul rosso il monogramma scuro non si vede: resta la sola scritta. */}
+        <p
+          className={`mt-8 flex items-center justify-center gap-2 text-[11px] tracking-wide ${
+            rosso ? "text-[rgba(244,236,221,0.7)]" : "text-muted-foreground"
+          }`}
+        >
+          {!rosso && (
+            <img
+              src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+              alt=""
+              aria-hidden="true"
+              className="h-4 w-auto opacity-70"
+            />
+          )}
           MONO · Bottega Gastronomica · Torino
         </p>
       </div>
@@ -112,7 +155,9 @@ export function Guscio({
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
         <ul className="mx-auto flex max-w-md items-end justify-between px-3 py-1.5">
           {voci.map(({ to, etichetta, Icona, centro }) => {
-            const attivo = percorso === to;
+            // Il ricettario vive dentro la scheda MONO: quando sei lì,
+            // la linguetta accesa è quella.
+            const attivo = percorso === to || (to === "/mono" && percorso.startsWith("/ricette"));
             if (centro) {
               return (
                 <li key={to} className="-mt-7">

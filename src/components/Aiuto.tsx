@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-/** Il «?» che spiega uno strumento in una frase. */
-export function Aiuto({ testo }: { testo: string }) {
+/** Il «?» che spiega uno strumento in una frase.
+ *  `suScuro` lo veste per i fondi pieni (il rosso del ricettario). */
+export function Aiuto({ testo, suScuro = false }: { testo: string; suScuro?: boolean }) {
   const [aperto, setAperto] = useState(false);
   return (
     <span className="relative inline-flex">
@@ -9,7 +10,11 @@ export function Aiuto({ testo }: { testo: string }) {
         type="button"
         aria-label="Spiegazione"
         onClick={() => setAperto((v) => !v)}
-        className="h-7 w-7 shrink-0 rounded-full border border-border text-xs font-semibold text-muted-foreground"
+        className={`h-7 w-7 shrink-0 rounded-full border text-xs font-semibold ${
+          suScuro
+            ? "border-[rgba(244,236,221,0.45)] text-[rgba(244,236,221,0.85)]"
+            : "border-border text-muted-foreground"
+        }`}
       >
         ?
       </button>

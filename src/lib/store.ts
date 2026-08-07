@@ -21,6 +21,21 @@ export interface Regola {
   categoria: Categoria;
 }
 
+/**
+ * Una ricetta SCRITTA DA CHI USA L'APP (la parte Salato del ricettario).
+ * Le basi del Dolce non stanno qui: vivono nel codice (`lib/cucina.ts`),
+ * così si aggiornano con l'app e nessuno le cancella per sbaglio.
+ * Le righe sono già belle e pronte: le ha sistemate l'interprete di cucina
+ * prima del salvataggio.
+ */
+export interface Ricetta {
+  id: string;
+  nome: string;
+  ingredienti: string[];
+  passi: string[];
+  creataIl: string;
+}
+
 export interface Stato {
   versione: 1;
   tema: "chiaro" | "scuro";
@@ -35,6 +50,8 @@ export interface Stato {
    * in rubrica e non serve tenerne una copia sul telefono.
    */
   iscrittoCome: string;
+  /** Il ricettario, parte Salato: le ricette dettate o scritte da chi usa l'app. */
+  ricette: Ricetta[];
 }
 
 const CHIAVE = "mono-money-v1";
@@ -54,6 +71,7 @@ const iniziale: Stato = {
   regole: [],
   benvenutoVisto: false,
   iscrittoCome: "",
+  ricette: [],
 };
 
 let stato: Stato = iniziale;
@@ -71,6 +89,8 @@ function leggi(): Stato {
       ...dati,
       movimenti: Array.isArray(dati.movimenti) ? dati.movimenti : [],
       regole: Array.isArray(dati.regole) ? dati.regole : [],
+      // Salvataggi nati prima del ricettario: la chiave non c'è, e va bene così.
+      ricette: Array.isArray(dati.ricette) ? dati.ricette : [],
     };
   } catch {
     return iniziale;
@@ -185,6 +205,27 @@ export const azioni = {
   impostaObiettivo(obiettivo: number) {
     aggiorna((s) => ({ ...s, obiettivo }));
   },
+  /* ------------------------------------------------------- il ricettario */
+  ricettaNuova(dati: { nome: string; ingredienti: string[]; passi: string[] }): Ricetta {
+    const r: Ricetta = {
+      id: nuovoId(),
+      nome: dati.nome.trim(),
+      ingredienti: dati.ingredienti,
+      passi: dati.passi,
+      creataIl: new Date().toISOString(),
+    };
+    aggiorna((s) => ({ ...s, ricette: [r, ...s.ricette] }));
+    return r;
+  },
+  ricettaAggiorna(id: string, patch: Partial<Omit<Ricetta, "id" | "creataIl">>) {
+    aggiorna((s) => ({
+      ...s,
+      ricette: s.ricette.map((r) => (r.id === id ? { ...r, ...patch } : r)),
+    }));
+  },
+  ricettaElimina(id: string) {
+    aggiorna((s) => ({ ...s, ricette: s.ricette.filter((r) => r.id !== id) }));
+  },
   /** Backup completo: TUTTI gli anni, non solo quello corrente. */
   esporta(): string {
     return JSON.stringify({ ...istantanea(), esportatoIl: new Date().toISOString() }, null, 2);
@@ -199,6 +240,9 @@ export const azioni = {
         obiettivo: typeof dati.obiettivo === "number" ? dati.obiettivo : s.obiettivo,
         movimenti: dati.movimenti as Movimento[],
         regole: Array.isArray(dati.regole) ? (dati.regole as Regola[]) : s.regole,
+        // ⚠️ Senza questa riga il ripristino di un backup BUTTEREBBE le ricette:
+        // importa() ricostruisce lo stato campo per campo, non con lo spread.
+        ricette: Array.isArray(dati.ricette) ? (dati.ricette as Ricetta[]) : s.ricette,
       }));
       return {
         ok: true,

@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { ChefHat } from "lucide-react";
 
 import { AggiungiEntrata } from "@/components/AggiungiEntrata";
 import { Aiuto } from "@/components/Aiuto";
@@ -116,6 +117,26 @@ function Home() {
 
       {/* Le entrate: senza stipendio «da parte» è un numero finto. */}
       <AggiungiEntrata />
+
+      {/* La porta del ricettario: porta il SUO rosso, così si riconosce
+          prima di leggere. Il lavoro deve essere incontrabile. */}
+      <Link
+        to="/ricette"
+        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
+          <ChefHat className="h-5 w-5 text-[#8a6d1f]" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Ricette</span>
+          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
+            Le basi dello chef, e le tue dette a voce
+          </span>
+        </span>
+        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+          ›
+        </span>
+      </Link>
 
       {/* La voce resta raggiungibile anche da qui, ma in coda: nell'ordine
           che ha dettato non c'era, e il cerchio della barra in fondo fa già
