@@ -89,27 +89,18 @@ export function Guscio({
                   rosso ? "border-b border-[rgba(244,236,221,0.28)]" : "border-b border-border"
                 } ${marchioGrande ? "pb-5" : "pb-4"}`}
               >
-                {rosso ? (
-                  /* Il marchio è SEMPRE l'originale: sul rosso siede sulla sua
-                     targa cashmere — lo stesso dischetto della barra della voce. */
-                  <span className="rounded-2xl bg-[var(--color-background)] px-4 py-2">
-                    <img
-                      src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
-                      alt="MONO — Bottega Gastronomica"
-                      className="h-14 w-auto"
-                    />
-                  </span>
-                ) : (
+                {/* Il marchio è SEMPRE l'originale e sta SEMPRE sulla sua targa
+                    cashmere: dal 9/8 il fondo è verde bosco, e prima era il
+                    solo ricettario rosso ad averne bisogno. Misura: 68 px
+                    (era 56, allargato su sua richiesta — sotto quella misura
+                    «Bottega Gastronomica» non si legge). */}
+                <span className={`targa ${marchioGrande ? "w-[82%] max-w-[300px]" : ""}`}>
                   <img
-                    // Tema unico cashmere: il marchio è quello scuro, l'originale.
                     src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
                     alt="MONO — Bottega Gastronomica"
-                    // 8/8: allargato su sua richiesta («allargare di più tutti
-                    // i loghi»). 56 px era la misura minima per leggere
-                    // «Bottega Gastronomica»; 68 la si legge senza cercarla.
-                    className={marchioGrande ? "w-[82%] max-w-[300px]" : "h-[68px] w-auto"}
+                    className={marchioGrande ? "w-full" : "h-[68px] w-auto"}
                   />
-                )}
+                </span>
               </div>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">

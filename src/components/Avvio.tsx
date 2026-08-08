@@ -45,7 +45,12 @@ export function Avvio({ children }: { children: React.ReactNode }) {
        * continuazione dell'icona, non un lampo verde in mezzo.
        */
       className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6"
-      style={{ backgroundColor: "var(--color-background)" }}
+      /* ⚠️ CASHMERE ESPLICITO, non «il colore del fondo». Dal 9/8 il fondo
+         dell'app è verde bosco, ma questa schermata non è l'app: è il seguito
+         dell'ICONA, che è su cashmere e resta lì. Legata al fondo sarebbe
+         diventata verde da sola, riportando il marchio svuotato che lui ha
+         già bocciato una volta. */
+      style={{ backgroundColor: "var(--cashmere)" }}
     >
       <img
         src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
@@ -54,7 +59,9 @@ export function Avvio({ children }: { children: React.ReactNode }) {
       />
       <p
         className="entra text-sm tracking-[0.18em] uppercase"
-        style={{ color: "var(--color-muted-foreground)", animationDelay: "120ms" }}
+        /* Il secondario di fuori adesso è chiaro (vive sul verde): qui il
+           fondo è cashmere, quindi il colore scuro si scrive per esteso. */
+        style={{ color: "oklch(0.517 0.066 104.1)", animationDelay: "120ms" }}
       >
         La tua voce conta
       </p>

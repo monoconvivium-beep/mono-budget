@@ -71,7 +71,7 @@ export function MarchioMono() {
           rel="noopener noreferrer"
           className="flex min-h-[64px] items-center gap-3 rounded-2xl bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-background)]">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--cashmere)]">
             <Store className="h-5.5 w-5.5 text-[var(--azione-scheda)]" />
           </span>
           <span className="min-w-0 flex-1">

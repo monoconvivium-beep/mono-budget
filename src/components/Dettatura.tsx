@@ -217,12 +217,12 @@ export function Dettatura({
           onClick={fase === "ascolto" ? () => rif.current?.stop() : avvia}
           className={`relative flex min-h-[64px] w-full items-center justify-center gap-3 rounded-2xl text-lg font-semibold shadow-rialzata transition-transform active:scale-[0.98] ${
             fase === "ascolto"
-              ? "bg-[var(--scuro-scheda)] text-[var(--scuro-testo)]"
+              ? "bg-[var(--ascolto-acceso)] text-[var(--ascolto-testo)]"
               : "bg-[var(--azione-scheda)] text-[var(--azione-testo)]"
           }`}
         >
           {fase === "ascolto" && (
-            <span className="absolute inset-0 rounded-2xl bg-[var(--scuro-scheda)] onda-microfono" />
+            <span className="absolute inset-0 rounded-2xl bg-[var(--ascolto-acceso)] onda-microfono" />
           )}
           {/**
            * La M col sorriso al posto dell'icona del microfono: il gesto
@@ -231,7 +231,7 @@ export function Dettatura({
            * 5/8: mai la versione svuotata per il fondo scuro. Per stare sul
            * terracotta si siede su un dischetto cashmere, che è il suo fondo.
            */}
-          <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-background)]">
+          <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--cashmere)]">
             <img
               src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
               alt=""
@@ -247,7 +247,7 @@ export function Dettatura({
         <div className="flex flex-col items-center gap-3 py-2">
           <div className="relative">
             {fase === "ascolto" && (
-              <span className="absolute inset-0 rounded-full bg-[var(--scuro-scheda)] onda-microfono" />
+              <span className="absolute inset-0 rounded-full bg-[var(--ascolto-acceso)] onda-microfono" />
             )}
             <button
               type="button"
@@ -255,7 +255,7 @@ export function Dettatura({
               aria-label={fase === "ascolto" ? "Sto ascoltando" : "Tocca e dì una spesa"}
               className={`relative flex items-center justify-center rounded-full shadow-rialzata transition-transform active:scale-95 ${
                 grande ? "h-40 w-40" : "h-28 w-28"
-              } ${fase === "ascolto" ? "bg-[var(--scuro-scheda)] text-[var(--scuro-testo)]" : "bg-oro text-oro-foreground"}`}
+              } ${fase === "ascolto" ? "bg-[var(--ascolto-acceso)] text-[var(--ascolto-testo)]" : "bg-oro text-oro-foreground"}`}
             >
               <Mic className={grande ? "h-16 w-16" : "h-11 w-11"} />
             </button>

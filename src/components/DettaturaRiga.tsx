@@ -197,7 +197,7 @@ export function DettaturaRiga({
         />
         <button
           type="submit"
-          className="tocco rounded-2xl bg-[var(--color-background)] px-4 text-sm font-bold"
+          className="tocco rounded-2xl bg-[var(--cashmere)] px-4 text-sm font-bold"
         >
           Aggiungi
         </button>

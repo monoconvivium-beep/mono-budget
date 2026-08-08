@@ -55,13 +55,15 @@ export function Iscrizione() {
   return (
     <main className="min-h-screen bg-background px-5 pt-10 pb-12">
       <form onSubmit={(e) => void manda(e)} className="mx-auto w-full max-w-md">
-        <img
-          src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
-          alt="MONO — Bottega Gastronomica"
-          className="mx-auto h-11 w-auto"
-          width={175}
-          height={44}
-        />
+        <span className="targa mx-auto block w-fit">
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+            alt="MONO — Bottega Gastronomica"
+            className="h-14 w-auto"
+            width={224}
+            height={56}
+          />
+        </span>
 
         <h1 className="mt-7 text-center text-3xl leading-tight">Ci presentiamo</h1>
         <p className="mt-2 text-center text-sm leading-relaxed text-muted-foreground">

@@ -48,21 +48,44 @@
   --shadow-rialzata: 0 22px 44px -18px oklch(0.259 0.006 56.1 / 0.45);
 }
 
+/**
+ * IL VESTITO — verde bosco di fondo, riquadri cashmere sopra.
+ * Scelto da lui il 9/8/2026 guardando tre provini a grandezza di telefono
+ * (A cashmere com'era · B verde coi riquadri bianchi · C verde coi riquadri
+ * cashmere): «io ho scelto verde riquadri cashmere».
+ *
+ * 🔑 COME REGGE SENZA TOCCARE 92 PUNTI DEL CODICE: il testo secondario
+ * (`text-muted-foreground`) vive sia sul fondo verde sia dentro i riquadri
+ * chiari, e un colore solo non può servire tutti e due. Invece di correggere
+ * a mano ogni punto — e sbagliarne qualcuno — qui sotto il fondo è VERDE e
+ * il testo di fuori è chiaro; poi **ogni riquadro ridefinisce le sue
+ * variabili** (vedi `@utility scheda`), così quello che ci sta dentro torna
+ * scuro da solo. Il colore lo decide il posto in cui si trova, non chi
+ * scrive la riga.
+ * ⚠️ Si ridefiniscono ENTRAMBE le forme, `--muted-foreground` e
+ * `--color-muted-foreground`. Il tema è dichiarato `@theme inline`, e
+ * «inline» vuol dire che Tailwind scrive nelle utility la variabile di
+ * partenza (`var(--muted-foreground)`), non quella col prefisso: ridefinire
+ * solo la `--color-*` non cambia niente — provato, il testo dentro i
+ * riquadri restava chiaro su chiaro e spariva.
+ */
 :root {
   --radius: 14px;
-  --background: oklch(0.945 0.022 83.3);
-  --foreground: oklch(0.259 0.006 56.1);
-  --card: oklch(1 0 89.9);
+  --background: oklch(0.43 0.046 146.9);
+  --foreground: oklch(0.945 0.022 83.3);
+  --card: oklch(0.968 0.018 84);
   --card-foreground: oklch(0.259 0.006 56.1);
-  --card-soft: oklch(0.968 0.018 84);
-  --popover: oklch(1 0 89.9);
+  --card-soft: oklch(0.945 0.022 83.3);
+  --popover: oklch(0.968 0.018 84);
   --popover-foreground: oklch(0.259 0.006 56.1);
   --primary: oklch(0.503 0.148 31.8);
   --primary-foreground: oklch(0.945 0.022 83.3);
   --secondary: oklch(0.579 0.129 41.3);
   --secondary-foreground: oklch(0.945 0.022 83.3);
+  /* `--muted` vive quasi solo DENTRO i riquadri (barre, tocchi): resta caldo. */
   --muted: oklch(0.918 0.038 86.9);
-  --muted-foreground: oklch(0.517 0.066 104.1);
+  /* Il secondario di FUORI, sul verde: cashmere smorzato, non grigio. */
+  --muted-foreground: oklch(0.945 0.022 83.3 / 0.78);
   --accent: oklch(0.503 0.148 31.8);
   --accent-foreground: oklch(0.945 0.022 83.3);
   --oro: oklch(0.745 0.105 84.7);
@@ -71,14 +94,45 @@
   --salvia: oklch(0.495 0.065 139.6);
   --destructive: oklch(0.503 0.148 31.8);
   --destructive-foreground: oklch(0.945 0.022 83.3);
-  --border: oklch(0.918 0.038 86.9);
-  --input: oklch(0.918 0.038 86.9);
+  /* I fili di FUORI (la riga sotto il marchio) sul verde: chiari e tenui. */
+  --border: oklch(0.945 0.022 83.3 / 0.22);
+  /* I campi da riempire sono cashmere ovunque si trovino: il loro bordo
+     resta caldo e scuro, se no su fondo chiaro sparisce. */
+  --input: oklch(0.259 0.006 56.1 / 0.2);
   --ring: oklch(0.745 0.105 84.7);
-  --scuro-scheda: oklch(0.468 0.049 146.7);
-  --scuro-testo: oklch(0.945 0.022 83.3);
+  /**
+   * IL BLOCCO D'ACCENTO — era verde bosco, ora è ORO.
+   * ⚠️ Non è un ripensamento sul colore: su un fondo verde un blocco verde
+   * non è discreto, è invisibile. Serviva l'altro colore di casa che regge
+   * il testo scuro. Il verde adesso è il fondo di tutto: non può essere
+   * anche l'eccezione.
+   */
+  --scuro-scheda: oklch(0.745 0.105 84.7);
+  --scuro-testo: oklch(0.259 0.006 56.1);
+  /**
+   * «STO ASCOLTANDO» — resta VERDE BOSCO, e ha una variabile sua.
+   * ⚠️ Prima si serviva da `--scuro-scheda` insieme al blocco d'accento.
+   * Passando quello all'oro, il microfono acceso diventava identico al
+   * microfono spento (che è già oro): l'unico segno che l'app ti sta
+   * sentendo sarebbe sparito. Sono due mestieri diversi e ora hanno due
+   * nomi diversi. Il verde qui si vede benissimo: sta dentro un riquadro
+   * cashmere, non sul fondo.
+   */
+  --ascolto-acceso: oklch(0.468 0.049 146.7);
+  --ascolto-testo: oklch(0.945 0.022 83.3);
   /* Terracotta pieno per i blocchi da toccare — vedi `scheda-azione`. */
   --azione-scheda: #a34e2e;
   --azione-testo: oklch(0.945 0.022 83.3);
+  /**
+   * IL CASHMERE, chiamato per nome.
+   * Serve alle TARGHE: i dischetti e i riquadri chiari sotto il marchio, che
+   * lo tengono leggibile sui fondi pieni (verde e rosso). Prima prendevano
+   * `--color-background` perché il fondo ERA cashmere — e il giorno che il
+   * fondo è diventato verde sarebbero diventate verdi anche loro, cioè
+   * invisibili, portandosi dietro il marchio.
+   * ⚠️ Una targa non è «il colore del fondo»: è cashmere e basta.
+   */
+  --cashmere: oklch(0.945 0.022 83.3);
 }
 
 .dark {
@@ -134,22 +188,64 @@
     font-weight: 600;
     letter-spacing: -0.01em;
   }
+
+  /**
+   * I CAMPI DA RIEMPIRE SONO SEMPRE CHIARI, ovunque si trovino.
+   * 🔑 Un campo è cashmere anche quando sta appoggiato sul verde — la
+   * ricerca del Diario, per dire, non è dentro nessun riquadro. Senza
+   * queste righe si porta dietro il testo chiaro del fondo e diventa
+   * bianco su bianco: il segnaposto sparisce e sembra un campo rotto.
+   */
+  input,
+  textarea,
+  select {
+    --foreground: oklch(0.259 0.006 56.1);
+    --muted-foreground: oklch(0.517 0.066 104.1);
+    --color-foreground: oklch(0.259 0.006 56.1);
+    --color-muted-foreground: oklch(0.517 0.066 104.1);
+    color: var(--color-card-foreground);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: oklch(0.517 0.066 104.1 / 0.8);
+  }
 }
 
 /* Scheda base: angoli morbidi, ombra larga e tenue. */
+/**
+ * DENTRO UN RIQUADRO SI TORNA AL CHIARO.
+ * Queste tre righe sono quello che fa reggere il tema verde: il riquadro è
+ * cashmere, quindi tutto ciò che ci finisce dentro — testi secondari, fili,
+ * separatori — deve tornare scuro, anche se è scritto in un file che non sa
+ * niente di dove verrà messo. Si ridefiniscono qui e la cascata fa il resto.
+ * ⚠️ Toccarle significa spegnere 92 testi in giro per l'app.
+ */
 @utility scheda {
+  --foreground: oklch(0.259 0.006 56.1);
+  --muted-foreground: oklch(0.517 0.066 104.1);
+  --border: oklch(0.918 0.038 86.9);
+  --color-foreground: oklch(0.259 0.006 56.1);
+  --color-muted-foreground: oklch(0.517 0.066 104.1);
+  --color-border: oklch(0.918 0.038 86.9);
   background-color: var(--color-card);
   color: var(--color-card-foreground);
   border-radius: 20px;
   box-shadow: var(--shadow-morbida);
-  border: 1px solid var(--color-border);
+  border: 1px solid oklch(0.259 0.006 56.1 / 0.1);
 }
 
 @utility scheda-tenue {
+  --foreground: oklch(0.259 0.006 56.1);
+  --muted-foreground: oklch(0.517 0.066 104.1);
+  --border: oklch(0.918 0.038 86.9);
+  --color-foreground: oklch(0.259 0.006 56.1);
+  --color-muted-foreground: oklch(0.517 0.066 104.1);
+  --color-border: oklch(0.918 0.038 86.9);
   background-color: var(--color-card-soft);
   color: var(--color-card-foreground);
   border-radius: 18px;
-  border: 1px solid var(--color-border);
+  border: 1px solid oklch(0.259 0.006 56.1 / 0.1);
 }
 
 /**
@@ -160,11 +256,18 @@
  * Le azioni sono terracotta: `scheda-azione` qui sotto.
  */
 @utility scheda-bosco {
+  /* Oro pieno: dentro si torna scuri, come in un riquadro chiaro. */
+  --foreground: oklch(0.259 0.006 56.1);
+  --muted-foreground: oklch(0.36 0.04 80);
+  --border: oklch(0.259 0.006 56.1 / 0.18);
+  --color-foreground: oklch(0.259 0.006 56.1);
+  --color-muted-foreground: oklch(0.36 0.04 80);
+  --color-border: oklch(0.259 0.006 56.1 / 0.18);
   background-color: var(--scuro-scheda);
   color: var(--scuro-testo);
   border-radius: 24px;
   box-shadow: var(--shadow-rialzata);
-  border: 1px solid oklch(0.945 0.022 83.3 / 0.14);
+  border: 1px solid oklch(0.259 0.006 56.1 / 0.12);
 }
 
 /**
@@ -176,11 +279,33 @@
  * Stessa logica del `goldDeep` dei token dell'app grande.
  */
 @utility scheda-azione {
+  /* Terracotta pieno: qui dentro il secondario resta CHIARO. */
+  --foreground: oklch(0.945 0.022 83.3);
+  --muted-foreground: oklch(0.945 0.022 83.3 / 0.78);
+  --border: oklch(0.945 0.022 83.3 / 0.22);
+  --color-foreground: oklch(0.945 0.022 83.3);
+  --color-muted-foreground: oklch(0.945 0.022 83.3 / 0.78);
+  --color-border: oklch(0.945 0.022 83.3 / 0.22);
   background-color: var(--azione-scheda);
   color: var(--azione-testo);
   border-radius: 24px;
   box-shadow: var(--shadow-rialzata);
   border: 1px solid oklch(0.945 0.022 83.3 / 0.14);
+}
+
+/**
+ * LA TARGA DEL MARCHIO.
+ * Il marchio di MONO è scuro e oro: sul verde bosco e sul rosso del
+ * ricettario affogherebbe. Invece di svuotarlo — «la versione chiara non è
+ * il marchio», parole sue del 5/8 — gli si mette sotto il suo pezzo di
+ * cashmere. Nato per il ricettario rosso, dal 9/8 vale su tutti i fondi
+ * pieni: è il modo in cui questo marchio sta su un colore.
+ */
+@utility targa {
+  background-color: var(--cashmere);
+  border-radius: 20px;
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
 }
 
 @utility pillola {

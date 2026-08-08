@@ -54,12 +54,11 @@ function Home() {
            sue. Largo il 76% della colonna: oltre tocca i bordi e non respira
            più. Il mese gli sta sotto, piccolo: è un dato, non un titolo. */
         <div className="w-full text-center">
-          <img
-            src={marchio}
-            alt="MONO — Bottega Gastronomica"
-            className="mx-auto w-[76%] max-w-[280px]"
-          />
-          <p className="mt-2 text-[11px] font-semibold tracking-[0.22em] text-muted-foreground uppercase">
+          {/* Sul verde bosco il marchio siede sulla sua targa cashmere. */}
+          <span className="targa mx-auto w-[82%] max-w-[300px]">
+            <img src={marchio} alt="MONO — Bottega Gastronomica" className="w-full" />
+          </span>
+          <p className="mt-3 text-[11px] font-semibold tracking-[0.22em] text-muted-foreground uppercase">
             {MESI[ora.getMonth()]} {ora.getFullYear()}
           </p>
         </div>

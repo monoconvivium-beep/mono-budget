@@ -43,19 +43,20 @@ export function Benvenuto() {
         <header className="text-center">
           {/* Il logo ufficiale della bottega, per primo: prima si vede da chi
               arriva il regalo, poi cos'è. */}
-          {/* ⚠️ Due versioni, non una: il logo ufficiale è scuro e sul verde
-              bosco sparisce; quello chiaro sul cashmere sparisce uguale.
-              Qui il fondo cambia col tema, quindi cambia anche il logo.
-              (Nel blocco MONO invece il fondo è sempre verde: là è fisso.) */}
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale${
-              tema === "scuro" ? "-chiaro" : ""
-            }.svg`}
-            alt="MONO — Bottega Gastronomica"
-            className="mx-auto h-12 w-auto"
-            width={190}
-            height={48}
-          />
+          {/* ⚠️ 9/8: UNA versione sola, l'originale, sulla sua targa cashmere.
+              Prima qui si cambiava marchio col tema — scuro sul chiaro, chiaro
+              sullo scuro — ma la versione svuotata «non è il marchio» (sua
+              regola del 5/8). La targa risolve il problema una volta per
+              tutte, su qualunque fondo. */}
+          <span className="targa mx-auto block w-fit">
+            <img
+              src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+              alt="MONO — Bottega Gastronomica"
+              className="h-14 w-auto"
+              width={224}
+              height={56}
+            />
+          </span>
           <p className="mt-6 text-xs font-semibold tracking-[0.2em] text-oro uppercase">
             Un omaggio utile di
           </p>
