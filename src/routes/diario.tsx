@@ -63,6 +63,9 @@ function Diario() {
   return (
     <Guscio
       titolo="Diario"
+      /* Il piatto con forchetta e cucchiaio: il Diario è il quaderno di quello
+         che è passato per la tavola. Scelta sua del 9/8. */
+      marchio="piatto"
       sottotitolo={`${filtrati.length} movimenti · ${euro(totale)} di uscite`}
       azione={
         <Aiuto testo="Qui c'è tutto lo storico. La ricerca guarda importi, categorie e parole dette. Nel cestino recuperi ciò che hai tolto per sbaglio." />

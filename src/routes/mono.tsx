@@ -90,23 +90,19 @@ function Mono() {
   }
 
   return (
-    <Guscio titolo="MONO" sottotitolo="Gastronomia — Torino">
-      {/* Il marchio e il payoff: chi arriva qui deve ricordarsi di chi è il regalo. */}
-      <section className="scheda-bosco p-5 text-center">
-        <p className="text-[10px] font-semibold tracking-[0.2em] text-oro uppercase">
-          Un omaggio utile di MONO
-        </p>
-        <h2 className="mt-2 text-3xl leading-none">
-          MONO <span className="text-oro">MONEY</span>
-        </h2>
-        <p className="mt-3 text-lg">La tua voce conta.</p>
-        <p className="mt-2 text-sm leading-relaxed opacity-85">
-          Il tuo borsellino, senza password. Gratis, per sempre.
-        </p>
-      </section>
-
-      {/* Prima le porte verso MONO (l'app vera si scarica da lì), poi il
-          ricettario, poi il passaparola: l'ordine è il funnel. */}
+    <Guscio titolo="MONO" sottotitolo="Gastronomia — Torino" senzaIntestazione>
+      {/**
+       * ⚠️ 9/8: QUI SOPRA NON CI VA NIENT'ALTRO — tolti su sua richiesta la
+       * fascia col marchio e «MONO · Gastronomia — Torino», e il riquadro
+       * dorato «MONO MONEY · La tua voce conta».
+       * 🔑 Motivo: erano tre presentazioni una sull'altra prima di arrivare
+       * alla carta che presenta davvero. Chi apre questa scheda vuole le
+       * porte verso la bottega, non sentirsi dire tre volte dov'è capitato.
+       * Si parte dritti da `MarchioMono`, che il marchio grande ce l'ha già.
+       *
+       * L'ordine è il funnel: prima le porte verso MONO (l'app vera si
+       * scarica da lì), poi il ricettario, poi il passaparola.
+       */}
       <MarchioMono />
 
       {/* Il ricettario: il regalo dentro il regalo. Rosso, come la sua pagina. */}

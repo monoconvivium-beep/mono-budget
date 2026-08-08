@@ -32,6 +32,20 @@ export function Guscio({
    * perché sul rosso sparirebbe e la versione svuotata non si usa.
    */
   fondo = "cashmere",
+  /**
+   * QUALE DEI TRE MARCHI va in testa a questa schermata (scelta sua, 9/8):
+   * · «intero» = MONO Bottega Gastronomica — dice CHI SIAMO
+   * · «piatto» = forchetta e cucchiaio — dice CUCINA (il Diario)
+   * · «sorriso» = la M che sorride — dice TI STO PARLANDO (i Bilanci)
+   * Non è decorazione: sono tre marchi veri, e ognuno ha il suo mestiere.
+   */
+  marchio = "intero",
+  /**
+   * Toglie del tutto la fascia in cima (marchio + titolo + sottotitolo).
+   * Serve alla scheda MONO, dove sotto c'è già il marchio grande nella sua
+   * carta: due marchi uno sull'altro erano solo un doppione.
+   */
+  senzaIntestazione = false,
 }: {
   titolo: string;
   sottotitolo?: string;
@@ -40,6 +54,8 @@ export function Guscio({
   intestazione?: ReactNode;
   marchioGrande?: boolean;
   fondo?: "cashmere" | "rosso";
+  marchio?: "intero" | "piatto" | "sorriso";
+  senzaIntestazione?: boolean;
 }) {
   const percorso = useRouterState({ select: (s) => s.location.pathname });
 
@@ -59,14 +75,25 @@ export function Guscio({
 
   const rosso = fondo === "rosso";
 
+  /* Il file e l'altezza del marchio di questa schermata. Il piatto è quadrato
+     e il sorriso quasi: alla stessa altezza del marchio intero peserebbero
+     troppo, quindi stanno più bassi — è la stessa presenza, non la stessa
+     misura. */
+  const marchi = {
+    intero: { file: "mono-orizzontale", alto: "h-[68px]" },
+    piatto: { file: "mono-monogramma", alto: "h-[54px]" },
+    sorriso: { file: "mono-sorriso", alto: "h-[52px]" },
+  } as const;
+  const scelto = marchi[marchio];
+
   return (
     <div
       className="min-h-screen"
       style={{ backgroundColor: rosso ? "var(--azione-scheda)" : "var(--color-background)" }}
     >
       <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
-        <header className="mb-5">
-          {intestazione ? (
+        <header className={senzaIntestazione ? "" : "mb-5"}>
+          {senzaIntestazione ? null : intestazione ? (
             <div className="flex items-start justify-between gap-3">
               {intestazione}
               {azione}
@@ -96,9 +123,9 @@ export function Guscio({
                     «Bottega Gastronomica» non si legge). */}
                 <span className={`targa ${marchioGrande ? "w-[82%] max-w-[300px]" : ""}`}>
                   <img
-                    src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
+                    src={`${import.meta.env.BASE_URL}marchio/${scelto.file}.svg`}
                     alt="MONO — Bottega Gastronomica"
-                    className={marchioGrande ? "w-full" : "h-[68px] w-auto"}
+                    className={marchioGrande ? "w-full" : `${scelto.alto} w-auto`}
                   />
                 </span>
               </div>
@@ -178,8 +205,23 @@ export function Guscio({
               <li key={to}>
                 <Link
                   to={to}
+                  /**
+                   * ⚠️ TERRACOTTA FISSO, ORO QUANDO SEI LÌ — sua correzione del
+                   * 9/8, ed era un difetto vero: prima le voci spente usavano
+                   * `text-muted-foreground`, che col vestito verde è diventato
+                   * CHIARO. Ma questa barra è cashmere, non verde: chiaro su
+                   * chiaro, e i nomi delle schermate erano spariti.
+                   * 🔑 L'ORO STA NEL FONDO, NON NEL TESTO. Provato prima come
+                   * testo: sul cashmere l'oro chiaro dà 2,08:1 (invisibile) e
+                   * l'unico oro leggibile è così profondo da virare al bronzo,
+                   * che accanto al terracotta delle altre voci non si distingue
+                   * — cioè non si capiva più dove sei. Come pillola piena
+                   * l'oro è quello vero, e il testo scuro sopra si legge.
+                   */
                   className={`tocco flex-col gap-1 rounded-2xl px-2 text-[11px] ${
-                    attivo ? "text-accent" : "text-muted-foreground"
+                    attivo
+                      ? "bg-[var(--oro)] font-semibold text-[var(--oro-foreground)]"
+                      : "text-[var(--azione-scheda)]"
                   }`}
                 >
                   <Icona className="h-5 w-5" />

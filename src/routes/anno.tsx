@@ -76,6 +76,9 @@ function Bilanci() {
   return (
     <Guscio
       titolo="Bilanci"
+      /* La M col sorriso: è la schermata dove i conti ti dicono come stai
+         messo, ed è giusto che a dirtelo sia la faccia. Scelta sua del 9/8. */
+      marchio="sorriso"
       sottotitolo={`${euro(conti.entrate)} entrate · ${euro(conti.uscite)} uscite`}
       azione={
         <Aiuto testo="Il mese ti dice com'è andata adesso, l'anno ti fa vedere la storia. La linea chiara sui mesi è la tua media: sotto hai speso meno del solito, sopra di più." />
