@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen, ChefHat } from "lucide-react";
+import { Download, Upload, Trash2, FileSpreadsheet, Share2, BookOpen } from "lucide-react";
 import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { MarchioMono } from "@/components/MarchioMono";
@@ -114,8 +114,15 @@ function Mono() {
         to="/ricette"
         className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-          <ChefHat className="h-5 w-5 text-[#8a6d1f]" />
+        {/* Il piatto, come sulla porta in Home: la cucina di MONO ha una faccia
+            sola, e non è il cappello da chef di una libreria. */}
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8"
+          />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-bold">Ricette</span>

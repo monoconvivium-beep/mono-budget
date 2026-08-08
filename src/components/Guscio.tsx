@@ -96,7 +96,7 @@ export function Guscio({
                     <img
                       src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
                       alt="MONO — Bottega Gastronomica"
-                      className="h-11 w-auto"
+                      className="h-14 w-auto"
                     />
                   </span>
                 ) : (
@@ -104,7 +104,10 @@ export function Guscio({
                     // Tema unico cashmere: il marchio è quello scuro, l'originale.
                     src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
                     alt="MONO — Bottega Gastronomica"
-                    className={marchioGrande ? "w-[76%] max-w-[280px]" : "h-14 w-auto"}
+                    // 8/8: allargato su sua richiesta («allargare di più tutti
+                    // i loghi»). 56 px era la misura minima per leggere
+                    // «Bottega Gastronomica»; 68 la si legge senza cercarla.
+                    className={marchioGrande ? "w-[82%] max-w-[300px]" : "h-[68px] w-auto"}
                   />
                 )}
               </div>
@@ -134,7 +137,10 @@ export function Guscio({
 
         {/* La firma, in fondo a OGNI schermata. Discreta, ma sempre lì: è così
             che un marchio si posa addosso a chi usa una cosa tutti i giorni.
-            Sul rosso il monogramma scuro non si vede: resta la sola scritta. */}
+            Sul rosso il monogramma scuro non si vede: resta la sola scritta.
+            ⚠️ 8/8: era alto 16 px e al 70% di opacità — cioè un marchio
+            sbiadito grande come una virgola, che è come non metterlo. Ora è
+            alto 26 px e pieno: si riconosce senza avvicinare il telefono. */}
         <p
           className={`mt-8 flex items-center justify-center gap-2 text-[11px] tracking-wide ${
             rosso ? "text-[rgba(244,236,221,0.7)]" : "text-muted-foreground"
@@ -145,7 +151,7 @@ export function Guscio({
               src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
               alt=""
               aria-hidden="true"
-              className="h-4 w-auto opacity-70"
+              className="h-[26px] w-auto"
             />
           )}
           MONO · Bottega Gastronomica · Torino

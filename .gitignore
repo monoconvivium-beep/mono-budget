@@ -40,3 +40,6 @@ public/__prova.html
 *.njsproj
 *.sln
 *.sw?
+
+# I provini e le fotografie di lavoro: non si pubblicano.
+scratchpad/

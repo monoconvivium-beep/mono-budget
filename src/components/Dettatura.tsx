@@ -231,12 +231,12 @@ export function Dettatura({
            * 5/8: mai la versione svuotata per il fondo scuro. Per stare sul
            * terracotta si siede su un dischetto cashmere, che è il suo fondo.
            */}
-          <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-background)]">
+          <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-background)]">
             <img
               src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
               alt=""
               aria-hidden="true"
-              className="h-6 w-auto"
+              className="h-8 w-auto"
             />
           </span>
           <span className="relative">
