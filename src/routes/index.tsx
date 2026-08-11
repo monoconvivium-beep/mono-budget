@@ -116,6 +116,32 @@ function Home() {
       {/* Le entrate: senza stipendio «da parte» è un numero finto. */}
       <AggiungiEntrata />
 
+      {/* La lista della spesa: oro, sopra il ricettario che è rosso. Due
+          regali, due colori — si riconoscono prima di leggerli. E niente
+          sesta linguetta in fondo, come già deciso per le ricette. */}
+      <Link
+        to="/spesa"
+        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl bg-oro p-3.5 text-oro-foreground shadow-morbida"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8"
+          />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Lista della spesa</span>
+          <span className="block truncate text-xs opacity-75">
+            Dilla a voce, poi spunta al banco
+          </span>
+        </span>
+        <span aria-hidden className="opacity-60">
+          ›
+        </span>
+      </Link>
+
       {/* La porta del ricettario: porta il SUO rosso, così si riconosce
           prima di leggere. Il lavoro deve essere incontrabile. */}
       <Link

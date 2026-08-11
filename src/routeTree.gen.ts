@@ -15,6 +15,7 @@ import { Route as AscoltoRouteImport } from './routes/ascolto'
 import { Route as DiarioRouteImport } from './routes/diario'
 import { Route as MonoRouteImport } from './routes/mono'
 import { Route as RicetteRouteImport } from './routes/ricette'
+import { Route as SpesaRouteImport } from './routes/spesa'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const RicetteRoute = RicetteRouteImport.update({
   path: '/ricette',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SpesaRoute = SpesaRouteImport.update({
+  id: '/spesa',
+  path: '/spesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
+  '/spesa': typeof SpesaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
+  '/spesa': typeof SpesaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +79,23 @@ export interface FileRoutesById {
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
+  '/spesa': typeof SpesaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette'
+  fullPaths:
+    '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette' | '/spesa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette'
-  id: '__root__' | '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette'
+  to: '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette' | '/spesa'
+  id:
+    | '__root__'
+    | '/'
+    | '/anno'
+    | '/ascolto'
+    | '/diario'
+    | '/mono'
+    | '/ricette'
+    | '/spesa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,6 +105,7 @@ export interface RootRouteChildren {
   DiarioRoute: typeof DiarioRoute
   MonoRoute: typeof MonoRoute
   RicetteRoute: typeof RicetteRoute
+  SpesaRoute: typeof SpesaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RicetteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/spesa': {
+      id: '/spesa'
+      path: '/spesa'
+      fullPath: '/spesa'
+      preLoaderRoute: typeof SpesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -143,6 +169,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiarioRoute: DiarioRoute,
   MonoRoute: MonoRoute,
   RicetteRoute: RicetteRoute,
+  SpesaRoute: SpesaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

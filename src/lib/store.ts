@@ -36,6 +36,19 @@ export interface Ricetta {
   creataIl: string;
 }
 
+/**
+ * Una riga della lista della spesa. È libera: nessuna categoria, nessun
+ * prezzo, nessun prodotto «consigliato» — sua scelta del 9/8, e ha ragione:
+ * una lista della spesa che ti suggerisce cosa comprare non è più la TUA
+ * lista. `cosa` esce già bella dall'interprete di cucina.
+ */
+export interface VoceSpesa {
+  id: string;
+  cosa: string;
+  presa: boolean;
+  creataIl: string;
+}
+
 export interface Stato {
   versione: 1;
   tema: "chiaro" | "scuro";
@@ -52,6 +65,8 @@ export interface Stato {
   iscrittoCome: string;
   /** Il ricettario, parte Salato: le ricette dettate o scritte da chi usa l'app. */
   ricette: Ricetta[];
+  /** La lista della spesa: quello che manca, detto a voce. */
+  spesa: VoceSpesa[];
 }
 
 const CHIAVE = "mono-money-v1";
@@ -72,6 +87,7 @@ const iniziale: Stato = {
   benvenutoVisto: false,
   iscrittoCome: "",
   ricette: [],
+  spesa: [],
 };
 
 let stato: Stato = iniziale;
@@ -91,6 +107,7 @@ function leggi(): Stato {
       regole: Array.isArray(dati.regole) ? dati.regole : [],
       // Salvataggi nati prima del ricettario: la chiave non c'è, e va bene così.
       ricette: Array.isArray(dati.ricette) ? dati.ricette : [],
+      spesa: Array.isArray(dati.spesa) ? dati.spesa : [],
     };
   } catch {
     return iniziale;
@@ -226,6 +243,33 @@ export const azioni = {
   ricettaElimina(id: string) {
     aggiorna((s) => ({ ...s, ricette: s.ricette.filter((r) => r.id !== id) }));
   },
+  /* ------------------------------------------------- la lista della spesa */
+  spesaAggiungi(cosa: string): void {
+    const pulito = cosa.trim();
+    if (!pulito) return;
+    const v: VoceSpesa = {
+      id: nuovoId(),
+      cosa: pulito,
+      presa: false,
+      creataIl: new Date().toISOString(),
+    };
+    // In cima: l'ultima cosa che ti è venuta in mente è quella che rischi
+    // di dimenticare, e deve stare dove cade l'occhio.
+    aggiorna((s) => ({ ...s, spesa: [v, ...s.spesa] }));
+  },
+  spesaSpunta(id: string) {
+    aggiorna((s) => ({
+      ...s,
+      spesa: s.spesa.map((v) => (v.id === id ? { ...v, presa: !v.presa } : v)),
+    }));
+  },
+  spesaTogli(id: string) {
+    aggiorna((s) => ({ ...s, spesa: s.spesa.filter((v) => v.id !== id) }));
+  },
+  /** Via le spuntate: quello che resta è quello che manca ancora. */
+  spesaPulisci() {
+    aggiorna((s) => ({ ...s, spesa: s.spesa.filter((v) => !v.presa) }));
+  },
   /** Backup completo: TUTTI gli anni, non solo quello corrente. */
   esporta(): string {
     return JSON.stringify({ ...istantanea(), esportatoIl: new Date().toISOString() }, null, 2);
@@ -243,6 +287,9 @@ export const azioni = {
         // ⚠️ Senza questa riga il ripristino di un backup BUTTEREBBE le ricette:
         // importa() ricostruisce lo stato campo per campo, non con lo spread.
         ricette: Array.isArray(dati.ricette) ? (dati.ricette as Ricetta[]) : s.ricette,
+        // Stessa ragione delle ricette: senza questa riga il ripristino di un
+        // backup vecchio cancellerebbe la lista della spesa.
+        spesa: Array.isArray(dati.spesa) ? (dati.spesa as VoceSpesa[]) : s.spesa,
       }));
       return {
         ok: true,
