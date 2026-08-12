@@ -2,6 +2,8 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { AggiungiEntrata } from "@/components/AggiungiEntrata";
 import { Aiuto } from "@/components/Aiuto";
+import { GrattaEVinci } from "@/components/GrattaEVinci";
+import { SettimanaMono } from "@/components/SettimanaMono";
 import { Dettatura } from "@/components/Dettatura";
 import { DoveVannoISoldi } from "@/components/DoveVannoISoldi";
 import { Guscio } from "@/components/Guscio";
@@ -64,8 +66,19 @@ function Home() {
         </div>
       }
     >
+      {/**
+       * Il gratta e vinci quando c'è, se no la settimana che si riempie.
+       * ⚠️ IN CIMA, sopra le spese: è l'unica cosa dell'app che si può
+       * perdere — il premio va guardato quando arriva, non trovato per caso
+       * scorrendo. La striscia invece è piccola e non ruba niente.
+       * L'ordine della Home l'ha dettato lui e resta quello: questo sta
+       * PRIMA dell'elenco, che comincia subito sotto.
+       */}
+      <GrattaEVinci />
+      <SettimanaMono />
+
       {/* 1. Cos'ho segnato — subito sotto il marchio */}
-      <section>
+      <section className="mt-4">
         <div className="mb-2 flex items-center justify-between px-1">
           <h2 className="text-lg">Ultime spese</h2>
           <Aiuto testo="Le × mettono il movimento nel cestino: lo recuperi dal Diario." />

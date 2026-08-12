@@ -1,5 +1,13 @@
 import { useSyncExternalStore } from "react";
 import type { Categoria, Metodo, Tipo } from "./parse";
+import {
+  giorno,
+  nuovoBiglietto,
+  puoEmettere,
+  registraUso,
+  type Biglietto,
+  type Striscia,
+} from "./gratta";
 
 export interface Movimento {
   id: string;
@@ -67,6 +75,10 @@ export interface Stato {
   ricette: Ricetta[];
   /** La lista della spesa: quello che manca, detto a voce. */
   spesa: VoceSpesa[];
+  /** I giorni di fila in cui ha usato l'app. Null = non ha ancora cominciato. */
+  striscia: Striscia | null;
+  /** Il gratta e vinci: UNO per persona, e quando c'è resta lì per sempre. */
+  biglietto: Biglietto | null;
 }
 
 const CHIAVE = "mono-money-v1";
@@ -88,6 +100,8 @@ const iniziale: Stato = {
   iscrittoCome: "",
   ricette: [],
   spesa: [],
+  striscia: null,
+  biglietto: null,
 };
 
 let stato: Stato = iniziale;
@@ -108,6 +122,8 @@ function leggi(): Stato {
       // Salvataggi nati prima del ricettario: la chiave non c'è, e va bene così.
       ricette: Array.isArray(dati.ricette) ? dati.ricette : [],
       spesa: Array.isArray(dati.spesa) ? dati.spesa : [],
+      striscia: dati.striscia ?? null,
+      biglietto: dati.biglietto ?? null,
     };
   } catch {
     return iniziale;
@@ -158,10 +174,29 @@ function nuovoId() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
+/**
+ * «Oggi ho usato MONO MONEY», appiccicato a un cambiamento di stato.
+ *
+ * 🔑 Lo chiamano le azioni VERE — segnare un movimento, toccare la lista,
+ * salvare una ricetta — non l'apertura dell'app: aprire e chiudere per sette
+ * giorni non è usarla, e il premio è per chi se ne serve davvero.
+ * Se i sette giorni si compiono qui, il biglietto nasce SUBITO e già deciso:
+ * grattarlo scoprirà una cosa scritta, non la tirerà a sorte sotto il dito.
+ */
+function conUso(s: Stato): Stato {
+  const oggi = giorno(new Date());
+  const striscia = registraUso(s.striscia, oggi);
+  if (striscia === s.striscia) return s; // già contato oggi
+  const biglietto = puoEmettere(striscia, s.biglietto)
+    ? nuovoBiglietto(oggi, Math.random())
+    : s.biglietto;
+  return { ...s, striscia, biglietto };
+}
+
 export const azioni = {
   aggiungi(m: Omit<Movimento, "id" | "data"> & { data?: string }) {
     const mov: Movimento = { id: nuovoId(), data: m.data ?? new Date().toISOString(), ...m };
-    aggiorna((s) => ({ ...s, movimenti: [mov, ...s.movimenti] }));
+    aggiorna((s) => conUso({ ...s, movimenti: [mov, ...s.movimenti] }));
     return mov;
   },
   cestina(id: string) {
@@ -231,7 +266,7 @@ export const azioni = {
       passi: dati.passi,
       creataIl: new Date().toISOString(),
     };
-    aggiorna((s) => ({ ...s, ricette: [r, ...s.ricette] }));
+    aggiorna((s) => conUso({ ...s, ricette: [r, ...s.ricette] }));
     return r;
   },
   ricettaAggiorna(id: string, patch: Partial<Omit<Ricetta, "id" | "creataIl">>) {
@@ -255,13 +290,15 @@ export const azioni = {
     };
     // In cima: l'ultima cosa che ti è venuta in mente è quella che rischi
     // di dimenticare, e deve stare dove cade l'occhio.
-    aggiorna((s) => ({ ...s, spesa: [v, ...s.spesa] }));
+    aggiorna((s) => conUso({ ...s, spesa: [v, ...s.spesa] }));
   },
   spesaSpunta(id: string) {
-    aggiorna((s) => ({
-      ...s,
-      spesa: s.spesa.map((v) => (v.id === id ? { ...v, presa: !v.presa } : v)),
-    }));
+    aggiorna((s) =>
+      conUso({
+        ...s,
+        spesa: s.spesa.map((v) => (v.id === id ? { ...v, presa: !v.presa } : v)),
+      }),
+    );
   },
   spesaTogli(id: string) {
     aggiorna((s) => ({ ...s, spesa: s.spesa.filter((v) => v.id !== id) }));
@@ -269,6 +306,26 @@ export const azioni = {
   /** Via le spuntate: quello che resta è quello che manca ancora. */
   spesaPulisci() {
     aggiorna((s) => ({ ...s, spesa: s.spesa.filter((v) => !v.presa) }));
+  },
+  /* ------------------------------------------------- il gratta e vinci */
+  /**
+   * «Oggi ho usato MONO MONEY». La chiamano le azioni vere — segnare un
+   * movimento, toccare la lista, salvare una ricetta — non l'apertura
+   * dell'app: aprire e chiudere per sette giorni non è usarla, e il premio
+   * è per chi se ne serve davvero.
+   *
+   * Se i sette giorni si compiono qui, il biglietto nasce SUBITO e già
+   * deciso: grattarlo scoprirà una cosa scritta, non la tirerà a sorte.
+   */
+  segnaUso() {
+    aggiorna(conUso);
+  },
+  gratta() {
+    aggiorna((s) =>
+      s.biglietto && !s.biglietto.grattato
+        ? { ...s, biglietto: { ...s.biglietto, grattato: true } }
+        : s,
+    );
   },
   /** Backup completo: TUTTI gli anni, non solo quello corrente. */
   esporta(): string {
@@ -290,6 +347,15 @@ export const azioni = {
         // Stessa ragione delle ricette: senza questa riga il ripristino di un
         // backup vecchio cancellerebbe la lista della spesa.
         spesa: Array.isArray(dati.spesa) ? (dati.spesa as VoceSpesa[]) : s.spesa,
+        striscia: (dati.striscia as Striscia | undefined) ?? s.striscia,
+        /**
+         * ⚠️ IL BIGLIETTO NON SI RIPRISTINA SE GIÀ CE N'È UNO.
+         * È l'unico campo che si difende dal proprio backup: il gratta e
+         * vinci è uno per persona, e senza questa riga basterebbe salvare
+         * il file prima di grattare e ricaricarlo dopo aver perso per
+         * rigiocare all'infinito. Quello che c'è già vince sempre.
+         */
+        biglietto: s.biglietto ?? (dati.biglietto as Biglietto | undefined) ?? null,
       }));
       return {
         ok: true,
