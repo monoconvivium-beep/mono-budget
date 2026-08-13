@@ -80,8 +80,18 @@ export function strisciaCompleta(s: Striscia | null): boolean {
 
 /* ---------------------------------------------------------- il biglietto */
 
-/** Uno su quattro vince. Sua scelta del 9/8. */
-export const QUOTA_VINCENTI = 0.25;
+/**
+ * Un biglietto su cinque vince — **20%**, sua correzione del 9/8 quando ha
+ * deciso di trattarla come una promozione a tiratura: «500 gratta e vinci,
+ * il 20% vincenti». Su 500 biglietti fanno **100 caffè**.
+ *
+ * ⚠️ I 500 NON SI CONTANO QUI E NON SI POSSONO CONTARE: senza server ogni
+ * telefono è un'isola e non sa quanti biglietti esistono al mondo. Il tetto
+ * è un fatto di BANCO — si conta là quanti caffè escono, e la promozione si
+ * chiude quando arrivano a cento. Quello che l'app sa fare da sola è
+ * smettere a una DATA, e quella è `FINE_PROMOZIONE`.
+ */
+export const QUOTA_VINCENTI = 0.2;
 
 export interface Biglietto {
   esito: "vinto" | "niente";
