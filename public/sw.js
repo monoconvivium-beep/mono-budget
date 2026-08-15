@@ -1,5 +1,5 @@
 /**
- * MONO MONEY — che funzioni anche senza rete.
+ * MonoConvivium — che funzioni anche senza rete.
  *
  * I movimenti stanno già tutti nel telefono: l'unica cosa che manca, senza
  * campo, sono i file dell'app. Questo li tiene da parte.
@@ -8,7 +8,7 @@
  * Senza, i telefoni che hanno già l'app continuano a mostrare quella vecchia e
  * sembra che le correzioni non siano state fatte.
  */
-const VERSIONE = "mono-money-v21";
+const VERSIONE = "mono-money-v22";
 
 /**
  * Tutto si calcola dalla RADICE dove il guardiano è registrato, mai da "/".
