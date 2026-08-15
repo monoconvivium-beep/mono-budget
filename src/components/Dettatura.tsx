@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Mic, Check, X, Wand2 } from "lucide-react";
 import { CATEGORIE, COLORI_CATEGORIA, euro, interpreta, type Categoria, type MovimentoBozza } from "@/lib/parse";
 import { azioni, useStato } from "@/lib/store";
+import { avvioAutomaticoPossibile, ricordaCheServeUnTocco } from "@/lib/avvio-microfono";
 import { Aiuto } from "./Aiuto";
 
 type Fase = "pronto" | "ascolto" | "conferma" | "errore";
@@ -77,7 +78,21 @@ export function Dettatura({
   const [scritto, setScritto] = useState("");
   const [salvate, setSalvate] = useState(0);
   const rif = useRef<Riconoscimento | null>(null);
-  const supportato = typeof window !== "undefined" && creaRiconoscimento() !== null;
+  /**
+   * ⚠️ UNA VOLTA SOLA, non a ogni disegno della schermata. Prima questa riga
+   * COSTRUIVA un riconoscimento vero a ogni aggiornamento — e questa schermata
+   * si ridisegna a ogni parola sentita e a ogni tasto premuto. Erano decine di
+   * oggetti che chiedono il microfono al sistema e vengono buttati subito.
+   */
+  const [supportato] = useState(() => typeof window !== "undefined" && creaRiconoscimento() !== null);
+  /** Vero finché sto provando una partenza che NESSUN dito ha chiesto. */
+  const partenzaDaSolo = useRef(false);
+  /**
+   * Questo telefono vuole un tocco per accendere il microfono (l'iPhone).
+   * Serve alle PAROLE, non al funzionamento: promettere «si accende da solo»
+   * a chi deve toccare è peggio che non promettere niente.
+   */
+  const [serveTocco, setServeTocco] = useState(() => !avvioAutomaticoPossibile());
 
   useEffect(() => () => rif.current?.abort(), []);
 
@@ -119,10 +134,28 @@ export function Dettatura({
     r.interimResults = false;
     r.maxAlternatives = 1;
     r.onresult = (e) => {
+      // È partito e ha sentito: da qui in poi ogni rifiuto è un rifiuto vero.
+      partenzaDaSolo.current = false;
       const testo = e.results[0][0].transcript ?? "";
       analizza(testo);
     };
     r.onerror = (e) => {
+      /**
+       * 🍏 IL RIFIUTO CHE NON È UN GUASTO. Se a chiedere il microfono non è
+       * stato un dito ma l'app da sola, Safari su iPhone risponde di no. Non
+       * c'è niente di rotto: quel telefono vuole un tocco. Se lo segna, torna
+       * al cerchio spento — che è già toccabile — e non dice niente.
+       * ⚠️ Solo alla partenza automatica: se il no arriva dopo un tocco,
+       * allora il permesso è davvero negato e va detto.
+       */
+      if (partenzaDaSolo.current && (e.error === "not-allowed" || e.error === "service-not-allowed")) {
+        partenzaDaSolo.current = false;
+        ricordaCheServeUnTocco();
+        setServeTocco(true);
+        setFase("pronto");
+        return;
+      }
+      partenzaDaSolo.current = false;
       setFase("errore");
       setErrore(
         e.error === "not-allowed"
@@ -132,7 +165,10 @@ export function Dettatura({
             : "La dettatura si è interrotta. Riprova.",
       );
     };
-    r.onend = () => setFase((f) => (f === "ascolto" ? "pronto" : f));
+    r.onend = () => {
+      partenzaDaSolo.current = false;
+      setFase((f) => (f === "ascolto" ? "pronto" : f));
+    };
     setBozze([]);
     setErrore("");
     setAscoltato("");
@@ -148,16 +184,32 @@ export function Dettatura({
     try {
       r.start();
     } catch {
+      // Stessa storia di `onerror`: il rifiuto a una partenza non chiesta da
+      // un dito non è un guasto da mostrare, è un telefono che vuole un tocco.
+      if (partenzaDaSolo.current) {
+        partenzaDaSolo.current = false;
+        ricordaCheServeUnTocco();
+        setServeTocco(true);
+        setFase("pronto");
+        return;
+      }
       setFase("errore");
       setErrore("Non sono riuscito ad accendere il microfono. Tocca il cerchio e riprova.");
     }
   }, [analizza]);
 
-  /** Un avvio solo, all'apertura della schermata: mai un riavvio automatico. */
+  /**
+   * Un avvio solo, all'apertura della schermata: mai un riavvio automatico.
+   * ⚠️ E solo se questo telefono non ha già detto di no una volta (vedi
+   * `lib/avvio-microfono.ts`): all'iPhone si chiede una volta sola, poi si
+   * smette di chiedere.
+   */
   const giaAvviato = useRef(false);
   useEffect(() => {
     if (!avvioAutomatico || giaAvviato.current) return;
     giaAvviato.current = true;
+    if (!avvioAutomaticoPossibile()) return;
+    partenzaDaSolo.current = true;
     avvia();
   }, [avvioAutomatico, avvia]);
 
@@ -203,7 +255,7 @@ export function Dettatura({
           <h2 className={grande ? "text-2xl" : "text-lg"}>Dì una spesa</h2>
           <Aiuto
             testo={
-              avvioAutomatico
+              avvioAutomatico && !serveTocco
                 ? "Il microfono si accende da solo quando apri questa schermata: parla pure. Una spesa sola per volta, poi confermi. Per i centesimi dì «quattro euro e sessanta»."
                 : "Un tocco = una spesa. Tocca, dì una spesa sola, poi confermi. Per i centesimi dì «quattro euro e sessanta»."
             }
@@ -263,11 +315,11 @@ export function Dettatura({
           <p className="text-center text-sm text-muted-foreground">
             {fase === "ascolto"
               ? "Sto ascoltando… dì una spesa sola."
-              : supportato
-                ? avvioAutomatico
+              : !supportato
+                ? "Dettatura non disponibile: scrivi qui sotto."
+                : avvioAutomatico && !serveTocco
                   ? "Tocca il cerchio per riascoltare."
-                  : "Tocca il microfono e dì una spesa."
-                : "Dettatura non disponibile: scrivi qui sotto."}
+                  : "Tocca il microfono e dì una spesa."}
           </p>
           {ascoltato && (
             <p className="text-center text-sm">
@@ -340,7 +392,9 @@ export function Dettatura({
               <select
                 value={b.categoria}
                 onChange={(e) => modifica(i, { categoria: e.target.value as Categoria })}
-                className="tocco mt-1 w-full rounded-2xl border border-input bg-card px-3 text-sm"
+                /* 16 px e non meno: sotto quella misura Safari ingrandisce la
+                   pagina appena si tocca la tendina, e resta ingrandita. */
+                className="tocco mt-1 w-full rounded-2xl border border-input bg-card px-3 text-base"
               >
                 {CATEGORIE.map((c) => (
                   <option key={c} value={c}>

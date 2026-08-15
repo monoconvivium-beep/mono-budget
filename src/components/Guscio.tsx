@@ -105,10 +105,14 @@ export function Guscio({
 
   return (
     <div
-      className="min-h-screen"
+      /* `min-h-dvh` e non `min-h-screen`: su iPhone `100vh` conta anche la
+         striscia degli strumenti di Safari, che compare e sparisce mentre si
+         scorre — la pagina risultava sempre un dito più alta dello schermo e
+         ballava. `dvh` è l'altezza vera, quella che si vede adesso. */
+      className="min-h-dvh"
       style={{ backgroundColor: rosso ? "var(--azione-scheda)" : "var(--color-background)" }}
     >
-      <div className="mx-auto w-full max-w-md respiro-basso px-4 pt-6">
+      <div className="respiro-alto mx-auto w-full max-w-md respiro-basso px-4">
         <header className={senzaIntestazione ? "" : "mb-5"}>
           {senzaIntestazione ? null : intestazione ? (
             <div className="flex items-start justify-between gap-3">

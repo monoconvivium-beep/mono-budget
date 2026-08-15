@@ -37,7 +37,7 @@ export function Benvenuto() {
 
   return (
     <main
-      className={`min-h-screen bg-background px-5 pt-10 pb-10 ${tema === "scuro" ? "dark" : ""}`}
+      className={`min-h-dvh respiro-alto-largo bg-background px-5 pb-10 ${tema === "scuro" ? "dark" : ""}`}
     >
       <div className="mx-auto w-full max-w-md">
         <header className="text-center">

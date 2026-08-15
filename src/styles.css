@@ -337,6 +337,49 @@
   padding-bottom: calc(112px + env(safe-area-inset-bottom));
 }
 
+/**
+ * IL RESPIRO IN CIMA — l'orologio dell'iPhone non deve stare sul marchio.
+ *
+ * 🔴 Perché serve (trovato il 15/8/2026): l'app dichiara
+ * `viewport-fit=cover` e `apple-mobile-web-app-status-bar-style:
+ * black-translucent`. Insieme vogliono dire «riempi lo schermo fino ai bordi
+ * e passa SOTTO la barra di sistema». Sull'iPhone col notch quella barra è
+ * alta 47-59 px: con soli 24 px di respiro il marchio ci finiva sotto,
+ * mezzo coperto da orologio e batteria. In Safari non si vedeva — succede
+ * solo quando l'app è stata messa in Home, cioè a chi la usa davvero.
+ *
+ * 🔑 `env(safe-area-inset-top)` vale **0** su Android e sul computer: la
+ * stessa riga non toglie niente a nessuno, aggiunge solo dove serve.
+ */
+@utility respiro-alto {
+  padding-top: calc(1.5rem + env(safe-area-inset-top));
+}
+
+@utility respiro-alto-largo {
+  padding-top: calc(2.5rem + env(safe-area-inset-top));
+}
+
+/**
+ * I CAMPI DA RIEMPIRE NON FANNO SALTARE LO SCHERMO.
+ *
+ * 🔴 Regola di Safari su iPhone: se tocchi un campo il cui testo è più
+ * piccolo di **16 px**, la pagina si ingrandisce da sola e resta ingrandita.
+ * Chi scrive si ritrova l'app spostata di lato e deve rimettersela a posto
+ * con le dita, ogni volta. È lo stesso difetto trovato sull'app grande.
+ *
+ * Questa è la rete di sicurezza per i campi che non dichiarano una misura;
+ * quelli che la dichiarano usano `text-base` (16 px) e non meno.
+ * ⚠️ Se un giorno un campo torna a `text-sm`, il difetto torna: la misura
+ * si controlla dal vivo, non a memoria.
+ */
+@layer base {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @utility onda-microfono {
   animation: onda 1.6s ease-out infinite;
 }

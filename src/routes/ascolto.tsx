@@ -41,8 +41,15 @@ function Ascolto() {
   const [comeAperto, setComeAperto] = useState(false);
   const { categoria } = Route.useSearch();
 
+  /**
+   * ⚠️ IL SOTTOTITOLO NON PROMETTE PIÙ «si accende da solo» (15/8/2026).
+   * Su Android è vero e continua a succedere; su iPhone Safari accende il
+   * microfono solo se glielo chiede un dito, e la vecchia frase sarebbe stata
+   * una bugia scritta sopra un cerchio spento. Quella di adesso è vera in
+   * tutti e due i casi — e la riga sotto il cerchio dice cosa fare ora.
+   */
   return (
-    <Guscio titolo="Ascolto" sottotitolo="Si accende da solo: parla pure" marchioGrande>
+    <Guscio titolo="Ascolto" sottotitolo="Dì una spesa: la scrivo io" marchioGrande>
       {categoria && (
         <p className="mb-2 rounded-2xl bg-card-soft px-4 py-2.5 text-center text-sm">
           Spesa della ricetta: va in <strong>{categoria}</strong>.

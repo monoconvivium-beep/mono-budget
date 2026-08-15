@@ -53,7 +53,7 @@ export function Iscrizione() {
   }
 
   return (
-    <main className="min-h-screen bg-background px-5 pt-10 pb-12">
+    <main className="min-h-dvh respiro-alto-largo bg-background px-5 pb-12">
       <form onSubmit={(e) => void manda(e)} className="mx-auto w-full max-w-md">
         <span className="targa mx-auto block w-fit">
           <img

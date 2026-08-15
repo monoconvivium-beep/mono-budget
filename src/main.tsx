@@ -39,6 +39,27 @@ createRoot(radice).render(
 );
 
 /**
+ * 🔐 «QUESTI DATI NON BUTTARLI» — chiesto al telefono all'avvio (15/8/2026).
+ *
+ * 🔴 Il rischio vero: i conti di quest'app vivono SOLO nel telefono, e la
+ * memoria di un sito è roba che il telefono considera sacrificabile. Safari su
+ * iPhone in particolare **cancella da sé** quel che un sito ha salvato dopo
+ * **sette giorni** che non lo si apre — a meno che l'app non sia stata messa
+ * in Home. Chi prova MonoConvivium in Safari, va in ferie e torna, rischia di
+ * trovare i conti azzerati senza aver toccato niente.
+ *
+ * Questa riga chiede al telefono di trattare la memoria come duratura. Non è
+ * una garanzia — Android la concede a chi usa l'app spesso o l'ha installata,
+ * Safari decide per conto suo — ma è la sola richiesta che si può fare, costa
+ * niente e non chiede nulla a chi usa l'app.
+ * 🔑 La difesa che vale davvero resta **mettere l'app in Home** (vedi
+ * `InstallaApp`) e l'esportazione dalla scheda MONO. Questa è la terza rete.
+ */
+if (typeof navigator !== "undefined") {
+  void navigator.storage?.persist?.().catch(() => undefined);
+}
+
+/**
  * Il guardiano che tiene l'app da parte, così si apre anche senza rete.
  * ⚠️ Solo in produzione: in sviluppo servirebbe pagine vecchie e si passerebbe
  * il tempo a chiedersi perché una correzione non si vede.

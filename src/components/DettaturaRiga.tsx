@@ -193,7 +193,9 @@ export function DettaturaRiga({
           onChange={(e) => setScritto(e.target.value)}
           placeholder={segnaposto}
           aria-label={segnaposto}
-          className="tocco w-full flex-1 rounded-2xl border border-[rgba(140,63,34,0.35)] bg-card-soft px-4 text-sm"
+          /* 16 px: sotto questa misura Safari su iPhone ingrandisce la pagina
+             appena si tocca il campo, e non torna più indietro da sola. */
+          className="tocco w-full flex-1 rounded-2xl border border-[rgba(140,63,34,0.35)] bg-card-soft px-4 text-base"
         />
         <button
           type="submit"

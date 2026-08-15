@@ -8,7 +8,7 @@
  * Senza, i telefoni che hanno già l'app continuano a mostrare quella vecchia e
  * sembra che le correzioni non siano state fatte.
  */
-const VERSIONE = "mono-money-v22";
+const VERSIONE = "mono-money-v23";
 
 /**
  * Tutto si calcola dalla RADICE dove il guardiano è registrato, mai da "/".
@@ -67,18 +67,49 @@ self.addEventListener("fetch", (evento) => {
   if (richiesta.mode === "navigate") {
     evento.respondWith(
       (async () => {
+        const cache = await caches.open(VERSIONE);
+        const daParte = async () =>
+          (await cache.match(dove("index.html"))) ?? (await cache.match(dove(".")));
+
         try {
-          const dallaRete = await fetch(richiesta);
-          const cache = await caches.open(VERSIONE);
-          cache.put(dove("index.html"), dallaRete.clone());
+          /**
+           * ⏱️ TRE SECONDI E NON DI PIÙ (aggiunto il 15/8/2026).
+           * 🔴 Prima si aspettava la rete senza limite. Con una tacca di campo
+           * — il parcheggio del supermercato, l'ascensore — una richiesta può
+           * restare appesa mezzo minuto prima di arrendersi: in quel mezzo
+           * minuto l'app è una schermata bianca, e chi la apre pensa che sia
+           * rotta e la chiude. La copia da parte è già nel telefono e si apre
+           * subito: passati tre secondi si usa quella. Nessuno aspetta
+           * mezzo minuto per segnare un caffè.
+           */
+          const dallaRete = await Promise.race([
+            fetch(richiesta),
+            new Promise((_, no) => setTimeout(() => no(new Error("troppo lenta")), 3000)),
+          ]);
+
+          /**
+           * 🔴 SI SALVA SOLO SE LA RISPOSTA È BUONA.
+           * Prima si metteva da parte QUALUNQUE cosa tornasse — anche la
+           * pagina d'errore di GitHub durante una pubblicazione, o quella di
+           * un dominio non ancora agganciato (successo davvero il 15/8). Da
+           * quel momento il telefono avrebbe aperto quella pagina d'errore al
+           * posto dell'app, anche a pubblicazione finita, fino alla versione
+           * dopo. Un errore di un minuto diventava un guasto di giorni.
+           * ⚠️ Le pagine interne (`/spesa`) su GitHub tornano **404 con dentro
+           * l'app**: giustamente non si salvano, tanto ci pensa `index.html`
+           * preso dalla radice, che torna 200.
+           */
+          if (dallaRete.ok) cache.put(dove("index.html"), dallaRete.clone());
           return dallaRete;
         } catch {
-          const cache = await caches.open(VERSIONE);
-          const salvata = (await cache.match(dove("index.html"))) ?? (await cache.match(dove(".")));
-          return salvata ?? new Response("Sei senza rete e l'app non è ancora stata salvata.", {
-            status: 503,
-            headers: { "content-type": "text/plain; charset=utf-8" },
-          });
+          const salvata = await daParte();
+          return (
+            salvata ??
+            new Response("Sei senza rete e l'app non è ancora stata salvata.", {
+              status: 503,
+              headers: { "content-type": "text/plain; charset=utf-8" },
+            })
+          );
         }
       })(),
     );
