@@ -57,14 +57,25 @@ export function AggiungiEntrata() {
             setAperto(true);
             setFatta(null);
           }}
-          className="tocco w-full justify-center gap-2 rounded-2xl border border-dashed border-[color-mix(in_oklab,var(--color-primary)_45%,transparent)] px-4 font-semibold text-primary"
+          /**
+           * 🔴 ERA TERRACOTTA SUL VERDE: 1,25 di contrasto su 4,5 (misurato il
+           * 15/8/2026). Stessa trappola già vista con le voci della barra in
+           * fondo: questo bottone sta FUORI da ogni riquadro, cioè appoggiato
+           * al fondo verde bosco, e il terracotta su quel verde ha quasi la
+           * stessa profondità — due colori scuri uno sull'altro.
+           * 🔑 Fuori dai riquadri si scrive in cashmere. L'oro resta a dire
+           * «fatto» qui sotto, che è l'unica parola che deve saltare all'occhio.
+           */
+          className="tocco w-full justify-center gap-2 rounded-2xl border border-dashed border-[color-mix(in_oklab,var(--cashmere)_45%,transparent)] px-4 font-semibold text-foreground"
         >
           <Plus className="h-5 w-5" />
           Aggiungi un'entrata
         </button>
         <p className="mt-1.5 text-center text-xs text-muted-foreground">
+          {/* Oro e non terracotta: siamo sul verde, e il terracotta lì
+              sparisce (1,25). L'oro su questo verde è l'accento di casa. */}
           {fatta !== null ? (
-            <span className="font-semibold text-primary">Segnata: +{euro(fatta)}</span>
+            <span className="font-semibold text-oro">Segnata: +{euro(fatta)}</span>
           ) : (
             "Stipendio, rimborso, regalo — senza le entrate «da parte» è un numero finto."
           )}

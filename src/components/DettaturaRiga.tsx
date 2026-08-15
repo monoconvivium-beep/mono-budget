@@ -199,7 +199,16 @@ export function DettaturaRiga({
         />
         <button
           type="submit"
-          className="tocco rounded-2xl bg-[var(--cashmere)] px-4 text-sm font-bold"
+          /**
+           * 🔴 QUI LA PAROLA «Aggiungi» ERA INVISIBILE (trovato il 15/8/2026,
+           * misurando: contrasto 1.00, cioè testo e fondo dello STESSO colore).
+           * Il bottone è cashmere e non dichiarava nessun colore di testo,
+           * quindi ereditava quello della pagina — che dal 9/8, col vestito
+           * verde, è cashmere. Cashmere su cashmere: restava un confetto
+           * chiaro senza scritta, e nessuno lo toccava.
+           * ⚠️ Sul cashmere si scrive in seppia. Sempre.
+           */
+          className="tocco rounded-2xl bg-[var(--cashmere)] px-4 text-sm font-bold text-card-foreground"
         >
           Aggiungi
         </button>

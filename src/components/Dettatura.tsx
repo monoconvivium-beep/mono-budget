@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Mic, Check, X, Wand2 } from "lucide-react";
 import {
   CATEGORIE,
-  COLORI_CATEGORIA,
   euro,
   interpreta,
+  pillolaDi,
   type Categoria,
   type MovimentoBozza,
 } from "@/lib/parse";
@@ -357,7 +357,12 @@ export function Dettatura({
                 <span className="numero text-3xl">{euro(b.importo)}</span>
                 <span
                   className="pillola text-xs font-semibold"
-                  style={{ backgroundColor: COLORI_CATEGORIA[b.categoria], color: "#F4ECDD" }}
+                  /* L'inchiostro lo sceglie il colore del fondo, non l'abitudine:
+                     su «Spesa alimentare» il cashmere dava 1,94 su 4,5. */
+                  style={{
+                    backgroundColor: pillolaDi(b.categoria).fondo,
+                    color: pillolaDi(b.categoria).inchiostro,
+                  }}
                 >
                   {b.categoria}
                 </span>

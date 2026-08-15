@@ -5,7 +5,7 @@ import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { MarchioMono } from "@/components/MarchioMono";
 import { PassalaAUnAmico } from "@/components/PassalaAUnAmico";
-import { COLORI_CATEGORIA, CATEGORIE, euro } from "@/lib/parse";
+import { COLORI_CATEGORIA, CATEGORIE, euro, pillolaDi } from "@/lib/parse";
 import { versoCsv } from "@/lib/statistiche";
 import { attivi, azioni, useStato } from "@/lib/store";
 
@@ -292,7 +292,9 @@ function Mono() {
             <li
               key={c}
               className="pillola text-xs font-semibold"
-              style={{ backgroundColor: COLORI_CATEGORIA[c], color: "#F4ECDD" }}
+              /* Fondo e inchiostro decisi dal contrasto, non a occhio:
+                 vedi `pillolaDi` in lib/parse.ts. */
+              style={{ backgroundColor: pillolaDi(c).fondo, color: pillolaDi(c).inchiostro }}
             >
               {c}
             </li>

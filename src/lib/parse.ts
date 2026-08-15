@@ -40,6 +40,95 @@ export const COLORI_CATEGORIA: Record<Categoria, string> = {
   Altro: "#8A8578",
 };
 
+/** I due soli inchiostri di casa: la carta e la seppia. Non se ne inventano altri. */
+const CASHMERE = "#F4ECDD";
+const SEPPIA = "#262321";
+
+/**
+ * QUALE DEI DUE INCHIOSTRI SI LEGGE SU QUESTO COLORE.
+ *
+ * 🔴 Perché esiste (misurato il 15/8/2026): le pillole delle categorie
+ * scrivevano **sempre in cashmere**, su undici fondi diversi. Su sei di quegli
+ * undici il risultato era sotto la soglia di leggibilità, e il caso peggiore
+ * era proprio **Spesa alimentare** — l'oro, il colore più usato in un'app di
+ * una bottega di gastronomia — con **1,94 contro il 4,5 richiesto**: giallo
+ * chiaro su giallo chiaro. Anche Abbonamenti (2,49), Tempo libero (2,94),
+ * Altro (3,13), Bar (3,29) e Ristoranti (3,87) erano da riguardare.
+ *
+ * 🔑 Non si cambia nessun colore di categoria — quelli sono il codice con cui
+ * si legge la torta, e toccarli vorrebbe dire ridisegnare i grafici. Si cambia
+ * **l'inchiostro sopra**: chiaro sui fondi scuri, scuro sui fondi chiari.
+ * La scelta non è a occhio: si calcola, e vince quello che stacca di più.
+ *
+ * ⚠️ Il conto è quello ufficiale (WCAG), su luminanza relativa: sotto 4,5 una
+ * scritta piccola non si legge alla luce del sole, che è dove uno guarda il
+ * telefono quando è al banco.
+ */
+export function inchiostroSu(sfondoEsadecimale: string): string {
+  const l = luminanza(sfondoEsadecimale);
+  const conChiaro = (luminanza(CASHMERE) + 0.05) / (l + 0.05);
+  const conScuro = (l + 0.05) / (luminanza(SEPPIA) + 0.05);
+  return conScuro >= conChiaro ? SEPPIA : CASHMERE;
+}
+
+/** Luminanza relativa di un colore `#rrggbb`, come la definisce lo standard. */
+export function luminanza(esadecimale: string): number {
+  const pulito = esadecimale.replace("#", "");
+  const canale = (da: number) => {
+    const v = parseInt(pulito.slice(da, da + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * canale(0) + 0.7152 * canale(2) + 0.0722 * canale(4);
+}
+
+/** Quanto stacca un colore da un altro: 1 = identici, 21 = nero su bianco. */
+export function contrasto(a: string, b: string): number {
+  const la = luminanza(a);
+  const lb = luminanza(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+const SOGLIA_LEGGIBILE = 4.5;
+
+/**
+ * LA PILLOLA DI UNA CATEGORIA: che fondo e che inchiostro.
+ *
+ * 🔴 Due colori — **Ristoranti** (#B85C38) e **Altro** (#8A8578) — stanno
+ * proprio in mezzo: né abbastanza scuri per il cashmere, né abbastanza chiari
+ * per la seppia. Con l'inchiostro migliore arrivavano a 4,2 e 4,3, sotto la
+ * soglia. Per quelli, e solo per quelli, il **fondo della pillola** si scurisce
+ * di un soffio finché la scritta si legge.
+ *
+ * ⚠️ NON si tocca `COLORI_CATEGORIA`: quelli sono i colori con cui si legge la
+ * torta dei bilanci, e cambiarli vorrebbe dire cambiare il significato dei
+ * grafici. Qui si aggiusta **solo la pastiglia scritta**, e di pochissimo: chi
+ * guarda vede lo stesso colore di prima, un filo più profondo.
+ * 🔑 Vale anche per le categorie che verranno: si calcola, non si sceglie.
+ */
+export function pillolaDi(categoria: Categoria): { fondo: string; inchiostro: string } {
+  let fondo = COLORI_CATEGORIA[categoria];
+  let inchiostro = inchiostroSu(fondo);
+
+  // Al massimo venti passi da un decimo: oltre non è più lo stesso colore, e
+  // un colore irriconoscibile è un difetto peggiore di quello che si cura.
+  for (let passo = 0; passo < 20 && contrasto(inchiostro, fondo) < SOGLIA_LEGGIBILE; passo++) {
+    fondo = scurisci(fondo, 0.06);
+    inchiostro = inchiostroSu(fondo);
+  }
+  return { fondo, inchiostro };
+}
+
+/** Lo stesso colore, un po' più profondo. */
+function scurisci(esadecimale: string, quanto: number): string {
+  const pulito = esadecimale.replace("#", "");
+  const canale = (da: number) => {
+    const v = parseInt(pulito.slice(da, da + 2), 16);
+    return Math.round(Math.max(0, v * (1 - quanto)));
+  };
+  const due = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${due(canale(0))}${due(canale(2))}${due(canale(4))}`;
+}
+
 /** Sinonimi riconosciuti per ogni categoria. */
 export const SINONIMI: Record<Exclude<Categoria, "Altro">, string[]> = {
   Casa: [
