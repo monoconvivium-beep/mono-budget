@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { Store, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -111,6 +111,32 @@ function Spesa() {
           Togli le {prese.length} cose già prese
         </button>
       )}
+
+      {/* IL RICETTARIO vive qui dal 9/8: è la pagina di quello che si compra
+          e si cucina, e prima stava in Home fra i conti. Rosso, come la sua
+          pagina: si riconosce prima di leggerlo. */}
+      <Link
+        to="/ricette"
+        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
+          <img
+            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8"
+          />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Il quaderno di cucina</span>
+          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
+            15 basi dello chef, e le tue dette a voce
+          </span>
+        </span>
+        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+          ›
+        </span>
+      </Link>
 
       {/**
        * IL MESSAGGIO DI MONO — la terza faccia del marchio.

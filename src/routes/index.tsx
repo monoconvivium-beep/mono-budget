@@ -2,8 +2,6 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { AggiungiEntrata } from "@/components/AggiungiEntrata";
 import { Aiuto } from "@/components/Aiuto";
-import { GrattaEVinci } from "@/components/GrattaEVinci";
-import { SettimanaMono } from "@/components/SettimanaMono";
 import { Dettatura } from "@/components/Dettatura";
 import { DoveVannoISoldi } from "@/components/DoveVannoISoldi";
 import { Guscio } from "@/components/Guscio";
@@ -50,7 +48,7 @@ function Home() {
 
   return (
     <Guscio
-      titolo="MONO MONEY"
+      titolo="Il borsellino"
       intestazione={
         /* 0. IL MARCHIO, GRANDE E AL CENTRO. «Più grosso possibile», parole
            sue. Largo il 76% della colonna: oltre tocca i bordi e non respira
@@ -66,17 +64,6 @@ function Home() {
         </div>
       }
     >
-      {/**
-       * Il gratta e vinci quando c'è, se no la settimana che si riempie.
-       * ⚠️ IN CIMA, sopra le spese: è l'unica cosa dell'app che si può
-       * perdere — il premio va guardato quando arriva, non trovato per caso
-       * scorrendo. La striscia invece è piccola e non ruba niente.
-       * L'ordine della Home l'ha dettato lui e resta quello: questo sta
-       * PRIMA dell'elenco, che comincia subito sotto.
-       */}
-      <GrattaEVinci />
-      <SettimanaMono />
-
       {/* 1. Cos'ho segnato — subito sotto il marchio */}
       <section className="mt-4">
         <div className="mb-2 flex items-center justify-between px-1">
@@ -129,59 +116,20 @@ function Home() {
       {/* Le entrate: senza stipendio «da parte» è un numero finto. */}
       <AggiungiEntrata />
 
-      {/* La lista della spesa: oro, sopra il ricettario che è rosso. Due
-          regali, due colori — si riconoscono prima di leggerli. E niente
-          sesta linguetta in fondo, come già deciso per le ricette. */}
-      <Link
-        to="/spesa"
-        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl bg-oro p-3.5 text-oro-foreground shadow-morbida"
-      >
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
-            alt=""
-            aria-hidden="true"
-            className="h-8 w-8"
-          />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">Lista della spesa</span>
-          <span className="block truncate text-xs opacity-75">
-            Dilla a voce, poi spunta al banco
-          </span>
-        </span>
-        <span aria-hidden className="opacity-60">
-          ›
-        </span>
-      </Link>
-
-      {/* La porta del ricettario: porta il SUO rosso, così si riconosce
-          prima di leggere. Il lavoro deve essere incontrabile. */}
-      <Link
-        to="/ricette"
-        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
-      >
-        {/* IL PIATTO, non un'icona qualunque: la porta della cucina la apre il
-            nostro marchio. Prima c'era il cappello da chef di una libreria —
-            disegnato da altri, uguale in mille app. Questo è nostro. */}
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
-            alt=""
-            aria-hidden="true"
-            className="h-8 w-8"
-          />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">Ricette</span>
-          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
-            Le basi dello chef, e le tue dette a voce
-          </span>
-        </span>
-        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
-          ›
-        </span>
-      </Link>
+      {/* Diario e Bilanci non sono più in fondo allo schermo: da oggi la
+          barra ha quattro voci e questa è la pagina dei soldi, quindi si
+          entra da qui. Sono due porte tenui: chi le cerca le trova, chi
+          guarda le spese non ci inciampa. */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <Link to="/diario" className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5">
+          <span className="text-[15px] font-bold">Il diario</span>
+          <span className="text-xs text-muted-foreground">Tutto lo storico, la ricerca e il cestino</span>
+        </Link>
+        <Link to="/anno" className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5">
+          <span className="text-[15px] font-bold">I bilanci</span>
+          <span className="text-xs text-muted-foreground">Mese per mese, anno per anno</span>
+        </Link>
+      </div>
 
       {/* La voce resta raggiungibile anche da qui, ma in coda: nell'ordine
           che ha dettato non c'era, e il cerchio della barra in fondo fa già

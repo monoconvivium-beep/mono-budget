@@ -2,7 +2,7 @@
  * Avvio dell'app — tutto nel browser.
  *
  * 🔑 Qui non c'è nessun server, ed è una scelta, non una scorciatoia:
- * MONO MONEY è un regalo che la bottega fa ai clienti e deve restare **gratis
+ * MonoConvivium è un regalo che la bottega fa ai clienti e deve restare **gratis
  * per sempre**. Se ci fosse un pezzo da tenere acceso, qualcuno dovrebbe pagarlo
  * ogni mese e un giorno smetterebbe. Così invece l'app è un pugno di file fermi:
  * si mettono su un hosting statico qualunque e restano lì.

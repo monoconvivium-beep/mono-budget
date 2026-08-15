@@ -1,7 +1,7 @@
 /**
  * Il blocco MONO — il marchio, e le porte che riportano in bottega.
  *
- * 🔑 Perché sta dentro un'app dei conti: MONO MONEY **è pubblicità**, nel senso
+ * 🔑 Perché sta dentro un'app dei conti: MonoConvivium **è pubblicità**, nel senso
  * buono. È un oggetto utile che la bottega regala, e che una persona apre ogni
  * giorno con in testa il nome di chi gliel'ha dato. Se il marchio non si vede e
  * non c'è una porta per tornare, il regalo resta un favore e basta.
@@ -58,7 +58,7 @@ export function MarchioMono() {
           className="mx-auto w-[62%] max-w-[220px]"
         />
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          MONO MONEY è un omaggio di <strong>MONO</strong>, bottega di gastronomia a Torino.
+          MonoConvivium è un omaggio di <strong>MONO</strong>, bottega di gastronomia a Torino.
           Nessuno ti chiede niente in cambio: se ti trovi bene, passa a trovarci.
         </p>
       </div>

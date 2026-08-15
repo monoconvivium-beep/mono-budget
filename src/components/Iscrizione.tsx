@@ -67,7 +67,7 @@ export function Iscrizione() {
 
         <h1 className="mt-7 text-center text-3xl leading-tight">Ci presentiamo</h1>
         <p className="mt-2 text-center text-sm leading-relaxed text-muted-foreground">
-          MONO MONEY è un regalo, e ci piace sapere a chi lo stiamo facendo.
+          MonoConvivium è un regalo, e ci piace sapere a chi lo stiamo facendo.
         </p>
 
         <div className="mt-6 space-y-3">
@@ -111,7 +111,7 @@ export function Iscrizione() {
 
         <section className="scheda-bosco mt-4 p-4">
           <p className="text-[10px] font-semibold tracking-widest uppercase opacity-70">
-            La promessa MONO MONEY
+            La promessa MonoConvivium
           </p>
           <p className="mt-2 text-sm leading-relaxed opacity-95">
             MONO riceve <strong>nome, cognome, email, telefono e consensi</strong>. Non riceve mai

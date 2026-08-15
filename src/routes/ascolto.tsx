@@ -16,13 +16,13 @@ export const Route = createFileRoute("/ascolto")({
   }),
   head: () => ({
     meta: [
-      { title: "Ascolto — MONO MONEY" },
+      { title: "Ascolto — MonoConvivium" },
       {
         name: "description",
         content:
-          "Un tocco, una spesa: dì l'importo e il posto, MONO MONEY ti mostra cosa ha capito e tu confermi.",
+          "Un tocco, una spesa: dì l'importo e il posto, MonoConvivium ti mostra cosa ha capito e tu confermi.",
       },
-      { property: "og:title", content: "Ascolto — MONO MONEY" },
+      { property: "og:title", content: "Ascolto — MonoConvivium" },
       {
         property: "og:description",
         content: "Dettatura a tutto schermo: un tocco = una spesa, sempre con conferma.",

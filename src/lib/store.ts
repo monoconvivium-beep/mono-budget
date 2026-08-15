@@ -57,6 +57,21 @@ export interface VoceSpesa {
   creataIl: string;
 }
 
+/**
+ * Una cosa da fare. Stessa forma della voce di spesa, e non è pigrizia: sono
+ * lo stesso gesto — la dici, la vedi, la spunti quando è fatta. Due strutture
+ * diverse per due liste identiche avrebbero solo raddoppiato i difetti.
+ * ⚠️ Niente date, per ora: non erano state chieste, e una scadenza che non
+ * può mandare nessuna notifica (l'app non ha server) prometterebbe più di
+ * quello che sa fare.
+ */
+export interface VoceDaFare {
+  id: string;
+  cosa: string;
+  fatta: boolean;
+  creataIl: string;
+}
+
 export interface Stato {
   versione: 1;
   tema: "chiaro" | "scuro";
@@ -75,6 +90,8 @@ export interface Stato {
   ricette: Ricetta[];
   /** La lista della spesa: quello che manca, detto a voce. */
   spesa: VoceSpesa[];
+  /** Le cose da fare: le faccende di casa, dette a voce. */
+  dafare: VoceDaFare[];
   /** I giorni di fila in cui ha usato l'app. Null = non ha ancora cominciato. */
   striscia: Striscia | null;
   /** Il gratta e vinci: UNO per persona, e quando c'è resta lì per sempre. */
@@ -100,6 +117,7 @@ const iniziale: Stato = {
   iscrittoCome: "",
   ricette: [],
   spesa: [],
+  dafare: [],
   striscia: null,
   biglietto: null,
 };
@@ -122,6 +140,7 @@ function leggi(): Stato {
       // Salvataggi nati prima del ricettario: la chiave non c'è, e va bene così.
       ricette: Array.isArray(dati.ricette) ? dati.ricette : [],
       spesa: Array.isArray(dati.spesa) ? dati.spesa : [],
+      dafare: Array.isArray(dati.dafare) ? dati.dafare : [],
       striscia: dati.striscia ?? null,
       biglietto: dati.biglietto ?? null,
     };
@@ -175,7 +194,7 @@ function nuovoId() {
 }
 
 /**
- * «Oggi ho usato MONO MONEY», appiccicato a un cambiamento di stato.
+ * «Oggi ho usato MonoConvivium», appiccicato a un cambiamento di stato.
  *
  * 🔑 Lo chiamano le azioni VERE — segnare un movimento, toccare la lista,
  * salvare una ricetta — non l'apertura dell'app: aprire e chiudere per sette
@@ -307,9 +326,35 @@ export const azioni = {
   spesaPulisci() {
     aggiorna((s) => ({ ...s, spesa: s.spesa.filter((v) => !v.presa) }));
   },
+  /* ---------------------------------------------- le cose da fare */
+  dafareAggiungi(cosa: string): void {
+    const pulito = cosa.trim();
+    if (!pulito) return;
+    const v: VoceDaFare = {
+      id: nuovoId(),
+      cosa: pulito,
+      fatta: false,
+      creataIl: new Date().toISOString(),
+    };
+    aggiorna((s) => conUso({ ...s, dafare: [v, ...s.dafare] }));
+  },
+  dafareSpunta(id: string) {
+    aggiorna((s) =>
+      conUso({
+        ...s,
+        dafare: s.dafare.map((v) => (v.id === id ? { ...v, fatta: !v.fatta } : v)),
+      }),
+    );
+  },
+  dafareTogli(id: string) {
+    aggiorna((s) => ({ ...s, dafare: s.dafare.filter((v) => v.id !== id) }));
+  },
+  dafarePulisci() {
+    aggiorna((s) => ({ ...s, dafare: s.dafare.filter((v) => !v.fatta) }));
+  },
   /* ------------------------------------------------- il gratta e vinci */
   /**
-   * «Oggi ho usato MONO MONEY». La chiamano le azioni vere — segnare un
+   * «Oggi ho usato MonoConvivium». La chiamano le azioni vere — segnare un
    * movimento, toccare la lista, salvare una ricetta — non l'apertura
    * dell'app: aprire e chiudere per sette giorni non è usarla, e il premio
    * è per chi se ne serve davvero.
@@ -347,6 +392,7 @@ export const azioni = {
         // Stessa ragione delle ricette: senza questa riga il ripristino di un
         // backup vecchio cancellerebbe la lista della spesa.
         spesa: Array.isArray(dati.spesa) ? (dati.spesa as VoceSpesa[]) : s.spesa,
+        dafare: Array.isArray(dati.dafare) ? (dati.dafare as VoceDaFare[]) : s.dafare,
         striscia: (dati.striscia as Striscia | undefined) ?? s.striscia,
         /**
          * ⚠️ IL BIGLIETTO NON SI RIPRISTINA SE GIÀ CE N'È UNO.

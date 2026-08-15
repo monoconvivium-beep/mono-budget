@@ -9,13 +9,13 @@ import { azioni, dataBreve, useStato, type Movimento } from "@/lib/store";
 export const Route = createFileRoute("/diario")({
   head: () => ({
     meta: [
-      { title: "Diario — MONO MONEY" },
+      { title: "Diario — MonoConvivium" },
       {
         name: "description",
         content:
           "Tutti i movimenti in ordine, con ricerca su tutto, cestino per recuperare gli errori e cambio categoria dalla riga.",
       },
-      { property: "og:title", content: "Diario — MONO MONEY" },
+      { property: "og:title", content: "Diario — MonoConvivium" },
       {
         property: "og:description",
         content: "Cerca, correggi la categoria e recupera dal cestino ciò che hai cancellato.",

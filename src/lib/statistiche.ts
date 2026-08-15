@@ -1,5 +1,5 @@
 /**
- * MONO MONEY — dove sono finiti i soldi.
+ * MonoConvivium — dove sono finiti i soldi.
  *
  * File PURO: niente React, niente grafica. Riceve dei movimenti e restituisce
  * i conti. Così i numeri si possono provare senza aprire l'app — ed è

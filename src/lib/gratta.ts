@@ -15,7 +15,7 @@
  * 3. **UN BIGLIETTO SU QUATTRO VINCE.** Gli altri no, e vanno detti bene.
  * 4. **VALE SEMPRE, TRANNE LA DOMENICA.**
  *
- * 🔑 PERCHÉ NIENTE CODICI: MONO MONEY non ha server, quindi un codice nato
+ * 🔑 PERCHÉ NIENTE CODICI: MonoConvivium non ha server, quindi un codice nato
  * qui dentro il banco non potrebbe comunque verificarlo. Meglio non fingere
  * una sicurezza che non c'è: si mostra la schermata alla cassa e il commesso
  * offre il caffè. Su un caffè, la fiducia costa meno di qualunque controllo.

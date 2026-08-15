@@ -18,11 +18,11 @@ export const Route = createFileRoute("/mono")({
         content:
           "Tema, obiettivo di risparmio, backup di tutti gli anni, regole imparate e la promessa: i tuoi dati restano sul telefono.",
       },
-      { property: "og:title", content: "MONO — impostazioni di MONO MONEY" },
+      { property: "og:title", content: "MONO — impostazioni di MonoConvivium" },
       {
         property: "og:description",
         content:
-          "Il libretto delle spese regalato da MONO, gastronomia a Torino. Nessun account, nessun server.",
+          "I conti, la lista della spesa, le cose da fare e il ricettario. Regalati da MONO, gastronomia a Torino. Nessun account, nessun server.",
       },
     ],
   }),
@@ -59,12 +59,12 @@ function Mono() {
    */
   async function condividi() {
     const testo =
-      "MONO MONEY — il libretto delle spese da tasca. Dici «quarantasei farmacia» e la spesa è scritta. Gratis, e i tuoi conti restano sul tuo telefono. Un omaggio di MONO, gastronomia a Torino.";
+      "MonoConvivium — i conti, la spesa e le cose da fare, dette a voce. Dici «quarantasei farmacia» e la spesa è scritta. Gratis, e i tuoi conti restano sul tuo telefono. Un omaggio di MONO, gastronomia a Torino.";
     const url = window.location.origin + import.meta.env.BASE_URL;
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: "MONO MONEY — La tua voce conta.", text: testo, url });
+        await navigator.share({ title: "MonoConvivium — La tua voce conta.", text: testo, url });
         return;
       } catch {
         // Ha chiuso il foglio di condivisione: non è un errore, non si dice niente.
@@ -94,7 +94,7 @@ function Mono() {
       {/**
        * ⚠️ 9/8: QUI SOPRA NON CI VA NIENT'ALTRO — tolti su sua richiesta la
        * fascia col marchio e «MONO · Gastronomia — Torino», e il riquadro
-       * dorato «MONO MONEY · La tua voce conta».
+       * dorato «MonoConvivium · La tua voce conta».
        * 🔑 Motivo: erano tre presentazioni una sull'altra prima di arrivare
        * alla carta che presenta davvero. Chi apre questa scheda vuole le
        * porte verso la bottega, non sentirsi dire tre volte dov'è capitato.

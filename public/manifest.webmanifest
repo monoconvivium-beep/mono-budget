@@ -1,7 +1,7 @@
 {
-  "name": "MONO MONEY — il libretto delle spese da tasca",
-  "short_name": "MONO MONEY",
-  "description": "Dì la spesa a voce e MONO MONEY la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono.",
+  "name": "MonoConvivium — i conti, la spesa e le cose da fare",
+  "short_name": "Convivium",
+  "description": "Dì la spesa a voce e MonoConvivium la scrive, la mette in categoria e tiene i conti del mese. I dati restano sul tuo telefono.",
   "id": ".",
   "start_url": ".",
   "scope": ".",

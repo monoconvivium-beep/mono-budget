@@ -1,7 +1,7 @@
 /**
  * La schermata d'ingresso — quella che spiega cos'è e perché è gratis.
  *
- * 🔑 Non è decorazione: MONO MONEY è un **omaggio della bottega**, e chi lo
+ * 🔑 Non è decorazione: MonoConvivium è un **omaggio della bottega**, e chi lo
  * riceve deve capire in cinque secondi tre cose — cos'è, che non costa niente,
  * e che i suoi soldi non li vede nessuno. Senza questa schermata l'app si apre
  * su una lista vuota e sembra un'app qualunque scaricata per sbaglio.
@@ -97,7 +97,7 @@ export function Benvenuto() {
 
         <section className="scheda-bosco mt-4 p-5">
           <p className="text-xs font-semibold tracking-widest uppercase opacity-80">
-            La promessa MONO MONEY
+            La promessa MonoConvivium
           </p>
           <p className="mt-2 text-sm leading-relaxed opacity-95">
             MONO <strong>non riceve niente</strong>: né le cifre, né le categorie, né il saldo, né

@@ -33,7 +33,7 @@ export const Route = createFileRoute("/ricette")({
   }),
   head: () => ({
     meta: [
-      { title: "Ricette — MONO MONEY" },
+      { title: "Ricette — MonoConvivium" },
       {
         name: "description",
         content:

@@ -29,7 +29,7 @@ export function PassalaAUnAmico() {
   const link = `https://money.monobottega.it/?amico=${codice}`;
 
   async function condividi() {
-    const testo = `Ti regalo MONO MONEY: dici una spesa a voce e i conti si fanno da soli. Gratis, senza pubblicità: ${link}`;
+    const testo = `Ti regalo MonoConvivium: dici una spesa a voce e i conti si fanno da soli. Gratis, senza pubblicità: ${link}`;
     try {
       // Il foglio di condivisione del telefono: WhatsApp, SMS, quello che c'è.
       if (navigator.share) {
@@ -76,7 +76,7 @@ export function PassalaAUnAmico() {
               legge, e chi sta dall'altra parte non riprova due volte. */}
           <img
             src={`${import.meta.env.BASE_URL}marchio/qr-passaparola.svg`}
-            alt="Codice da inquadrare per scaricare MONO MONEY"
+            alt="Codice da inquadrare per scaricare MonoConvivium"
             className="w-full max-w-[15rem] rounded-2xl border border-border"
             width={240}
             height={240}

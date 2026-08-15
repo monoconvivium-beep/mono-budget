@@ -1,5 +1,5 @@
 /**
- * MONO MONEY — comprensione dell'italiano parlato.
+ * MonoConvivium — comprensione dell'italiano parlato.
  *
  * File PURO: nessun React, nessuna grafica, nessuna rete.
  * Riceve una frase e restituisce i movimenti riconosciuti.

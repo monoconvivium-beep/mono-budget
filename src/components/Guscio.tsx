@@ -1,14 +1,28 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Home, BookOpen, Mic, CalendarRange, Store } from "lucide-react";
+import { Wallet, ShoppingBasket, Mic, CheckSquare, Heart } from "lucide-react";
 import { useStato } from "@/lib/store";
 
+/**
+ * LE QUATTRO PAGINE — riorganizzazione del 9/8/2026, sua richiesta.
+ *
+ * Prima erano cinque voci nate una alla volta (Home, Diario, Ascolto,
+ * Bilanci, MONO), e tre di quelle parlavano tutte di soldi. Ora una pagina
+ * per mestiere: **i soldi · la spesa · le cose da fare · il Convivium**.
+ *
+ * 🔑 Il cerchio in mezzo si chiama **DILLO** e non più «Ascolto»: fa tre
+ * mestieri (una spesa, una cosa da comprare, una cosa da fare) e il vecchio
+ * nome ne raccontava uno solo.
+ *
+ * ⚠️ Diario e Bilanci NON sono spariti: sono dentro «Soldi», raggiungibili
+ * da lì. Toglierli dalla barra non vuol dire buttarli.
+ */
 const voci = [
-  { to: "/", etichetta: "Home", Icona: Home },
-  { to: "/diario", etichetta: "Diario", Icona: BookOpen },
-  { to: "/ascolto", etichetta: "Ascolto", Icona: Mic, centro: true },
-  { to: "/anno", etichetta: "Bilanci", Icona: CalendarRange },
-  { to: "/mono", etichetta: "MONO", Icona: Store },
+  { to: "/", etichetta: "Soldi", Icona: Wallet },
+  { to: "/spesa", etichetta: "Spesa", Icona: ShoppingBasket },
+  { to: "/ascolto", etichetta: "Dillo", Icona: Mic, centro: true },
+  { to: "/dafare", etichetta: "Da fare", Icona: CheckSquare },
+  { to: "/convivium", etichetta: "Convivium", Icona: Heart },
 ];
 
 export function Guscio({
@@ -54,7 +68,7 @@ export function Guscio({
   intestazione?: ReactNode;
   marchioGrande?: boolean;
   fondo?: "cashmere" | "rosso";
-  marchio?: "intero" | "piatto" | "sorriso";
+  marchio?: "intero" | "piatto" | "sorriso" | "convivium";
   senzaIntestazione?: boolean;
 }) {
   const percorso = useRouterState({ select: (s) => s.location.pathname });
@@ -83,6 +97,9 @@ export function Guscio({
     intero: { file: "mono-orizzontale", alto: "h-[68px]" },
     piatto: { file: "mono-monogramma", alto: "h-[54px]" },
     sorriso: { file: "mono-sorriso", alto: "h-[52px]" },
+    /* Il cuore di posate del progetto sociale. È largo e basso: alla misura
+       degli altri diventerebbe un puntino, per questo sta più alto. */
+    convivium: { file: "mono-convivium", alto: "h-[58px]" },
   } as const;
   const scelto = marchi[marchio];
 
@@ -181,7 +198,14 @@ export function Guscio({
           {voci.map(({ to, etichetta, Icona, centro }) => {
             // Il ricettario vive dentro la scheda MONO: quando sei lì,
             // la linguetta accesa è quella.
-            const attivo = percorso === to || (to === "/mono" && percorso.startsWith("/ricette"));
+            /* Le pagine che vivono dentro un'altra accendono la linguetta
+               della loro casa: il ricettario sta nella Spesa, il Diario e i
+               Bilanci nei Soldi. Se no uno ci entra e la barra non gli dice
+               più dov'è. */
+            const attivo =
+              percorso === to ||
+              (to === "/spesa" && percorso.startsWith("/ricette")) ||
+              (to === "/" && (percorso === "/diario" || percorso === "/anno"));
             if (centro) {
               return (
                 <li key={to} className="-mt-7">

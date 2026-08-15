@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnoRouteImport } from './routes/anno'
 import { Route as AscoltoRouteImport } from './routes/ascolto'
+import { Route as ConviviumRouteImport } from './routes/convivium'
+import { Route as DafareRouteImport } from './routes/dafare'
 import { Route as DiarioRouteImport } from './routes/diario'
 import { Route as MonoRouteImport } from './routes/mono'
 import { Route as RicetteRouteImport } from './routes/ricette'
@@ -30,6 +32,16 @@ const AnnoRoute = AnnoRouteImport.update({
 const AscoltoRoute = AscoltoRouteImport.update({
   id: '/ascolto',
   path: '/ascolto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConviviumRoute = ConviviumRouteImport.update({
+  id: '/convivium',
+  path: '/convivium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DafareRoute = DafareRouteImport.update({
+  id: '/dafare',
+  path: '/dafare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiarioRoute = DiarioRouteImport.update({
@@ -57,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/convivium': typeof ConviviumRoute
+  '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
@@ -66,6 +80,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/convivium': typeof ConviviumRoute
+  '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
@@ -76,6 +92,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/convivium': typeof ConviviumRoute
+  '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
@@ -84,14 +102,33 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette' | '/spesa'
+    | '/'
+    | '/anno'
+    | '/ascolto'
+    | '/convivium'
+    | '/dafare'
+    | '/diario'
+    | '/mono'
+    | '/ricette'
+    | '/spesa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anno' | '/ascolto' | '/diario' | '/mono' | '/ricette' | '/spesa'
+  to:
+    | '/'
+    | '/anno'
+    | '/ascolto'
+    | '/convivium'
+    | '/dafare'
+    | '/diario'
+    | '/mono'
+    | '/ricette'
+    | '/spesa'
   id:
     | '__root__'
     | '/'
     | '/anno'
     | '/ascolto'
+    | '/convivium'
+    | '/dafare'
     | '/diario'
     | '/mono'
     | '/ricette'
@@ -102,6 +139,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnnoRoute: typeof AnnoRoute
   AscoltoRoute: typeof AscoltoRoute
+  ConviviumRoute: typeof ConviviumRoute
+  DafareRoute: typeof DafareRoute
   DiarioRoute: typeof DiarioRoute
   MonoRoute: typeof MonoRoute
   RicetteRoute: typeof RicetteRoute
@@ -129,6 +168,20 @@ declare module '@tanstack/react-router' {
       path: '/ascolto'
       fullPath: '/ascolto'
       preLoaderRoute: typeof AscoltoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/convivium': {
+      id: '/convivium'
+      path: '/convivium'
+      fullPath: '/convivium'
+      preLoaderRoute: typeof ConviviumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dafare': {
+      id: '/dafare'
+      path: '/dafare'
+      fullPath: '/dafare'
+      preLoaderRoute: typeof DafareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/diario': {
@@ -166,6 +219,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnnoRoute: AnnoRoute,
   AscoltoRoute: AscoltoRoute,
+  ConviviumRoute: ConviviumRoute,
+  DafareRoute: DafareRoute,
   DiarioRoute: DiarioRoute,
   MonoRoute: MonoRoute,
   RicetteRoute: RicetteRoute,
