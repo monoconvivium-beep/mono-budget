@@ -68,9 +68,17 @@ function Ascolto() {
             aria-expanded={comeAperto}
             aria-label={comeAperto ? "Nascondi le istruzioni" : "Mostra le istruzioni"}
             onClick={() => setComeAperto((v) => !v)}
-            className="h-7 w-7 shrink-0 rounded-full border border-border text-xs font-semibold text-muted-foreground"
+            /* Stessa regola del «?» di `Aiuto`: si tocca 44, si vede 28.
+               Questo era rimasto indietro perché è scritto a mano qui e non
+               passa dal componente — misurato il 15/8/2026. */
+            className="-m-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
           >
-            {comeAperto ? "×" : "?"}
+            <span
+              aria-hidden
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-xs font-semibold text-muted-foreground"
+            >
+              {comeAperto ? "×" : "?"}
+            </span>
           </button>
         </div>
         <ul className={`space-y-2 text-muted-foreground ${comeAperto ? "mt-3" : "hidden"}`}>

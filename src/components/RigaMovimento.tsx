@@ -91,7 +91,11 @@ export function RigaMovimento({
                   azioni.cambiaCategoria(m.id, e.target.value as Categoria, m.etichetta)
                 }
                 aria-label={`Categoria di ${m.etichetta || m.categoria}`}
-                className="absolute inset-x-0 -inset-y-2 w-full opacity-0"
+                /* La tendina invisibile è la zona che si tocca per cambiare
+                   categoria: con -inset-y-2 era alta 40 px veri, sotto il
+                   minimo di 44. Tre pixel per lato in più e nessuno se ne
+                   accorge — se non il dito, che adesso prende al primo colpo. */
+                className="absolute inset-x-0 -inset-y-3 w-full opacity-0"
               >
                 {CATEGORIE.map((c) => (
                   <option key={c} value={c}>
