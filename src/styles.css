@@ -405,15 +405,27 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 @keyframes mono-entra {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* La ciambella non "appare": si compone. Parte piccola e ruotata di un quarto,
    e si assesta - l'occhio la legge come un disegno che si chiude. */
 @keyframes mono-disegna {
-  from { opacity: 0; transform: rotate(-90deg) scale(0.86); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @utility entra {
@@ -425,5 +437,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entra, .disegna { animation: none; }
+  .entra,
+  .disegna {
+    animation: none;
+  }
 }

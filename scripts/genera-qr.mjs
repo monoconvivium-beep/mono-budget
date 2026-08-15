@@ -29,7 +29,10 @@ import { writeFileSync } from "node:fs";
 import QRCode from "qrcode";
 
 const INDIRIZZO = process.argv[2] ?? "https://convivium.monobottega.it/";
-const USCITA = new URL(`../public/marchio/${process.argv[3] ?? "qr-mono-money.svg"}`, import.meta.url);
+const USCITA = new URL(
+  `../public/marchio/${process.argv[3] ?? "qr-mono-money.svg"}`,
+  import.meta.url,
+);
 
 const svg = await QRCode.toString(INDIRIZZO, {
   type: "svg",

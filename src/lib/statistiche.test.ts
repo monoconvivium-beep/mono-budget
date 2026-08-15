@@ -78,7 +78,10 @@ describe("dove sono finiti i soldi", () => {
 
   it("a parità di totale l'ordine non balla", () => {
     // Due schermate uguali devono restare uguali: se no sembra che i conti si muovano.
-    const dati = [mov({ importo: 10, categoria: "Salute" }), mov({ importo: 10, categoria: "Bar" })];
+    const dati = [
+      mov({ importo: 10, categoria: "Salute" }),
+      mov({ importo: 10, categoria: "Bar" }),
+    ];
 
     expect(perCategoria(dati, "uscita").map((v) => v.categoria)).toEqual(["Bar", "Salute"]);
     expect(perCategoria([...dati].reverse(), "uscita").map((v) => v.categoria)).toEqual([
@@ -104,9 +107,9 @@ describe("il riepilogo", () => {
   });
 
   it("la differenza diventa negativa se si spende più di quanto entra", () => {
-    expect(riepilogo([mov({ importo: 100, tipo: "entrata" }), mov({ importo: 180 })]).differenza).toBe(
-      -80,
-    );
+    expect(
+      riepilogo([mov({ importo: 100, tipo: "entrata" }), mov({ importo: 180 })]).differenza,
+    ).toBe(-80);
   });
 
   it("senza uscite la spesa media è zero, non una divisione per zero", () => {

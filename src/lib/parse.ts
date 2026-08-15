@@ -332,11 +332,7 @@ interface Importo {
 }
 
 function normalizza(testo: string): string {
-  return testo
-    .toLowerCase()
-    .replace(/€/g, " euro ")
-    .replace(/\s+/g, " ")
-    .trim();
+  return testo.toLowerCase().replace(/€/g, " euro ").replace(/\s+/g, " ").trim();
 }
 
 function tokenizza(testo: string): string[] {

@@ -45,8 +45,7 @@ function PaginaRotta({ error, reset }: { error: Error; reset: () => void }) {
           Questa pagina non si è aperta
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Qualcosa è andato storto. Riprova, oppure torna alla home.
-          {" "}
+          Qualcosa è andato storto. Riprova, oppure torna alla home.{" "}
           <strong>I tuoi movimenti sono al sicuro</strong>: stanno su questo telefono e non si
           perdono.
         </p>
@@ -85,20 +84,20 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Avvio>
-      {/* La presentazione prende tutto lo schermo, una volta sola. Sta qui e non
+        {/* La presentazione prende tutto lo schermo, una volta sola. Sta qui e non
           dentro la Home perché non deve avere la barra in basso: chi la vede la
           prima volta non ha ancora niente da guardare nelle altre schede. */}
-      {/* Tre porte in fila, e l'ordine conta: prima si capisce cos'è e che è
+        {/* Tre porte in fila, e l'ordine conta: prima si capisce cos'è e che è
           gratis, POI si lasciano i dati. Chiedere prima di aver dato qualcosa
           fa chiudere l'app, e i dati non li raccogli lo stesso. */}
-      {!benvenutoVisto ? (
-        <Benvenuto />
-      ) : !iscrittoCome ? (
-        <Iscrizione />
-      ) : (
-        // Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente.
-        <Outlet />
-      )}
+        {!benvenutoVisto ? (
+          <Benvenuto />
+        ) : !iscrittoCome ? (
+          <Iscrizione />
+        ) : (
+          // Obbligatorio: le pagine figlie compaiono qui. Togliendo <Outlet /> non si apre più niente.
+          <Outlet />
+        )}
       </Avvio>
     </QueryClientProvider>
   );

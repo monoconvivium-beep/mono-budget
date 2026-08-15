@@ -37,7 +37,7 @@ npm run build    # produce dist/ — solo file statici
   dettatura si prova dal telefono**.
 - **Non trasformare mai un importo di nascosto e non salvare senza conferma.**
   L'italiano parlato scrive «quattro e sessanta» come `460`: l'app lo riconosce,
-  lo dice e *propone* la lettura in centesimi. Non la applica da sola.
+  lo dice e _propone_ la lettura in centesimi. Non la applica da sola.
 - **Su iPhone il pulsante «Installa» non può esistere**: Apple non lo consente a
   nessun sito. Lì si mostrano le istruzioni, ed è il massimo possibile.
 - **Quando si pubblica, cambiare `VERSIONE` in `public/sw.js`**, altrimenti i

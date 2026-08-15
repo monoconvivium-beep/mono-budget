@@ -304,9 +304,9 @@ function Mono() {
         <h2 className="mb-2 text-lg text-foreground">Come funziona</h2>
         <p>
           Tocchi il microfono, dici <strong>una</strong> spesa e l'ascolto si chiude da solo.
-          MonoConvivium ti mostra importo, categoria e testo: salva solo dopo la tua conferma, e non cambia
-          mai un importo di nascosto. Se un numero sembra letto tutto attaccato (460 invece di 4,60)
-          te lo propone, decidi tu.
+          MonoConvivium ti mostra importo, categoria e testo: salva solo dopo la tua conferma, e non
+          cambia mai un importo di nascosto. Se un numero sembra letto tutto attaccato (460 invece
+          di 4,60) te lo propone, decidi tu.
         </p>
         <p className="mt-2">
           I conti si leggono nella scheda <strong>Bilanci</strong>: il mese ti dice com'è andata

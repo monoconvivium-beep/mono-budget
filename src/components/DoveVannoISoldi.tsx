@@ -83,9 +83,7 @@ export function DoveVannoISoldi({
                 style={{ backgroundColor: v.colore }}
               />
               <span className="min-w-0 flex-1 truncate">{v.categoria}</span>
-              <span className="text-xs text-muted-foreground">
-                {Math.round(v.quota * 100)}%
-              </span>
+              <span className="text-xs text-muted-foreground">{Math.round(v.quota * 100)}%</span>
             </li>
           ))}
         </ul>

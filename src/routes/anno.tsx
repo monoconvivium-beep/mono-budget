@@ -37,7 +37,8 @@ function Bilanci() {
   const conti = riepilogo(delPeriodo);
   // ⚠️ Il futuro non si guarda: un mese che non è ancora arrivato non ha conti,
   // e lasciare la freccia attiva fa credere che l'app abbia perso dei dati.
-  const nelFuturo = anno > adesso.getFullYear() || (anno === adesso.getFullYear() && mese >= adesso.getMonth());
+  const nelFuturo =
+    anno > adesso.getFullYear() || (anno === adesso.getFullYear() && mese >= adesso.getMonth());
 
   function spostaMese(passi: number) {
     const d = new Date(anno, mese + passi, 1);
@@ -70,8 +71,7 @@ function Bilanci() {
     : 0;
   const posizioneMedia = Math.min(100, (mediaUscite / massimo) * 100);
 
-  const titoloPeriodo =
-    vista === "mese" ? `${MESI[mese]} ${anno}` : `${anno}`;
+  const titoloPeriodo = vista === "mese" ? `${MESI[mese]} ${anno}` : `${anno}`;
 
   return (
     <Guscio
@@ -158,9 +158,7 @@ function Bilanci() {
             <p className="numero text-2xl leading-tight">{euro(conti.entrate)}</p>
           </div>
           <div>
-            <p className="text-[10px] font-semibold tracking-widest uppercase opacity-70">
-              Uscite
-            </p>
+            <p className="text-[10px] font-semibold tracking-widest uppercase opacity-70">Uscite</p>
             <p className="numero text-2xl leading-tight">{euro(conti.uscite)}</p>
           </div>
         </div>

@@ -37,7 +37,10 @@ export function ListaSpuntabile({
   return (
     <ul className="scheda mt-4 overflow-hidden">
       {[...aperte, ...chiuse].map((v) => (
-        <li key={v.id} className="flex items-center gap-3 border-b border-border px-3 last:border-0">
+        <li
+          key={v.id}
+          className="flex items-center gap-3 border-b border-border px-3 last:border-0"
+        >
           <button
             type="button"
             onClick={() => onSpunta(v.id)}

@@ -61,7 +61,10 @@ function Spesa() {
       ) : (
         <ul className="scheda mt-4 overflow-hidden">
           {[...daPrendere, ...prese].map((v) => (
-            <li key={v.id} className="flex items-center gap-3 border-b border-border px-3 last:border-0">
+            <li
+              key={v.id}
+              className="flex items-center gap-3 border-b border-border px-3 last:border-0"
+            >
               {/* Tutta la riga è il bersaglio: al banco si tocca con una mano
                   sola e senza guardare bene. La ✕ resta staccata, se no si
                   cancella una cosa mentre si voleva spuntarla. */}
@@ -69,7 +72,9 @@ function Spesa() {
                 type="button"
                 onClick={() => azioni.spesaSpunta(v.id)}
                 className="flex min-h-[52px] flex-1 items-center gap-3 py-2 text-left"
-                aria-label={v.presa ? `Rimetti ${v.cosa} nella lista` : `Segna ${v.cosa} come preso`}
+                aria-label={
+                  v.presa ? `Rimetti ${v.cosa} nella lista` : `Segna ${v.cosa} come preso`
+                }
               >
                 <span
                   aria-hidden

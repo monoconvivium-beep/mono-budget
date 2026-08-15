@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Mic, Check, X, Wand2 } from "lucide-react";
-import { CATEGORIE, COLORI_CATEGORIA, euro, interpreta, type Categoria, type MovimentoBozza } from "@/lib/parse";
+import {
+  CATEGORIE,
+  COLORI_CATEGORIA,
+  euro,
+  interpreta,
+  type Categoria,
+  type MovimentoBozza,
+} from "@/lib/parse";
 import { azioni, useStato } from "@/lib/store";
 import { avvioAutomaticoPossibile, ricordaCheServeUnTocco } from "@/lib/avvio-microfono";
 import { Aiuto } from "./Aiuto";
@@ -84,7 +91,9 @@ export function Dettatura({
    * si ridisegna a ogni parola sentita e a ogni tasto premuto. Erano decine di
    * oggetti che chiedono il microfono al sistema e vengono buttati subito.
    */
-  const [supportato] = useState(() => typeof window !== "undefined" && creaRiconoscimento() !== null);
+  const [supportato] = useState(
+    () => typeof window !== "undefined" && creaRiconoscimento() !== null,
+  );
   /** Vero finché sto provando una partenza che NESSUN dito ha chiesto. */
   const partenzaDaSolo = useRef(false);
   /**
@@ -102,9 +111,7 @@ export function Dettatura({
       setAscoltato(testo);
       if (!risultati.length) {
         setFase("errore");
-        setErrore(
-          "Non ho trovato un importo. Prova così: «quattro euro e sessanta caffè».",
-        );
+        setErrore("Non ho trovato un importo. Prova così: «quattro euro e sessanta caffè».");
         return;
       }
       setBozze(
@@ -148,7 +155,10 @@ export function Dettatura({
        * ⚠️ Solo alla partenza automatica: se il no arriva dopo un tocco,
        * allora il permesso è davvero negato e va detto.
        */
-      if (partenzaDaSolo.current && (e.error === "not-allowed" || e.error === "service-not-allowed")) {
+      if (
+        partenzaDaSolo.current &&
+        (e.error === "not-allowed" || e.error === "service-not-allowed")
+      ) {
         partenzaDaSolo.current = false;
         ricordaCheServeUnTocco();
         setServeTocco(true);
@@ -381,8 +391,8 @@ export function Dettatura({
 
               {b.categoriaIncerta && (
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Non ho riconosciuto la categoria: resta <strong>Altro</strong>. Scegline una e
-                  la imparo.
+                  Non ho riconosciuto la categoria: resta <strong>Altro</strong>. Scegline una e la
+                  imparo.
                 </p>
               )}
 

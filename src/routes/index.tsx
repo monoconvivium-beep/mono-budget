@@ -159,11 +159,19 @@ function Home() {
           entra da qui. Sono due porte tenui: chi le cerca le trova, chi
           guarda le spese non ci inciampa. */}
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <Link to="/diario" className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5">
+        <Link
+          to="/diario"
+          className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5"
+        >
           <span className="text-[15px] font-bold">Il diario</span>
-          <span className="text-xs text-muted-foreground">Tutto lo storico, la ricerca e il cestino</span>
+          <span className="text-xs text-muted-foreground">
+            Tutto lo storico, la ricerca e il cestino
+          </span>
         </Link>
-        <Link to="/anno" className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5">
+        <Link
+          to="/anno"
+          className="scheda-tenue flex min-h-[64px] flex-col justify-center gap-0.5 p-3.5"
+        >
           <span className="text-[15px] font-bold">I bilanci</span>
           <span className="text-xs text-muted-foreground">Mese per mese, anno per anno</span>
         </Link>

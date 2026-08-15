@@ -56,9 +56,7 @@ function Diario() {
       .sort((a, b) => b.data.localeCompare(a.data));
   }, [movimenti, cerca, vista]);
 
-  const totale = filtrati
-    .filter((m) => m.tipo === "uscita")
-    .reduce((t, m) => t + m.importo, 0);
+  const totale = filtrati.filter((m) => m.tipo === "uscita").reduce((t, m) => t + m.importo, 0);
 
   return (
     <Guscio

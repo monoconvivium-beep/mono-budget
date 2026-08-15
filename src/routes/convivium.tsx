@@ -37,11 +37,7 @@ export const Route = createFileRoute("/convivium")({
  */
 function Convivium() {
   return (
-    <Guscio
-      titolo="MonoConvivium"
-      sottotitolo="Il cuore sociale di MONO"
-      marchio="convivium"
-    >
+    <Guscio titolo="MonoConvivium" sottotitolo="Il cuore sociale di MONO" marchio="convivium">
       {/* 1. IL PERCHÉ. Le parole vengono dal sito, non le ho inventate qui:
              se un giorno cambiano là, vanno cambiate anche qui. */}
       <section className="scheda p-5 text-center">
@@ -94,12 +90,11 @@ function Convivium() {
 
       <PassalaAUnAmico />
 
-      <Link
-        to="/mono"
-        className="scheda-tenue mt-4 flex min-h-[56px] items-center gap-3 p-3.5"
-      >
+      <Link to="/mono" className="scheda-tenue mt-4 flex min-h-[56px] items-center gap-3 p-3.5">
         <Settings className="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span className="min-w-0 flex-1 text-[15px] font-semibold">Impostazioni e copia di sicurezza</span>
+        <span className="min-w-0 flex-1 text-[15px] font-semibold">
+          Impostazioni e copia di sicurezza
+        </span>
         <span aria-hidden className="text-muted-foreground">
           ›
         </span>

@@ -55,7 +55,11 @@ export function leggiProvenienza(search: string): Provenienza {
   const da = ripulisci(p.get("da")?.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789-", 24);
   if (da) fuori.da = da;
 
-  const amico = ripulisci(p.get("amico")?.toUpperCase(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-", 12);
+  const amico = ripulisci(
+    p.get("amico")?.toUpperCase(),
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-",
+    12,
+  );
   if (amico) fuori.amico = amico;
 
   return fuori;
@@ -120,10 +124,38 @@ export function notaProvenienza(p: Provenienza): string | null {
  * alla persona sbagliata.
  */
 const PAROLE = [
-  "PANE", "MELA", "PERA", "FICO", "NOCE", "MIELE", "SALE", "PEPE",
-  "TIMO", "MENTA", "ANICE", "CACAO", "RISO", "ORZO", "FARRO", "MAIS",
-  "KIWI", "PESCA", "PRUGNA", "SEDANO", "CAROTA", "PATATA", "FAVA", "CECI",
-  "PINOLO", "SESAMO", "COCCO", "OLIVA", "SALVIA", "MIRTO", "LIMONE", "UVA",
+  "PANE",
+  "MELA",
+  "PERA",
+  "FICO",
+  "NOCE",
+  "MIELE",
+  "SALE",
+  "PEPE",
+  "TIMO",
+  "MENTA",
+  "ANICE",
+  "CACAO",
+  "RISO",
+  "ORZO",
+  "FARRO",
+  "MAIS",
+  "KIWI",
+  "PESCA",
+  "PRUGNA",
+  "SEDANO",
+  "CAROTA",
+  "PATATA",
+  "FAVA",
+  "CECI",
+  "PINOLO",
+  "SESAMO",
+  "COCCO",
+  "OLIVA",
+  "SALVIA",
+  "MIRTO",
+  "LIMONE",
+  "UVA",
 ] as const;
 
 /** Un codice nuovo, tipo «PANE-42». Il caso si passa da fuori: così si prova. */
