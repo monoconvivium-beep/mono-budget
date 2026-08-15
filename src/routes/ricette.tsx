@@ -134,7 +134,17 @@ function Copertina({ ricette }: { ricette: Ricetta[] }) {
                         {b.sotto}
                       </span>
                     </span>
-                    <span aria-hidden className="text-[#B9AD93]">
+                    {/**
+                     * 🔴 Era `text-[#B9AD93]`: beige chiaro su riquadro
+                     * cashmere, **2,02** di contrasto (misurato il 15/8/2026).
+                     * Sotto il 3 nemmeno una freccina conta come visibile: e
+                     * questa è l'unico segno che la riga si apre.
+                     * 🔑 Ora prende lo stesso colore del sottotitolo che le sta
+                     * accanto — che dentro un riquadro è l'oliva di casa. In
+                     * più toglie un colore scritto a mano nel componente, che
+                     * il sistema di design vieta da sempre.
+                     */}
+                    <span aria-hidden className="text-muted-foreground">
                       ›
                     </span>
                   </Link>
