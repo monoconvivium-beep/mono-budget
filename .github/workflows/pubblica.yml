@@ -42,7 +42,8 @@ jobs:
       - run: npm test
 
       # 🏠 LA RADICE DELL'APP — adesso è "/", perché l'app vive sul suo dominio
-      # money.monobottega.it (agganciato il 5/8 in Settings → Pages).
+      # convivium.monobottega.it (traslocato il 15/8 da money.monobottega.it;
+      # va riagganciato in Settings → Pages → Custom domain).
       #
       # ⚠️ LE DUE COSE VANNO INSIEME, e sbagliarne l'ordine fa pagina bianca —
       # è già successo due volte in una notte:

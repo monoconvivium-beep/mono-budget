@@ -16,7 +16,7 @@
 import { QrCode, Share2 } from "lucide-react";
 import { useState } from "react";
 
-import { codiceAmico } from "@/lib/origine";
+import { codiceAmico, INDIRIZZO_APP } from "@/lib/origine";
 
 import { Aiuto } from "./Aiuto";
 
@@ -26,7 +26,7 @@ export function PassalaAUnAmico() {
   const codice = codiceAmico();
 
   /** L'indirizzo con la targa personale: chi arriva da qui porta il codice. */
-  const link = `https://money.monobottega.it/?amico=${codice}`;
+  const link = `${INDIRIZZO_APP}/?amico=${codice}`;
 
   async function condividi() {
     const testo = `Ti regalo MonoConvivium: dici una spesa a voce e i conti si fanno da soli. Gratis, senza pubblicità: ${link}`;

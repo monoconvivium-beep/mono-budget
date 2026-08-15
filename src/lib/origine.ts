@@ -6,8 +6,8 @@
  * né il negozio che tiene il cartoncino sul banco, né l'amico che ha girato
  * il link. Da qui in poi ogni strada porta la sua targa:
  *
- *   money.monobottega.it/?da=edicola      → il banco dell'edicola
- *   money.monobottega.it/?amico=PANE-42   → il link girato da un amico
+ *   convivium.monobottega.it/?da=edicola      → il banco dell'edicola
+ *   convivium.monobottega.it/?amico=PANE-42   → il link girato da un amico
  *
  * La targa si ricorda sul telefono e viaggia con l'iscrizione dentro la
  * colonna `notes` di `crm_contacts` — una colonna che c'è già: zero migrazioni.
@@ -17,6 +17,20 @@
  * È la parola scritta su un volantino — solo che il volantino è un indirizzo.
  * E non tocca la promessa di prima pagina: di soldi, qui, non passa niente.
  */
+
+/**
+ * L'INDIRIZZO DELL'APP — punto unico, si cambia SOLO qui.
+ *
+ * 🔴 Perché esiste: il 15/8 l'app ha traslocato da `money.monobottega.it` a
+ * `convivium.monobottega.it`, e l'indirizzo vecchio era scritto a mano dentro
+ * il link del passaparola — un posto dove nessuno lo cercava. Un link che
+ * porta a un indirizzo morto non è un difetto piccolo: è l'amico che apre e
+ * non trova niente, e non riprova.
+ *
+ * ⚠️ Se cambia di nuovo: cambiare qui, cambiare `public/CNAME`, e rigenerare
+ * i QR con `scripts/genera-qr.mjs` — sono disegni fermi, non si aggiornano da soli.
+ */
+export const INDIRIZZO_APP = "https://convivium.monobottega.it";
 
 const CHIAVE_DA = "mono-money-da";
 const CHIAVE_AMICO = "mono-money-amico";

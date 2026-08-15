@@ -12,7 +12,7 @@
  *
  * Uso:  node scripts/genera-qr.mjs [indirizzo] [nome-file]
  *   node scripts/genera-qr.mjs                         → qr-mono-money.svg (pulito)
- *   node scripts/genera-qr.mjs "https://money.monobottega.it/?da=passaparola" qr-passaparola.svg
+ *   node scripts/genera-qr.mjs "https://convivium.monobottega.it/?da=passaparola" qr-passaparola.svg
  *
  * 🔑 I QR sono DUE e non vanno confusi:
  *  - `qr-mono-money.svg`  → l'indirizzo pulito. È quello STAMPATO sul
@@ -28,7 +28,7 @@ import { writeFileSync } from "node:fs";
 
 import QRCode from "qrcode";
 
-const INDIRIZZO = process.argv[2] ?? "https://money.monobottega.it/";
+const INDIRIZZO = process.argv[2] ?? "https://convivium.monobottega.it/";
 const USCITA = new URL(`../public/marchio/${process.argv[3] ?? "qr-mono-money.svg"}`, import.meta.url);
 
 const svg = await QRCode.toString(INDIRIZZO, {
