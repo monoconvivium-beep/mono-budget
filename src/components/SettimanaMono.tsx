@@ -52,16 +52,20 @@ export function SettimanaMono() {
           );
         })}
       </div>
+      {/* «ti tocca il gratta e vinci» l'ha bocciata lui: suonava come un
+          obbligo invece che come un premio. «Sblocchi» dice che te lo sei
+          guadagnato, e «scopri il premio» dice perché vale la pena tornare. */}
       <p className="mt-2.5 text-[13px] leading-relaxed">
         {mancano === 1 ? (
           <>
-            Ancora <strong>un giorno</strong> e ti tocca il gratta e vinci.
+            Ancora <strong>un giorno</strong> e sblocchi il gratta e vinci.
           </>
         ) : (
           <>
-            Ancora <strong>{mancano} giorni</strong> e ti tocca il gratta e vinci.
+            Ancora <strong>{mancano} giorni</strong> e sblocchi il gratta e vinci.
           </>
         )}
+        <span className="mt-1 block text-muted-foreground">Scopri il premio.</span>
       </p>
       <p className="sr-only">
         {accesi} giorni su {GIORNI_PER_VINCERE}

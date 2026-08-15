@@ -18,9 +18,31 @@
  * non parte nessuna richiesta e l'app resta muta come promesso. Per la stessa
  * ragione il logo è un file nostro, non l'immagine di un social.
  */
-import { ExternalLink, Instagram, Mail, MapPin, Store } from "lucide-react";
+import { ExternalLink, Instagram, Mail, MapPin, MessageCircle, Phone, Store } from "lucide-react";
+
+/**
+ * ☎️ IL TELEFONO — `+39 379 398 0937`, dettato da lui due volte a giorni di
+ * distanza e identico tutte e due le volte: per questo si può pubblicare.
+ * ⚠️ Un numero pubblico sbagliato è un cliente perso e resta in giro per
+ * mesi: se un domani cambia, va cambiato ANCHE nel sito e su Google, non
+ * solo qui.
+ */
+const TELEFONO = "+393793980937";
+const TELEFONO_SCRITTO = "379 398 0937";
 
 const QUADRETTI = [
+  {
+    Icona: Phone,
+    titolo: "Chiamaci",
+    sotto: TELEFONO_SCRITTO,
+    url: `tel:${TELEFONO}`,
+  },
+  {
+    Icona: MessageCircle,
+    titolo: "WhatsApp",
+    sotto: "Scrivici un messaggio",
+    url: `https://wa.me/${TELEFONO.replace("+", "")}`,
+  },
   {
     Icona: ExternalLink,
     titolo: "Il sito",
@@ -85,8 +107,14 @@ export function MarchioMono() {
           </span>
         </a>
 
-        {/* I quadretti: quattro porte, icona in alto, come nell'app centrale. */}
-        <div className="mt-3 grid grid-cols-2 gap-3">
+        {/* I CONTATTI — sei porte, icona in alto, come nell'app centrale.
+            Dal 9/8 le prime due sono il telefono e WhatsApp: prima l'unico
+            modo di parlare con la bottega era una email, che nessuno scrive
+            per chiedere se c'è ancora la focaccia. */}
+        <p className="mt-4 mb-2 px-1 text-[10px] font-bold tracking-[0.16em] text-muted-foreground uppercase">
+          Contatti
+        </p>
+        <div className="grid grid-cols-2 gap-3">
           {QUADRETTI.map(({ Icona, titolo, sotto, url }) => (
             <a
               key={url}

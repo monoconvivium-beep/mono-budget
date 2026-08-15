@@ -45,11 +45,14 @@ function Convivium() {
       {/* 1. IL PERCHÉ. Le parole vengono dal sito, non le ho inventate qui:
              se un giorno cambiano là, vanno cambiate anche qui. */}
       <section className="scheda p-5 text-center">
+        {/* Il marchio INTERO — cuore di posate più il nome scritto — che ha
+            mandato lui il 9/8. In testa alla pagina resta il solo cuore: qui
+            dentro invece c'è spazio per leggerlo, ed è il punto in cui si
+            spiega di cosa si tratta. */}
         <img
-          src={`${import.meta.env.BASE_URL}marchio/mono-convivium.svg`}
-          alt=""
-          aria-hidden="true"
-          className="mx-auto h-[70px] w-auto"
+          src={`${import.meta.env.BASE_URL}marchio/mono-convivium-intero.svg`}
+          alt="MonoConvivium"
+          className="mx-auto h-[104px] w-auto"
         />
         <h2 className="mt-3 text-xl">La tavola come spazio condiviso</h2>
         <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
