@@ -66,16 +66,20 @@ export function Benvenuto() {
 
           {/* Il marchio dell'app sotto quello della bottega: prima chi lo regala,
               poi cosa regala. */}
+          {/* ⚠️ Il nome era spezzato in due righe («MONO» / «MONEY») e per
+              questo era sopravvissuto al cambio di nome del 9/8: cercando
+              «MONO MONEY» non lo trovava nessuno. Era il titolone della PRIMA
+              schermata che si vede installando l'app. */}
           <h1 className="mt-6 text-4xl leading-none">
-            <span className="block">MONO</span>
-            <span className="block text-oro">MONEY</span>
+            <span className="block">Mono</span>
+            <span className="block text-oro">Convivium</span>
           </h1>
 
           {/* Il payoff. È il claim della bottega: si scrive per intero, col punto. */}
           <p className="mt-4 text-xl">La tua voce conta.</p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Il tuo borsellino, senza password. La tua voce diventa un bilancio chiaro: spese,
-            entrate, categorie e risparmio, in un solo gesto.
+            I conti, la lista della spesa, le cose da fare e il quaderno di cucina. Tutto detto a
+            voce, tutto sul tuo telefono.
           </p>
         </header>
 
