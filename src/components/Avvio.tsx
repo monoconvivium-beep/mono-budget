@@ -52,16 +52,50 @@ export function Avvio({ children }: { children: React.ReactNode }) {
          già bocciato una volta. */
       style={{ backgroundColor: "var(--cashmere)" }}
     >
+      {/**
+       * TUTTI E QUATTRO I MARCHI, in fila — sua richiesta del 9/8: «che sia
+       * presente tutta la parte di branding grafica».
+       *
+       * 🔑 L'ORDINE È SUO e racconta una discesa: prima la faccia (la M che
+       * sorride), poi il mestiere (il piatto), poi CHI SIAMO grande in mezzo
+       * — è il marchio della bottega e resta il più importante — e sotto il
+       * nome di quest'app, che è il progetto sociale.
+       * ⚠️ Le misure NON sono tutte uguali apposta: il marchio della bottega
+       * pesa il doppio degli altri. Quattro marchi della stessa misura non
+       * sono un'identità, sono un elenco.
+       * ⚠️ Entrano a scaletta di 90 ms: la schermata dura 900 ms in tutto,
+       * ritardi più lunghi si vedrebbero a metà.
+       */}
+      <img
+        src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
+        alt=""
+        aria-hidden="true"
+        className="entra h-11 w-auto"
+      />
+      <img
+        src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+        alt=""
+        aria-hidden="true"
+        className="entra h-12 w-auto"
+        style={{ animationDelay: "90ms" }}
+      />
       <img
         src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
         alt="MONO — Bottega Gastronomica"
-        className="entra w-[68%] max-w-[260px]"
+        className="entra w-[70%] max-w-[270px]"
+        style={{ animationDelay: "180ms" }}
+      />
+      <img
+        src={`${import.meta.env.BASE_URL}marchio/mono-convivium-intero.svg`}
+        alt="MonoConvivium"
+        className="entra h-[76px] w-auto"
+        style={{ animationDelay: "270ms" }}
       />
       <p
         className="entra text-sm tracking-[0.18em] uppercase"
         /* Il secondario di fuori adesso è chiaro (vive sul verde): qui il
            fondo è cashmere, quindi il colore scuro si scrive per esteso. */
-        style={{ color: "oklch(0.517 0.066 104.1)", animationDelay: "120ms" }}
+        style={{ color: "oklch(0.517 0.066 104.1)", animationDelay: "360ms" }}
       >
         La tua voce conta
       </p>

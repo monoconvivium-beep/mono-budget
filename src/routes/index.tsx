@@ -7,6 +7,7 @@ import { DoveVannoISoldi } from "@/components/DoveVannoISoldi";
 import { Guscio } from "@/components/Guscio";
 import { InstallaApp } from "@/components/InstallaApp";
 import { RigaMovimento } from "@/components/RigaMovimento";
+import { SettimanaMono } from "@/components/SettimanaMono";
 import { euro } from "@/lib/parse";
 import { delMese } from "@/lib/statistiche";
 import { attivi, MESI, somma, useStato } from "@/lib/store";
@@ -64,6 +65,16 @@ function Home() {
         </div>
       }
     >
+      {/**
+       * LA SETTIMANA, QUI E BEN VISIBILE — sua richiesta del 9/8.
+       * ⚠️ La striscia sì, il gratta e vinci NO: quello vive «solo ed
+       * esclusivamente» nel Convivium, parole sue. Qui si vede che i giorni
+       * si stanno accumulando; il premio si va a prendere di là.
+       * 🔑 In cima e non in fondo: se sta sotto le spese non la vede
+       * nessuno, ed è proprio la cosa che deve far tornare domani.
+       */}
+      <SettimanaMono rimandaAlConvivium />
+
       {/* 1. Cos'ho segnato — subito sotto il marchio */}
       <section className="mt-4">
         <div className="mb-2 flex items-center justify-between px-1">

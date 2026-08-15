@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { GIORNI_PER_VINCERE, pallini } from "@/lib/gratta";
 import { useStato } from "@/lib/store";
 
@@ -18,10 +20,44 @@ const LETTERE = ["L", "M", "M", "G", "V", "S", "D"] as const;
  * Chi comincia di mercoledì vede comunque L M M G V S D, e va bene così:
  * dicono «sette volte», non «da lunedì a domenica».
  */
-export function SettimanaMono() {
+export function SettimanaMono({
+  /**
+   * In Home la striscia deve anche dire DOVE si va a prendere il premio: il
+   * gratta e vinci vive solo nel Convivium (sua regola), e senza questo
+   * rimando chi compie i sette giorni vedrebbe la striscia sparire senza
+   * capire dov'è finita.
+   */
+  rimandaAlConvivium = false,
+}: {
+  rimandaAlConvivium?: boolean;
+} = {}) {
   const { striscia, biglietto } = useStato();
 
-  // Già giocato: la striscia ha finito il suo lavoro e si toglie di mezzo.
+  // C'è un biglietto da grattare: in Home si dice dov'è, altrove niente.
+  if (biglietto && !biglietto.grattato) {
+    if (!rimandaAlConvivium) return null;
+    return (
+      <Link
+        to="/convivium"
+        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border-2 border-[var(--oro)] bg-[linear-gradient(160deg,#3E5A43,#2E4230)] p-3.5 text-[var(--cashmere)] shadow-rialzata"
+      >
+        <span aria-hidden className="text-2xl">
+          ☕
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Il tuo gratta e vinci è pronto</span>
+          <span className="block truncate text-xs text-[rgba(244,236,221,0.8)]">
+            Sette giorni di fila. Vai a grattarlo nel Convivium
+          </span>
+        </span>
+        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+          ›
+        </span>
+      </Link>
+    );
+  }
+
+  // Già grattato: la striscia ha finito il suo lavoro e si toglie di mezzo.
   if (biglietto) return null;
 
   const accesi = pallini(striscia);
