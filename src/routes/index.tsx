@@ -127,32 +127,19 @@ function Home() {
       {/* Le entrate: senza stipendio «da parte» è un numero finto. */}
       <AggiungiEntrata />
 
-      {/* IL QUADERNO DI CUCINA ANCHE QUI — sua richiesta del 9/8: «ho paura
-          che la gente non lo veda». Casa sua è la pagina Spesa, ma questa è
-          la schermata che aprono tutti i giorni, e un lavoro che non si
-          incontra per l'utente non esiste. Due porte, non due ricettari. */}
-      <Link
-        to="/ricette"
-        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
-      >
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
-            alt=""
-            aria-hidden="true"
-            className="h-8 w-8"
-          />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">Il quaderno di cucina</span>
-          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
-            15 basi dello chef, e le tue dette a voce
-          </span>
-        </span>
-        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
-          ›
-        </span>
-      </Link>
+      {/**
+       * 🔴 IL QUADERNO DI CUCINA NON STA PIÙ QUI — sua decisione del 15/8/2026.
+       *
+       * Il 9/8 era stato messo **anche** in questa schermata («ho paura che la
+       * gente non lo veda»), identico a quello della Spesa. Ma erano la stessa
+       * identica carta in due posti: non due porte, **un doppione** — e un
+       * doppione su una pagina di conti è una cosa che c'entra poco, messa
+       * dove l'occhio cerca i soldi.
+       *
+       * ⚠️ Non è stato tolto: è **cresciuto** dov'è casa sua (la Spesa), dove
+       * adesso è un blocco intero invece di una strisciolina. Questa pagina
+       * parla di soldi e basta.
+       */}
 
       {/* Diario e Bilanci non sono più in fondo allo schermo: da oggi la
           barra ha quattro voci e questa è la pagina dei soldi, quindi si

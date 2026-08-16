@@ -1,5 +1,5 @@
 /**
- * LA SCHERMATA D'AVVIO — un secondo di marchio, poi si lavora.
+ * LA SCHERMATA D'AVVIO — due secondi e mezzo di marchio, poi si lavora.
  *
  * 🔑 È il mezzo secondo in cui un'app dice di chi è. Tutte quelle grandi ce
  * l'hanno, e non è vanità: quando apri qualcosa venti volte al giorno, quello
@@ -8,8 +8,13 @@
  * ⚠️ Si vede **solo quando l'app è installata**, non nel browser. Nel browser
  * uno ha già la barra dell'indirizzo davanti e sa dov'è: una schermata in più
  * sarebbe solo un secondo rubato.
- * ⚠️ Dura **900 ms e non di più**: oltre non è un saluto, è un'attesa. E chi ha
- * chiesto meno movimento nelle impostazioni del telefono non la vede affatto.
+ * ⏱️ **Durava 900 ms, dal 15/8/2026 dura 2400** — sua richiesta: «deve cadere
+ * l'occhio, si devono poter vedere tutti i loghi». A 900 ms i quattro marchi
+ * facevano appena in tempo a entrare che la schermata era già sparita: c'erano,
+ * ma nessuno li vedeva. Non è un'attesa più lunga per vanità — è il tempo
+ * perché quattro cose si leggano invece di lampeggiare.
+ * ⚠️ Chi ha chiesto meno movimento nelle impostazioni del telefono non la vede
+ * affatto: quella resta una preferenza di accessibilità, non un capriccio.
  */
 import { useEffect, useState } from "react";
 
@@ -29,7 +34,7 @@ export function Avvio({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!mostra) return;
-    const t = setTimeout(() => setMostra(false), 900);
+    const t = setTimeout(() => setMostra(false), 2400);
     return () => clearTimeout(t);
   }, [mostra]);
 
@@ -63,8 +68,9 @@ export function Avvio({ children }: { children: React.ReactNode }) {
        * ⚠️ Le misure NON sono tutte uguali apposta: il marchio della bottega
        * pesa il doppio degli altri. Quattro marchi della stessa misura non
        * sono un'identità, sono un elenco.
-       * ⚠️ Entrano a scaletta di 90 ms: la schermata dura 900 ms in tutto,
-       * ritardi più lunghi si vedrebbero a metà.
+       * ⚠️ Entrano a scaletta di **140 ms** (erano 90): l'ultimo arriva a 560 ms
+       * e da lì restano insieme sotto gli occhi quasi due secondi. Con la
+       * scaletta stretta di prima si accavallavano e sembravano una cosa sola.
        */}
       <img
         src={`${import.meta.env.BASE_URL}marchio/mono-sorriso.svg`}
@@ -77,25 +83,25 @@ export function Avvio({ children }: { children: React.ReactNode }) {
         alt=""
         aria-hidden="true"
         className="entra h-12 w-auto"
-        style={{ animationDelay: "90ms" }}
+        style={{ animationDelay: "140ms" }}
       />
       <img
         src={`${import.meta.env.BASE_URL}marchio/mono-orizzontale.svg`}
         alt="MONO — Bottega Gastronomica"
         className="entra w-[70%] max-w-[270px]"
-        style={{ animationDelay: "180ms" }}
+        style={{ animationDelay: "280ms" }}
       />
       <img
         src={`${import.meta.env.BASE_URL}marchio/mono-convivium-intero.svg`}
         alt="MonoConvivium"
         className="entra h-[76px] w-auto"
-        style={{ animationDelay: "270ms" }}
+        style={{ animationDelay: "420ms" }}
       />
       <p
         className="entra text-sm tracking-[0.18em] uppercase"
         /* Il secondario di fuori adesso è chiaro (vive sul verde): qui il
            fondo è cashmere, quindi il colore scuro si scrive per esteso. */
-        style={{ color: "oklch(0.517 0.066 104.1)", animationDelay: "360ms" }}
+        style={{ color: "oklch(0.517 0.066 104.1)", animationDelay: "560ms" }}
       >
         La tua voce conta
       </p>

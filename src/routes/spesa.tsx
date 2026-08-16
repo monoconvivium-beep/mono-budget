@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { DettaturaRiga } from "@/components/DettaturaRiga";
 import { Guscio } from "@/components/Guscio";
-import { interpretaIngrediente } from "@/lib/cucina";
+import { BASI, interpretaIngrediente } from "@/lib/cucina";
 import { fraseSpesa } from "@/lib/spesa";
 import { azioni, useStato } from "@/lib/store";
 
@@ -32,6 +32,9 @@ function Spesa() {
   const voci = stato.spesa;
   const daPrendere = voci.filter((v) => !v.presa);
   const prese = voci.filter((v) => v.presa);
+  /* Quante ricette ha dettato lui: serve a far dire al quaderno una cosa
+     vera invece di una promessa generica. */
+  const mie = stato.ricette.length;
 
   /* La frase cambia a ogni apertura della schermata, non a ogni tocco:
      se cambiasse mentre spunti la spesa sembrerebbe un'insegna lampeggiante. */
@@ -117,29 +120,65 @@ function Spesa() {
         </button>
       )}
 
-      {/* IL RICETTARIO vive qui dal 9/8: è la pagina di quello che si compra
-          e si cucina, e prima stava in Home fra i conti. Rosso, come la sua
-          pagina: si riconosce prima di leggerlo. */}
+      {/**
+       * IL QUADERNO DI CUCINA — rifatto il 15/8/2026, sua richiesta.
+       *
+       * 🔴 Fino a ieri era una **strisciolina identica** a quella che stava in
+       * Home: la stessa carta in due posti. Lui ha tolto quella dei Soldi —
+       * lì parlava di cucina in mezzo ai conti — e ha chiesto che qui fosse
+       * **fatta in un'altra maniera**. Giusto: adesso questa è l'unica porta
+       * del ricettario, e una porta sola deve avere la misura di una porta.
+       *
+       * 🔑 La domanda al posto dell'etichetta. Non dice più «Il quaderno di
+       * cucina» (che è un nome, e un nome non chiama nessuno): dice **«E
+       * adesso che ci faccio?»**, che è esattamente il pensiero di chi ha
+       * appena finito di scrivere la lista della spesa. Il nome resta sopra,
+       * piccolo, per chi lo cerca.
+       * 🔑 I numeri sono **contati, non scritti a mano**: le basi si contano da
+       * `BASI` (oggi 15, e il giorno che ne aggiungiamo una questa riga si
+       * aggiorna da sola), le tue da quelle davvero dettate. Un numero fisso in
+       * una frase invecchia in silenzio, e nessuno se ne accorge finché un
+       * cliente non lo conta.
+       */}
       <Link
         to="/ricette"
-        className="mt-4 flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
+        className="mt-5 block rounded-3xl border border-[#8C3F22] bg-[var(--azione-scheda)] p-5 text-[var(--azione-testo)] shadow-rialzata"
       >
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4E7C8]">
-          <img
-            src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
-            alt=""
-            aria-hidden="true"
-            className="h-8 w-8"
-          />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">Il quaderno di cucina</span>
-          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
-            15 basi dello chef, e le tue dette a voce
+        <span className="flex items-start gap-3.5">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#F4E7C8]">
+            <img
+              src={`${import.meta.env.BASE_URL}marchio/mono-monogramma.svg`}
+              alt=""
+              aria-hidden="true"
+              className="h-10 w-10"
+            />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[10px] font-bold tracking-[0.18em] text-[rgba(244,236,221,0.72)] uppercase">
+              Il quaderno di cucina
+            </span>
+            <span className="mt-1 block font-[var(--font-display)] text-2xl leading-tight font-semibold">
+              E adesso che ci faccio?
+            </span>
           </span>
         </span>
-        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
-          ›
+
+        <span className="mt-3.5 block text-sm leading-relaxed text-[rgba(244,236,221,0.88)]">
+          {BASI.length} basi dello chef, spiegate passo per passo.
+          {mie === 0
+            ? " E le tue, quando vorrai dettarle."
+            : mie === 1
+              ? " E la tua, detta a voce."
+              : ` E le tue ${mie} ricette, dette a voce.`}
+        </span>
+
+        <span className="mt-4 flex items-center justify-between gap-3">
+          <span className="pillola bg-[var(--cashmere)] text-sm font-bold text-[#262321]">
+            Apri il quaderno
+          </span>
+          <span aria-hidden className="text-xl text-[rgba(244,236,221,0.8)]">
+            ›
+          </span>
         </span>
       </Link>
 
