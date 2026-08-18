@@ -273,7 +273,9 @@ function Indietro() {
     <Link
       to="/ricette"
       search={{}}
-      className="mb-2 inline-flex items-center gap-1 text-sm text-[rgba(244,236,221,0.85)]"
+      /* 44 px veri anche qui: era alto 40 (misurato il 17/8). `-ml-2` si
+         riprende il respiro in più, così a schermo la riga non si sposta. */
+      className="-ml-2 mb-2 inline-flex min-h-[44px] items-center gap-1 px-2 text-sm text-[rgba(244,236,221,0.85)]"
     >
       ‹ Ricette
     </Link>
