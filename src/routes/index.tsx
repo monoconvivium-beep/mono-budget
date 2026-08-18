@@ -8,6 +8,7 @@ import { Guscio } from "@/components/Guscio";
 import { InstallaApp } from "@/components/InstallaApp";
 import { RigaMovimento } from "@/components/RigaMovimento";
 import { SettimanaMono } from "@/components/SettimanaMono";
+import { SpeseCheTornano } from "@/components/SpeseCheTornano";
 import { euro } from "@/lib/parse";
 import { delMese } from "@/lib/statistiche";
 import { attivi, MESI, somma, useStato } from "@/lib/store";
@@ -23,9 +24,10 @@ export const Route = createFileRoute("/")({ component: Home });
  *
  * ⚠️ Prima l'ordine era il contrario (torta, numeri, dettatura, spese): è
  * stato cambiato su sua richiesta, non per gusto. Non rimetterlo com'era.
- * ⚠️ La barra «Dì una spesa» è finita in fondo perché nell'elenco non c'era:
- * il gesto ce l'ha comunque sempre sotto il pollice, è il cerchio grande in
- * mezzo alla barra di navigazione.
+ * ⚠️ Dal 17/8 la barra «Dì una spesa» sta **in cima**, non più in coda: il
+ * microfono è uscito dalla barra di navigazione (al centro c'è il Convivium)
+ * e ogni schermata si tiene il suo. L'ordine delle quattro cose qui sotto
+ * resta quello che ha dettato lui.
  *
  * 🔑 Il verde bosco sta su **un blocco solo** per schermata, e da oggi
  * l'accento vero è il **terracotta**: il verde è l'eccezione, non la regola.
@@ -75,6 +77,22 @@ function Home() {
        */}
       <SettimanaMono rimandaAlConvivium />
 
+      {/**
+       * 🎙️ LA VOCE PER PRIMA — spostata quassù il 17/8/2026.
+       *
+       * 🔴 Perché è cambiato: fino a ieri il microfono era il cerchio in mezzo
+       * alla barra, sempre sotto il pollice, e qui bastava tenerlo in coda.
+       * Da oggi il centro della barra è il Convivium e **ogni schermata si
+       * tiene il suo microfono**: lasciarlo in fondo avrebbe voluto dire
+       * scorrere tutta la Home per segnare un caffè — cioè il gesto più
+       * frequente dell'app diventato il più lontano.
+       * 🔑 Adesso è come nella Spesa e in Da fare: si apre la pagina e la prima
+       * cosa che si incontra è il modo di parlarci. Stessa regola ovunque.
+       */}
+      <div className="mt-4">
+        <Dettatura forma="barra" />
+      </div>
+
       {/* 1. Cos'ho segnato — subito sotto il marchio */}
       <section className="mt-4">
         <div className="mb-2 flex items-center justify-between px-1">
@@ -84,7 +102,7 @@ function Home() {
 
         {movimenti.length === 0 ? (
           <p className="scheda p-6 text-center text-sm text-muted-foreground">
-            Ancora nessun movimento. Tocca il cerchio in fondo e dì la prima.
+            Ancora nessun movimento. Tocca «Dì una spesa» qui sopra e dì la prima.
           </p>
         ) : (
           <ul className="space-y-2">
@@ -127,6 +145,9 @@ function Home() {
       {/* Le entrate: senza stipendio «da parte» è un numero finto. */}
       <AggiungiEntrata />
 
+      {/* Le spese che tornano: compare da sola quando c'è qualcosa da dire. */}
+      <SpeseCheTornano />
+
       {/**
        * 🔴 IL QUADERNO DI CUCINA NON STA PIÙ QUI — sua decisione del 15/8/2026.
        *
@@ -162,13 +183,6 @@ function Home() {
           <span className="text-[15px] font-bold">I bilanci</span>
           <span className="text-xs text-muted-foreground">Mese per mese, anno per anno</span>
         </Link>
-      </div>
-
-      {/* La voce resta raggiungibile anche da qui, ma in coda: nell'ordine
-          che ha dettato non c'era, e il cerchio della barra in fondo fa già
-          la stessa cosa con un tocco. */}
-      <div className="mt-6">
-        <Dettatura forma="barra" />
       </div>
 
       {/* Sta qui perché è il momento in cui uno ha appena provato la voce:

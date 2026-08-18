@@ -17,6 +17,7 @@ import { Cake, ChefHat, Croissant, Droplet, IceCream, Mic, Plus, Sparkles } from
 
 import { Aiuto } from "@/components/Aiuto";
 import { EditorRicetta } from "@/components/EditorRicetta";
+import { IngredientiNellaSpesa } from "@/components/IngredientiNellaSpesa";
 import { Guscio } from "@/components/Guscio";
 import {
   basiPerFamiglia,
@@ -221,6 +222,16 @@ function VistaBase({ base }: { base: RicettaBase }) {
           </li>
         ))}
       </ul>
+
+      {/**
+       * I DUE PONTI, in ordine di quando servono.
+       * Prima si compra, poi si paga: la lista della spesa viene prima dei
+       * conti, e il bottone chiaro sta sopra quello dorato.
+       * ⚠️ Sono due gesti diversi e devono restare due bottoni: chi vuole
+       * ricordarsi di comprare le uova non vuole vedersi comparire un
+       * movimento nei conti.
+       */}
+      <IngredientiNellaSpesa ingredienti={base.ingredienti} />
 
       {/* Il ponte verso i conti: cucini, segni, i conti tornano. */}
       <Link

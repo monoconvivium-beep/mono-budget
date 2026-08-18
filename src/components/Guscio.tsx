@@ -1,28 +1,47 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Wallet, ShoppingBasket, Mic, CheckSquare, Heart } from "lucide-react";
+import { Wallet, ShoppingBasket, ChefHat, CheckSquare } from "lucide-react";
 import { useStato } from "@/lib/store";
 
 /**
- * LE QUATTRO PAGINE — riorganizzazione del 9/8/2026, sua richiesta.
+ * LA BARRA — rifatta il 17/8/2026, e l'idea del centro è sua.
  *
- * Prima erano cinque voci nate una alla volta (Home, Diario, Ascolto,
- * Bilanci, MONO), e tre di quelle parlavano tutte di soldi. Ora una pagina
- * per mestiere: **i soldi · la spesa · le cose da fare · il Convivium**.
+ * 🔴 Il problema: gli strumenti sono QUATTRO (soldi, spesa, ricettario, cose da
+ * fare) ma i bottoni ne mostravano tre. Il **ricettario non aveva il suo** e si
+ * raggiungeva solo passando dalla Spesa: una stanza che bisogna sapere che
+ * esiste. Il quinto posto se lo prendeva il microfono.
  *
- * 🔑 Il cerchio in mezzo si chiama **DILLO** e non più «Ascolto»: fa tre
- * mestieri (una spesa, una cosa da comprare, una cosa da fare) e il vecchio
- * nome ne raccontava uno solo.
+ * 🔑 LA SOLUZIONE, sua: **il microfono esce dalla barra e il centro diventa il
+ * Convivium**. Regge per due motivi, e nessuno dei due è estetico.
+ * · Il microfono **non serve nella barra**: ogni schermata ha già il suo, lì
+ *   dove si detta — la spesa nella Spesa, la faccenda in Da fare, la ricetta
+ *   nel ricettario. Un bottone che ti porta *altrove* per parlare era un giro
+ *   in più rispetto a parlare dove sei.
+ * · Il **posto centrale è il più importante della barra**, ed è giusto che ci
+ *   stia chi siamo e non uno strumento. Prima il Convivium era l'ultima voce a
+ *   destra, in fila con la lista della spesa: adesso è il cuore, al centro.
  *
- * ⚠️ Diario e Bilanci NON sono spariti: sono dentro «Soldi», raggiungibili
- * da lì. Toglierli dalla barra non vuol dire buttarli.
+ * ⚠️ La schermata `/ascolto` NON è stata tolta: ci arriva ancora il ponte del
+ * ricettario («segna la spesa degli ingredienti», con la categoria già scelta).
+ * È uscita dalla barra, non dall'app.
  */
-const voci = [
+/**
+ * ⚠️ Due forme diverse, e il tipo lo dichiara invece di far finta.
+ * Le voci normali hanno un'icona disegnata; quella di mezzo no, perché ci va
+ * il **marchio vero** del Convivium. Scrivere un'icona finta solo per far
+ * contento il controllo dei tipi avrebbe lasciato in giro un campo che non
+ * serve a nessuno e che il prossimo crede di dover usare.
+ */
+type Voce =
+  | { to: string; etichetta: string; Icona: typeof Wallet; centro?: false }
+  | { to: string; etichetta: string; centro: true };
+
+const voci: Voce[] = [
   { to: "/", etichetta: "Soldi", Icona: Wallet },
   { to: "/spesa", etichetta: "Spesa", Icona: ShoppingBasket },
-  { to: "/ascolto", etichetta: "Dillo", Icona: Mic, centro: true },
+  { to: "/convivium", etichetta: "Convivium", centro: true },
+  { to: "/ricette", etichetta: "Ricette", Icona: ChefHat },
   { to: "/dafare", etichetta: "Da fare", Icona: CheckSquare },
-  { to: "/convivium", etichetta: "Convivium", Icona: Heart },
 ];
 
 export function Guscio({
@@ -199,30 +218,43 @@ export function Guscio({
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
         <ul className="mx-auto flex max-w-md items-end justify-between px-3 py-1.5">
-          {voci.map(({ to, etichetta, Icona, centro }) => {
-            // Il ricettario vive dentro la scheda MONO: quando sei lì,
-            // la linguetta accesa è quella.
-            /* Le pagine che vivono dentro un'altra accendono la linguetta
-               della loro casa: il ricettario sta nella Spesa, il Diario e i
-               Bilanci nei Soldi. Se no uno ci entra e la barra non gli dice
-               più dov'è. */
+          {voci.map((voce) => {
+            const { to, etichetta } = voce;
+            /* ⚠️ Il ricettario NON accende più la Spesa: dal 17/8 ha la sua
+               linguetta. Restano appoggiate a «Soldi» solo Diario e Bilanci,
+               che vivono davvero dentro quella pagina — se no uno ci entra e
+               la barra non gli dice più dov'è. */
             const attivo =
               percorso === to ||
-              (to === "/spesa" && percorso.startsWith("/ricette")) ||
+              (to === "/ricette" && percorso.startsWith("/ricette")) ||
               (to === "/" && (percorso === "/diario" || percorso === "/anno"));
-            if (centro) {
+            if (voce.centro) {
               return (
                 <li key={to} className="-mt-7">
                   <Link
                     to={to}
-                    aria-label="Ascolto"
-                    // Terracotta: è il gesto principale dell'app, e da oggi il
-                    // colore delle azioni è il terracotta. Il verde resta al
-                    // blocco dei numeri, uno per schermata.
-                    className="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-[var(--azione-scheda)] text-[var(--azione-testo)] shadow-rialzata"
+                    aria-label="Convivium"
+                    /**
+                     * IL CUORE AL CENTRO — il posto più importante della barra.
+                     * Terracotta pieno, come tutte le cose che si toccano.
+                     * ⚠️ Dentro non c'è un'icona qualunque ma il **marchio
+                     * vero** del progetto (il cuore di posate), e sta sul suo
+                     * dischetto cashmere: sul terracotta, da solo, sparirebbe —
+                     * e la versione svuotata del marchio non si usa. È la
+                     * stessa regola della M col sorriso sul bottone del
+                     * microfono.
+                     */
+                    className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-full bg-[var(--azione-scheda)] text-[var(--azione-testo)] shadow-rialzata"
                   >
-                    <Icona className="h-6 w-6" />
-                    <span className="mt-0.5 text-[10px] font-semibold tracking-wide">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--cashmere)]">
+                      <img
+                        src={`${import.meta.env.BASE_URL}marchio/mono-convivium.svg`}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-6 w-auto"
+                      />
+                    </span>
+                    <span className="text-[8px] font-bold tracking-[0.08em]">
                       {etichetta.toUpperCase()}
                     </span>
                   </Link>
@@ -252,7 +284,7 @@ export function Guscio({
                       : "text-[var(--azione-scheda)]"
                   }`}
                 >
-                  <Icona className="h-5 w-5" />
+                  <voce.Icona className="h-5 w-5" />
                   {etichetta}
                 </Link>
               </li>
