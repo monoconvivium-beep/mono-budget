@@ -25,7 +25,8 @@ import type { Movimento } from "./store";
 export interface SpesaRicorrente {
   /** Come l'ha chiamata chi l'ha detta: «netflix», «palestra», «bolletta». */
   etichetta: string;
-  /** Quanto costa di solito, in centesimi: la MEDIANA, non la media. */
+  /** Quanto costa di solito, in euro: la MEDIANA, non la media — una
+   *  bolletta sballata una volta sposta la media e lascia stare la mediana. */
   tipico: number;
   /** In quanti mesi diversi è comparsa. */
   mesi: number;
@@ -56,13 +57,21 @@ function chiave(etichetta: string): string {
   return etichetta.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+/**
+ * ⚠️ GLI IMPORTI QUI SONO IN EURO, non in centesimi: `4.6` vuol dire 4,60 €
+ * (vedi `interpreta` in `lib/parse.ts`, che salva `valore` con due decimali).
+ * Per questo la mediana di due numeri si ferma **a due decimali** invece di
+ * arrotondare all'intero: con `Math.round` la mediana fra 9,99 e 10,99 sarebbe
+ * diventata «10» — cioè un abbonamento di 10 € al posto di uno da 10,49, e un
+ * errore di 5,88 € sul conto dell'anno. Trovato provando dal vivo il 17/8.
+ */
 function mediana(numeri: number[]): number {
   const ordinati = [...numeri].sort((a, b) => a - b);
   const mezzo = Math.floor(ordinati.length / 2);
   if (!ordinati.length) return 0;
-  return ordinati.length % 2
-    ? (ordinati[mezzo] ?? 0)
-    : Math.round(((ordinati[mezzo - 1] ?? 0) + (ordinati[mezzo] ?? 0)) / 2);
+  if (ordinati.length % 2) return ordinati[mezzo] ?? 0;
+  const meta = ((ordinati[mezzo - 1] ?? 0) + (ordinati[mezzo] ?? 0)) / 2;
+  return Math.round(meta * 100) / 100;
 }
 
 /**
