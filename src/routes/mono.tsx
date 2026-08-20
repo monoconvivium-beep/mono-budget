@@ -5,7 +5,7 @@ import { Guscio } from "@/components/Guscio";
 import { Aiuto } from "@/components/Aiuto";
 import { MarchioMono } from "@/components/MarchioMono";
 import { PassalaAUnAmico } from "@/components/PassalaAUnAmico";
-import { COLORI_CATEGORIA, CATEGORIE, euro, pillolaDi } from "@/lib/parse";
+import { coloreCategoria, CATEGORIE, euro, pillolaDi } from "@/lib/parse";
 import { versoCsv } from "@/lib/statistiche";
 import { attivi, azioni, useStato } from "@/lib/store";
 
@@ -269,7 +269,9 @@ function Mono() {
                 </span>
                 <span
                   className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: COLORI_CATEGORIA[r.categoria] }}
+                  style={{
+                    backgroundColor: coloreCategoria(r.categoria, stato.categoriePersonali),
+                  }}
                 />
                 <button
                   type="button"

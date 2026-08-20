@@ -5,7 +5,7 @@
  * i conti. Così i numeri si possono provare senza aprire l'app — ed è
  * importante, perché un grafico sbagliato non si vede: sembra solo strano.
  */
-import { COLORI_CATEGORIA, type Categoria, type Tipo } from "./parse";
+import { coloreCategoria, type Categoria, type CategoriaPersonale, type Tipo } from "./parse";
 import type { Movimento } from "./store";
 
 export interface VoceCategoria {
@@ -38,7 +38,12 @@ export function dellAnno(movimenti: readonly Movimento[], anno: number): Movimen
  * ⚠️ A parità di totale l'ordine è **alfabetico**, non casuale: due schermate
  * uguali devono restare uguali, altrimenti sembra che i conti si muovano.
  */
-export function perCategoria(movimenti: readonly Movimento[], tipo: Tipo): VoceCategoria[] {
+export function perCategoria(
+  movimenti: readonly Movimento[],
+  tipo: Tipo,
+  /** Le categorie inventate da chi usa l'app: servono per il loro colore. */
+  personali: readonly CategoriaPersonale[] = [],
+): VoceCategoria[] {
   const somme = new Map<Categoria, { totale: number; quanti: number }>();
 
   for (const m of movimenti) {
@@ -56,7 +61,7 @@ export function perCategoria(movimenti: readonly Movimento[], tipo: Tipo): VoceC
       totale: Math.round(v.totale * 100) / 100,
       quota: v.totale / totale,
       quantiMovimenti: v.quanti,
-      colore: COLORI_CATEGORIA[categoria],
+      colore: coloreCategoria(categoria, [...personali]),
     }))
     .sort((a, b) => b.totale - a.totale || a.categoria.localeCompare(b.categoria, "it"));
 }

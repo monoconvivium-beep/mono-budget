@@ -19,9 +19,23 @@ export const CATEGORIE = [
   "Altro",
 ] as const;
 
-export type Categoria = (typeof CATEGORIE)[number];
+/** Le undici di casa: quelle che ci sono già all'apertura. */
+export type CategoriaBase = (typeof CATEGORIE)[number];
 
-export const COLORI_CATEGORIA: Record<Categoria, string> = {
+/**
+ * Una categoria è **testo libero**, non un elenco chiuso.
+ *
+ * 🔴 Perché: «Trasporti» tiene dentro la benzina e il biglietto del pullman,
+ * che sono due spese diverse per chi le guarda a fine mese. Un elenco deciso
+ * da noi costringe a scegliere la casella meno sbagliata, e un bilancio fatto
+ * di caselle meno sbagliate non serve a nessuno.
+ *
+ * Le undici di casa restano, e restano prime: sono il punto di partenza, non
+ * il recinto.
+ */
+export type Categoria = string;
+
+export const COLORI_CATEGORIA: Record<CategoriaBase, string> = {
   Casa: "#4E6B47",
   "Spesa alimentare": "#CBA75A",
   Bar: "#B5723F",
@@ -39,6 +53,68 @@ export const COLORI_CATEGORIA: Record<Categoria, string> = {
   "Tempo libero": "#7E9247",
   Altro: "#8A8578",
 };
+
+/** Una categoria creata da chi usa l'app: un nome e un colore, niente altro. */
+export interface CategoriaPersonale {
+  nome: string;
+  colore: string;
+}
+
+/**
+ * I colori per le categorie nuove.
+ *
+ * Restano dentro la tavolozza MONO: una categoria inventata non deve sembrare
+ * appiccicata da un'altra app. Sono tutti diversi da quelli delle undici di
+ * casa, perché nella torta due fette dello stesso colore si leggono come una
+ * sola — la lezione già pagata con Shopping e Spesa alimentare.
+ */
+export const COLORI_DISPONIBILI = [
+  "#7A5C3E", // cuoio
+  "#3F6B6B", // ottanio
+  "#9A6A2F", // ambra scura
+  "#5B5F7E", // ardesia
+  "#8C5A70", // prugna chiara
+  "#4F7355", // salvia scura
+  "#A8763A", // rame
+  "#6B4E7A", // viola scuro
+  "#37585F", // petrolio
+  "#8E5A48", // mattone chiaro
+] as const;
+
+/**
+ * IL COLORE DI UNA CATEGORIA, di casa o inventata.
+ *
+ * Per le nuove il colore **si calcola dal nome**, non si sorteggia: la stessa
+ * categoria deve avere sempre lo stesso colore, su questo telefono e sul
+ * prossimo, altrimenti la torta cambia significato a ogni apertura.
+ */
+export function coloreCategoria(nome: Categoria, personali: CategoriaPersonale[] = []): string {
+  const scelto = personali.find((c) => c.nome === nome)?.colore;
+  if (scelto) return scelto;
+  if (nome in COLORI_CATEGORIA) return COLORI_CATEGORIA[nome as CategoriaBase];
+  return COLORI_DISPONIBILI[impronta(nome) % COLORI_DISPONIBILI.length] ?? COLORI_CATEGORIA.Altro;
+}
+
+/** Numero stabile ricavato da un nome: stesso nome, stesso numero, sempre. */
+function impronta(testo: string): number {
+  let somma = 0;
+  for (const carattere of testo.toLocaleLowerCase("it")) {
+    somma = (somma * 31 + carattere.charCodeAt(0)) % 100000;
+  }
+  return somma;
+}
+
+/**
+ * Il colore da proporre a una categoria nuova: il primo della tavolozza che
+ * non è già in uso, così due categorie create di fila non si somigliano.
+ */
+export function coloreLibero(giaUsati: string[]): string {
+  return (
+    COLORI_DISPONIBILI.find((c) => !giaUsati.includes(c)) ??
+    COLORI_DISPONIBILI[giaUsati.length % COLORI_DISPONIBILI.length] ??
+    COLORI_CATEGORIA.Altro
+  );
+}
 
 /** I due soli inchiostri di casa: la carta e la seppia. Non se ne inventano altri. */
 const CASHMERE = "#F4ECDD";
@@ -105,8 +181,11 @@ const SOGLIA_LEGGIBILE = 4.5;
  * guarda vede lo stesso colore di prima, un filo più profondo.
  * 🔑 Vale anche per le categorie che verranno: si calcola, non si sceglie.
  */
-export function pillolaDi(categoria: Categoria): { fondo: string; inchiostro: string } {
-  let fondo = COLORI_CATEGORIA[categoria];
+export function pillolaDi(
+  categoria: Categoria,
+  personali: CategoriaPersonale[] = [],
+): { fondo: string; inchiostro: string } {
+  let fondo = coloreCategoria(categoria, personali);
   let inchiostro = inchiostroSu(fondo);
 
   // Al massimo venti passi da un decimo: oltre non è più lo stesso colore, e
@@ -130,7 +209,7 @@ function scurisci(esadecimale: string, quanto: number): string {
 }
 
 /** Sinonimi riconosciuti per ogni categoria. */
-export const SINONIMI: Record<Exclude<Categoria, "Altro">, string[]> = {
+export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
   Casa: [
     "casa",
     "affitto",

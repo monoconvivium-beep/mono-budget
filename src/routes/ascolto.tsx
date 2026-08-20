@@ -10,9 +10,10 @@ export const Route = createFileRoute("/ascolto")({
    * la spesa degli ingredienti parte già nella categoria giusta.
    */
   validateSearch: (s: Record<string, unknown>): { categoria?: Categoria | undefined } => ({
-    categoria: CATEGORIE.includes(s["categoria"] as Categoria)
-      ? (s["categoria"] as Categoria)
-      : undefined,
+    categoria:
+      typeof s["categoria"] === "string" && s["categoria"].trim() !== ""
+        ? (s["categoria"] as Categoria)
+        : undefined,
   }),
   head: () => ({
     meta: [

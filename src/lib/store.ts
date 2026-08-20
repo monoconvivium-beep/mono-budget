@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
-import type { Categoria, Metodo, Tipo } from "./parse";
+import { CATEGORIE, coloreLibero } from "./parse";
+import type { Categoria, CategoriaPersonale, Metodo, Tipo } from "./parse";
 import {
   giorno,
   nuovoBiglietto,
@@ -96,6 +97,14 @@ export interface Stato {
   striscia: Striscia | null;
   /** Il gratta e vinci: UNO per persona, e quando c'è resta lì per sempre. */
   biglietto: Biglietto | null;
+  /**
+   * Le categorie inventate da chi usa l'app.
+   *
+   * 🔴 Perché esistono: «Trasporti» tiene dentro la benzina e il biglietto del
+   * pullman, che a fine mese sono due cose diverse. Le undici di casa restano
+   * come punto di partenza, ma non sono più un recinto.
+   */
+  categoriePersonali: CategoriaPersonale[];
 }
 
 const CHIAVE = "mono-money-v1";
@@ -120,6 +129,7 @@ const iniziale: Stato = {
   dafare: [],
   striscia: null,
   biglietto: null,
+  categoriePersonali: [],
 };
 
 let stato: Stato = iniziale;
@@ -143,6 +153,8 @@ function leggi(): Stato {
       dafare: Array.isArray(dati.dafare) ? dati.dafare : [],
       striscia: dati.striscia ?? null,
       biglietto: dati.biglietto ?? null,
+      // Salvataggi nati prima delle categorie libere: la chiave non c'è.
+      categoriePersonali: Array.isArray(dati.categoriePersonali) ? dati.categoriePersonali : [],
     };
   } catch {
     return iniziale;
@@ -255,6 +267,53 @@ export const azioni = {
         movimenti: s.movimenti.map((m) => (m.id === id ? { ...m, categoria } : m)),
       };
     });
+  },
+  /**
+   * CREA UNA CATEGORIA NUOVA.
+   *
+   * Il colore non lo sceglie l'utente: lo propone l'app dalla tavolozza MONO,
+   * prendendo il primo non ancora usato. Chiedere anche il colore vorrebbe
+   * dire due decisioni per una cosa sola, e la seconda non interessa a nessuno.
+   *
+   * Un nome già esistente non crea un doppione: si torna quello che c'è.
+   */
+  creaCategoria(nome: string): string {
+    const pulito = nome.trim().slice(0, 24);
+    if (!pulito) return "";
+    let risultato = pulito;
+    aggiorna((s) => {
+      const gia = [...CATEGORIE, ...s.categoriePersonali.map((c) => c.nome)].find(
+        (n) => n.toLocaleLowerCase("it") === pulito.toLocaleLowerCase("it"),
+      );
+      if (gia) {
+        risultato = gia;
+        return s;
+      }
+      const usati = s.categoriePersonali.map((c) => c.colore);
+      return {
+        ...s,
+        categoriePersonali: [
+          ...s.categoriePersonali,
+          { nome: pulito, colore: coloreLibero(usati) },
+        ],
+      };
+    });
+    return risultato;
+  },
+  /**
+   * TOGLIE UNA CATEGORIA INVENTATA.
+   *
+   * ⚠️ I movimenti che ci stavano dentro **non si cancellano**: tornano in
+   * «Altro». Cancellare le spese di qualcuno perché ha cambiato idea sul nome
+   * di una casella sarebbe un danno, non una pulizia.
+   */
+  togliCategoria(nome: string) {
+    aggiorna((s) => ({
+      ...s,
+      categoriePersonali: s.categoriePersonali.filter((c) => c.nome !== nome),
+      movimenti: s.movimenti.map((m) => (m.categoria === nome ? { ...m, categoria: "Altro" } : m)),
+      regole: s.regole.filter((r) => r.categoria !== nome),
+    }));
   },
   togliRegola(chiave: string) {
     aggiorna((s) => ({ ...s, regole: s.regole.filter((r) => r.chiave !== chiave) }));

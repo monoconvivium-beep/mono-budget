@@ -1,6 +1,13 @@
-import { COLORI_CATEGORIA, euro, CATEGORIE, type Categoria } from "@/lib/parse";
-import { azioni, dataBreve, oraBreve, type Movimento } from "@/lib/store";
+import { coloreCategoria, euro, CATEGORIE, type Categoria } from "@/lib/parse";
+import { azioni, dataBreve, oraBreve, useStato, type Movimento } from "@/lib/store";
+
 import { X, RotateCcw, Trash2, ChevronDown } from "lucide-react";
+
+/**
+ * Valore riservato della voce «nuova categoria».
+ * I nomi veri vengono ripuliti prima del salvataggio: nessuno finisce cosi.
+ */
+const NUOVA = "__nuova__";
 
 export function RigaMovimento({
   m,
@@ -23,6 +30,28 @@ export function RigaMovimento({
   scheda?: boolean;
   ritardoMs?: number;
 }) {
+  const { categoriePersonali: personali } = useStato();
+  const colore = coloreCategoria(m.categoria, personali);
+
+  /**
+   * Cambia la categoria del movimento, e se serve ne inventa una.
+   *
+   * 🔑 La categoria nuova si crea **da qui**, mentre stai guardando la spesa
+   * che non ci sta in nessuna casella: è il momento in cui ti accorgi che ti
+   * serve. Mandare l'utente in una schermata di impostazioni vorrebbe dire
+   * fargli perdere il filo — e nessuno ci va.
+   */
+  function scegli(valore: string) {
+    if (valore !== NUOVA) {
+      azioni.cambiaCategoria(m.id, valore as Categoria, m.etichetta);
+      return;
+    }
+    const nome = window.prompt("Come si chiama la categoria nuova?\n(per esempio: Benzina)");
+    if (!nome?.trim()) return;
+    const creata = azioni.creaCategoria(nome);
+    if (creata) azioni.cambiaCategoria(m.id, creata, m.etichetta);
+  }
+
   return (
     <li
       className={
@@ -33,7 +62,7 @@ export function RigaMovimento({
       style={
         scheda
           ? {
-              borderLeftColor: COLORI_CATEGORIA[m.categoria],
+              borderLeftColor: colore,
               animationDelay: `${ritardoMs}ms`,
             }
           : undefined
@@ -43,7 +72,7 @@ export function RigaMovimento({
         <span
           aria-hidden
           className="h-9 w-1.5 shrink-0 rounded-full"
-          style={{ backgroundColor: COLORI_CATEGORIA[m.categoria] }}
+          style={{ backgroundColor: colore }}
         />
       )}
       <div className="min-w-0 flex-1">
@@ -75,21 +104,19 @@ export function RigaMovimento({
             <span
               className="relative inline-flex items-center gap-1.5 rounded-full py-1 pr-2 pl-2.5 font-semibold text-foreground"
               style={{
-                backgroundColor: `color-mix(in oklab, ${COLORI_CATEGORIA[m.categoria]} 22%, transparent)`,
+                backgroundColor: `color-mix(in oklab, ${colore} 22%, transparent)`,
               }}
             >
               <span
                 aria-hidden
                 className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: COLORI_CATEGORIA[m.categoria] }}
+                style={{ backgroundColor: colore }}
               />
               {m.categoria}
               <ChevronDown aria-hidden className="h-3 w-3 opacity-60" />
               <select
                 value={m.categoria}
-                onChange={(e) =>
-                  azioni.cambiaCategoria(m.id, e.target.value as Categoria, m.etichetta)
-                }
+                onChange={(e) => scegli(e.target.value)}
                 aria-label={`Categoria di ${m.etichetta || m.categoria}`}
                 /* La tendina invisibile è la zona che si tocca per cambiare
                    categoria: con -inset-y-2 era alta 40 px veri, sotto il
@@ -102,6 +129,16 @@ export function RigaMovimento({
                     {c}
                   </option>
                 ))}
+                {personali.length > 0 && (
+                  <optgroup label="Le tue">
+                    {personali.map((c) => (
+                      <option key={c.nome} value={c.nome}>
+                        {c.nome}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                <option value={NUOVA}>+ Nuova categoria…</option>
               </select>
             </span>
             <span>
