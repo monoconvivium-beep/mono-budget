@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Guscio } from "@/components/Guscio";
 import { RigaMovimento } from "@/components/RigaMovimento";
+import { LeTueCategorie } from "@/components/LeTueCategorie";
 import { Aiuto } from "@/components/Aiuto";
 import { euro } from "@/lib/parse";
 import { azioni, dataBreve, useStato, type Movimento } from "@/lib/store";
@@ -101,6 +102,10 @@ function Diario() {
           </button>
         )}
       </div>
+
+      {/* Nel cestino no: lì si recuperano le spese buttate, e le categorie non
+          c'entrano niente. */}
+      {vista === "tutti" && <LeTueCategorie />}
 
       {filtrati.length === 0 ? (
         <p className="scheda mt-4 p-6 text-center text-sm text-muted-foreground">

@@ -8,7 +8,7 @@
  * Senza, i telefoni che hanno già l'app continuano a mostrare quella vecchia e
  * sembra che le correzioni non siano state fatte.
  */
-const VERSIONE = "mono-money-v29";
+const VERSIONE = "mono-money-v30";
 
 /**
  * Tutto si calcola dalla RADICE dove il guardiano è registrato, mai da "/".
