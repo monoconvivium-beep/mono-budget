@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Check, X } from "lucide-react";
-import { euro } from "@/lib/parse";
+import { euro, leggiImporto } from "@/lib/parse";
 import { azioni } from "@/lib/store";
 import { Aiuto } from "./Aiuto";
 
@@ -141,16 +141,4 @@ export function AggiungiEntrata() {
       </div>
     </section>
   );
-}
-
-/**
- * Legge un importo scritto all'italiana: «1.450,50» → 1450.5.
- * ⚠️ Il punto è il separatore delle migliaia, la virgola i centesimi. Chi
- * scrive «1.450» intende millequattrocentocinquanta, non uno e quarantacinque.
- */
-function leggiImporto(testo: string): number | null {
-  const pulito = testo.trim().replace(/[€\s]/g, "");
-  if (!pulito) return null;
-  const n = Number(pulito.replace(/\./g, "").replace(",", "."));
-  return Number.isFinite(n) ? n : null;
 }

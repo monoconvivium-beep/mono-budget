@@ -16,6 +16,7 @@ import { Route as CategorieRouteImport } from './routes/categorie'
 import { Route as ConviviumRouteImport } from './routes/convivium'
 import { Route as DafareRouteImport } from './routes/dafare'
 import { Route as DiarioRouteImport } from './routes/diario'
+import { Route as FisseRouteImport } from './routes/fisse'
 import { Route as MonoRouteImport } from './routes/mono'
 import { Route as RicetteRouteImport } from './routes/ricette'
 import { Route as SpesaRouteImport } from './routes/spesa'
@@ -55,6 +56,11 @@ const DiarioRoute = DiarioRouteImport.update({
   path: '/diario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FisseRoute = FisseRouteImport.update({
+  id: '/fisse',
+  path: '/fisse',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MonoRoute = MonoRouteImport.update({
   id: '/mono',
   path: '/mono',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
+  '/fisse': typeof FisseRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
   '/spesa': typeof SpesaRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
+  '/fisse': typeof FisseRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
   '/spesa': typeof SpesaRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
+  '/fisse': typeof FisseRoute
   '/mono': typeof MonoRoute
   '/ricette': typeof RicetteRoute
   '/spesa': typeof SpesaRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/convivium'
     | '/dafare'
     | '/diario'
+    | '/fisse'
     | '/mono'
     | '/ricette'
     | '/spesa'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/convivium'
     | '/dafare'
     | '/diario'
+    | '/fisse'
     | '/mono'
     | '/ricette'
     | '/spesa'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/convivium'
     | '/dafare'
     | '/diario'
+    | '/fisse'
     | '/mono'
     | '/ricette'
     | '/spesa'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   ConviviumRoute: typeof ConviviumRoute
   DafareRoute: typeof DafareRoute
   DiarioRoute: typeof DiarioRoute
+  FisseRoute: typeof FisseRoute
   MonoRoute: typeof MonoRoute
   RicetteRoute: typeof RicetteRoute
   SpesaRoute: typeof SpesaRoute
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fisse': {
+      id: '/fisse'
+      path: '/fisse'
+      fullPath: '/fisse'
+      preLoaderRoute: typeof FisseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mono': {
       id: '/mono'
       path: '/mono'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConviviumRoute: ConviviumRoute,
   DafareRoute: DafareRoute,
   DiarioRoute: DiarioRoute,
+  FisseRoute: FisseRoute,
   MonoRoute: MonoRoute,
   RicetteRoute: RicetteRoute,
   SpesaRoute: SpesaRoute,

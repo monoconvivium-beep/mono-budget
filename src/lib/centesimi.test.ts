@@ -28,7 +28,7 @@ describe("i prezzi detti con la e", () => {
 
     expect(m).toHaveLength(1);
     expect(m[0]?.importo).toBe(4.6);
-    expect(m[0]?.categoria).toBe("Bar");
+    expect(m[0]?.categoria).toBe("Bar e ristoranti");
   });
 
   it("continua a funzionare col modo che si insegnava prima", () => {

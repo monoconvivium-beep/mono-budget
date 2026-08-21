@@ -95,6 +95,8 @@ describe("la voce e le categorie spente", () => {
   });
 
   it("spegnerne una non tocca tutte le altre", () => {
-    expect(interpreta("quattro e sessanta caffè", [], ["Tabacchi"])[0]?.categoria).toBe("Bar");
+    expect(interpreta("quattro e sessanta caffè", [], ["Tabacchi"])[0]?.categoria).toBe(
+      "Bar e ristoranti",
+    );
   });
 });

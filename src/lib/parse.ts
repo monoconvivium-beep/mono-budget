@@ -7,11 +7,26 @@
 
 export const CATEGORIE = [
   "Casa",
+  /**
+   * 🔴 AFFITTO e LUCE E GAS sono uscite DA «Casa» il 21/8/2026, chieste da lui.
+   * Motivo: sono le due uscite che **tornano identiche ogni mese** — quelle che
+   * si possono segnare da sole (vedi `lib/fisse.ts`). Tenute dentro «Casa»
+   * insieme al detersivo e all'idraulico non si sarebbe mai potuto dire
+   * «l'affitto quanto mi pesa all'anno», che è la domanda vera.
+   */
+  "Affitto",
+  "Luce e gas",
   "Spesa alimentare",
-  "Bar",
-  "Ristoranti",
-  "Tabacchi",
+  /**
+   * ⚠️ «Bar» e «Ristoranti» erano due caselle: unite su sua indicazione. Fuori
+   * a mangiare è una cosa sola per chi guarda il mese — e chi vuole dividerle
+   * si fa la sua categoria, che adesso si può.
+   */
+  "Bar e ristoranti",
+  /** Sua richiesta: la benzina non è «un trasporto», è LA spesa dell'auto. */
+  "Benzina",
   "Trasporti",
+  "Tabacchi",
   "Salute",
   "Abbonamenti",
   "Shopping",
@@ -37,11 +52,18 @@ export type Categoria = string;
 
 export const COLORI_CATEGORIA: Record<CategoriaBase, string> = {
   Casa: "#4E6B47",
+  /* Bruno del tetto: l'affitto è la casa, ma non è il detersivo. */
+  Affitto: "#5E4632",
+  /* Petrolio: nella torta non somiglia a nessuno degli altri. */
+  "Luce e gas": "#246B70",
   "Spesa alimentare": "#CBA75A",
-  Bar: "#B5723F",
-  Ristoranti: "#B85C38",
+  /* Il terracotta che era del Bar: la casella unita si riconosce ancora. */
+  "Bar e ristoranti": "#B5723F",
+  /* Il nero asfalto che era dei Trasporti: è il colore più «benzina» che c'è. */
+  Benzina: "#262321",
+  /* E i trasporti prendono il blu del biglietto. */
+  Trasporti: "#3E5C8A",
   Tabacchi: "#6E6A3C",
-  Trasporti: "#262321",
   Salute: "#A83A28",
   Abbonamenti: "#E27A60",
   /**
@@ -212,17 +234,27 @@ function scurisci(esadecimale: string, quanto: number): string {
 export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
   Casa: [
     "casa",
-    "affitto",
-    "bollette",
-    "bolletta",
-    "luce",
-    "gas",
-    "acqua",
     "condominio",
     "mutuo",
     "ferramenta",
     "pulizie",
     "detersivi",
+    "idraulico",
+    "elettricista",
+    "manutenzione",
+  ],
+  Affitto: ["affitto", "locazione", "canone di locazione"],
+  "Luce e gas": [
+    "luce e gas",
+    "bolletta",
+    "bollette",
+    "luce",
+    "gas",
+    "acqua",
+    "enel",
+    "energia",
+    "riscaldamento",
+    "caldaia",
   ],
   "Spesa alimentare": [
     "spesa",
@@ -244,7 +276,7 @@ export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
     "latte",
     "drogheria",
   ],
-  Bar: [
+  "Bar e ristoranti": [
     "bar",
     "caffè",
     "caffe",
@@ -255,8 +287,6 @@ export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
     "aperitivo",
     "spritz",
     "birra",
-  ],
-  Ristoranti: [
     "ristorante",
     "trattoria",
     "osteria",
@@ -281,12 +311,19 @@ export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
     "francobolli",
     "valori bollati",
   ],
-  Trasporti: [
-    "trasporti",
+  Benzina: [
     "benzina",
     "gasolio",
     "diesel",
     "carburante",
+    "distributore",
+    "rifornimento",
+    "gpl",
+    "metano",
+    "colonnina",
+  ],
+  Trasporti: [
+    "trasporti",
     "biglietto",
     "biglietti",
     "autobus",
@@ -304,6 +341,9 @@ export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
     "meccanico",
     "gomme",
     "bici",
+    "monopattino",
+    "aereo",
+    "volo",
   ],
   Salute: [
     "salute",
@@ -806,6 +846,20 @@ export function interpreta(
  * paga o uno scontrino il punto c'è sempre, e una cifra senza sembra un errore
  * di battitura proprio dove non ci si può permettere di sembrare approssimativi.
  */
+/**
+ * Legge un importo scritto all'italiana: «1.450,50» → 1450.5.
+ * ⚠️ Il punto è il separatore delle migliaia, la virgola i centesimi. Chi
+ * scrive «1.450» intende millequattrocentocinquanta, non uno e quarantacinque.
+ * 🔑 Sta qui e non dentro una schermata: lo usano le entrate a mano e le spese
+ * fisse, e due copie della stessa lettura sono due modi diversi di sbagliare.
+ */
+export function leggiImporto(testo: string): number | null {
+  const pulito = testo.trim().replace(/[€\s]/g, "");
+  if (!pulito) return null;
+  const n = Number(pulito.replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+
 export function euro(n: number): string {
   return (
     n.toLocaleString("it-IT", {

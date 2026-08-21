@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { CATEGORIE, coloreCategoria, coloreLibero } from "./parse";
 import { RETE_DI_SICUREZZA } from "./categorie";
+import { giornoBuono, meseDi, mesiDaSegnare, quandoSegnare, type SpesaFissa } from "./fisse";
 import type { Categoria, CategoriaPersonale, Metodo, Tipo } from "./parse";
 import {
   giorno,
@@ -24,6 +25,13 @@ export interface Movimento {
   /** nel cestino */
   cestinato?: boolean | undefined;
   cestinatoIl?: string | undefined;
+  /**
+   * Da quale spesa fissa è nato, e per quale mese (`2026-08`).
+   * 🔑 Sono queste due righe a impedire che l'affitto venga segnato due volte:
+   * prima di segnarne uno si guarda se per quel mese c'è già.
+   */
+  fissa?: string | undefined;
+  fissaMese?: string | undefined;
 }
 
 export interface Regola {
@@ -122,6 +130,11 @@ export interface Stato {
    * casella che sullo schermo non esiste più.
    */
   rinomine: Record<string, string>;
+  /**
+   * LE SPESE CHE TORNANO UGUALI OGNI MESE: affitto, luce e gas, abbonamenti.
+   * Le segna l'app da sola all'apertura — vedi `lib/fisse.ts`.
+   */
+  fisse: SpesaFissa[];
 }
 
 const CHIAVE = "mono-money-v1";
@@ -149,11 +162,51 @@ const iniziale: Stato = {
   categoriePersonali: [],
   nascoste: [],
   rinomine: {},
+  fisse: [],
 };
 
 let stato: Stato = iniziale;
 let caricato = false;
 const ascoltatori = new Set<() => void>();
+
+/**
+ * LE CASELLE CAMBIATE IL 21/8/2026, e cosa ne è stato di quello che c'era dentro.
+ *
+ * 🔴 «Bar» e «Ristoranti» sono diventate una casella sola. Chi aveva già delle
+ * spese lì dentro **non le deve perdere né vedere sparire dalla torta**: si
+ * riscrivono al nome nuovo appena l'app si apre, una volta sola, in silenzio.
+ * ⚠️ Non è un capriccio di nomi: una spesa che punta a una casella che non
+ * esiste più è una spesa che nel bilancio non si vede.
+ */
+const CASELLE_UNITE: Record<string, string> = {
+  Bar: "Bar e ristoranti",
+  Ristoranti: "Bar e ristoranti",
+};
+
+const nomeNuovo = (n: string) => CASELLE_UNITE[n] ?? n;
+
+function conCaselleNuove(s: Stato): Stato {
+  const diCasa = new Set<string>(CATEGORIE);
+  return {
+    ...s,
+    movimenti: s.movimenti.map((m) =>
+      CASELLE_UNITE[m.categoria] ? { ...m, categoria: nomeNuovo(m.categoria) as Categoria } : m,
+    ),
+    regole: s.regole.map((r) =>
+      CASELLE_UNITE[r.categoria] ? { ...r, categoria: nomeNuovo(r.categoria) as Categoria } : r,
+    ),
+    nascoste: [...new Set(s.nascoste.map(nomeNuovo))],
+    rinomine: Object.fromEntries(
+      Object.entries(s.rinomine).map(([da, a]) => [nomeNuovo(da), nomeNuovo(a)]),
+    ),
+    /* Una sua categoria che adesso è diventata di casa — «Benzina» — non deve
+       restare in doppio: due voci con lo stesso nome nella tendina sono un
+       elenco che sembra rotto. Le spese non si toccano: il nome è lo stesso. */
+    categoriePersonali: s.categoriePersonali.filter(
+      (c) => !diCasa.has(c.nome) && !CASELLE_UNITE[c.nome],
+    ),
+  };
+}
 
 function leggi(): Stato {
   if (typeof window === "undefined") return iniziale;
@@ -161,7 +214,7 @@ function leggi(): Stato {
     const raw = window.localStorage.getItem(CHIAVE);
     if (!raw) return iniziale;
     const dati = JSON.parse(raw) as Partial<Stato>;
-    return {
+    return conCaselleNuove({
       ...iniziale,
       ...dati,
       movimenti: Array.isArray(dati.movimenti) ? dati.movimenti : [],
@@ -177,7 +230,8 @@ function leggi(): Stato {
       // Salvataggi nati prima della schermata delle categorie: le chiavi non ci sono.
       nascoste: Array.isArray(dati.nascoste) ? dati.nascoste : [],
       rinomine: dati.rinomine && typeof dati.rinomine === "object" ? dati.rinomine : {},
-    };
+      fisse: Array.isArray(dati.fisse) ? dati.fisse : [],
+    });
   } catch {
     return iniziale;
   }
@@ -416,6 +470,79 @@ export const azioni = {
       movimenti: s.movimenti.map((m) => (m.categoria === nome ? { ...m, categoria: "Altro" } : m)),
       regole: s.regole.filter((r) => r.categoria !== nome),
     }));
+  },
+  /* ------------------------------------------------ le spese fisse del mese */
+  /**
+   * Una spesa che torna uguale ogni mese. Nasce **da questo mese**: quello che
+   * è stato pagato prima l'app non se lo inventa.
+   */
+  fissaAggiungi(d: { cosa: string; importo: number; categoria: string; giorno: number }) {
+    const fissa: SpesaFissa = {
+      id: nuovoId(),
+      cosa: d.cosa.trim().slice(0, 32),
+      importo: d.importo,
+      categoria: d.categoria,
+      giorno: giornoBuono(d.giorno),
+      daQuando: meseDi(new Date()),
+      attiva: true,
+    };
+    aggiorna((s) => ({ ...s, fisse: [...s.fisse, fissa] }));
+    return fissa;
+  },
+  /**
+   * ⚠️ Togliere una spesa fissa NON cancella i movimenti già segnati: quelli
+   * sono spese vere, uscite davvero. Smette solo di segnarne di nuove.
+   */
+  fissaTogli(id: string) {
+    aggiorna((s) => ({ ...s, fisse: s.fisse.filter((f) => f.id !== id) }));
+  },
+  fissaAccendiOSpegni(id: string) {
+    aggiorna((s) => ({
+      ...s,
+      fisse: s.fisse.map((f) => (f.id === id ? { ...f, attiva: !f.attiva } : f)),
+    }));
+  },
+  /**
+   * SEGNA LE FISSE ARRIVATE A SCADENZA, e torna quelle che ha segnato adesso.
+   *
+   * 🔑 Si chiama all'apertura dell'app: qui non c'è nessun server che lo faccia
+   * di notte. È ripetibile senza danni — un movimento per fissa e per mese, mai
+   * due — quindi aprire e chiudere l'app dieci volte non segna dieci affitti.
+   */
+  segnaLeFisse(oggi: Date = new Date()): Movimento[] {
+    const nati: Movimento[] = [];
+    aggiorna((s) => {
+      if (s.fisse.length === 0) return s;
+      const nuovi: Movimento[] = [];
+
+      for (const f of s.fisse) {
+        const giaSegnati = s.movimenti
+          .filter((m) => m.fissa === f.id && m.fissaMese)
+          .map((m) => m.fissaMese as string);
+
+        for (const mese of mesiDaSegnare(f, oggi, giaSegnati)) {
+          nuovi.push({
+            id: nuovoId(),
+            data: quandoSegnare(mese, f.giorno),
+            importo: f.importo,
+            categoria: (s.rinomine[f.categoria] ?? f.categoria) as Categoria,
+            etichetta: f.cosa,
+            tipo: "uscita",
+            metodo: null,
+            /* Si vede nel Diario e nella ricerca: chi la trova capisce da dove
+               è arrivata senza dover chiedere niente a nessuno. */
+            testo: `${f.cosa} — spesa fissa segnata da MonoConvivium`,
+            fissa: f.id,
+            fissaMese: mese,
+          });
+        }
+      }
+
+      if (nuovi.length === 0) return s;
+      nati.push(...nuovi);
+      return { ...s, movimenti: [...nuovi, ...s.movimenti] };
+    });
+    return nati;
   },
   togliRegola(chiave: string) {
     aggiorna((s) => ({ ...s, regole: s.regole.filter((r) => r.chiave !== chiave) }));

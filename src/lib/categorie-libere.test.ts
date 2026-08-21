@@ -21,7 +21,7 @@ const SOGLIA = 4.5;
 
 describe("categorie inventate", () => {
   it("una categoria di casa tiene il suo colore di sempre", () => {
-    expect(coloreCategoria("Bar")).toBe(COLORI_CATEGORIA.Bar);
+    expect(coloreCategoria("Bar e ristoranti")).toBe(COLORI_CATEGORIA["Bar e ristoranti"]);
     expect(coloreCategoria("Trasporti")).toBe(COLORI_CATEGORIA.Trasporti);
   });
 
@@ -71,8 +71,12 @@ describe("categorie inventate", () => {
     expect(coloreCategoria("categoria mai vista")).toMatch(/^#[0-9A-Fa-f]{6}$/);
   });
 
-  it("le undici di casa restano undici", () => {
-    // Il punto di partenza non si tocca: si aggiunge, non si sostituisce.
-    expect(CATEGORIE).toHaveLength(11);
+  it("le caselle di casa sono tredici, e ognuna ha il suo colore", () => {
+    /* 🔴 Erano undici. Il 21/8/2026 «Affitto», «Luce e gas» e «Benzina» sono
+       uscite da dove stavano nascoste, e «Bar» e «Ristoranti» sono diventate
+       una sola. Il numero qui non è un capriccio: se qualcuno ne aggiunge una
+       senza darle un colore suo, nella torta due fette si leggono come una. */
+    expect(CATEGORIE).toHaveLength(13);
+    expect(new Set(Object.values(COLORI_CATEGORIA)).size).toBe(13);
   });
 });

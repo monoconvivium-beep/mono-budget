@@ -9,14 +9,42 @@ import { InstallaApp } from "@/components/InstallaApp";
 import { RigaMovimento } from "@/components/RigaMovimento";
 import { SettimanaMono } from "@/components/SettimanaMono";
 import { SpeseCheTornano } from "@/components/SpeseCheTornano";
-import { Tags } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { CalendarClock, Tags } from "lucide-react";
 
 import { categorieAttive } from "@/lib/categorie";
+import { type SpesaFissa } from "@/lib/fisse";
 import { euro } from "@/lib/parse";
 import { delMese } from "@/lib/statistiche";
-import { attivi, MESI, somma, useStato } from "@/lib/store";
+import { attivi, azioni, MESI, somma, useStato, type Movimento } from "@/lib/store";
 
 export const Route = createFileRoute("/")({ component: Home });
+
+/**
+ * «Ho segnato l'affitto di giugno, luglio e agosto» — non tre volte «Affitto
+ * 700,00 €».
+ * ⚠️ Difetto trovato provandolo: recuperando tre mesi arretrati la riga
+ * ripeteva la stessa spesa tre volte senza dire di QUALI mesi, cioè diceva un
+ * numero e nascondeva l'unica cosa che serviva sapere.
+ */
+function raccontaLeSegnate(nate: Movimento[]): string {
+  const gruppi = new Map<string, { importo: number; mesi: string[] }>();
+  for (const m of nate) {
+    const g = gruppi.get(m.etichetta) ?? { importo: m.importo, mesi: [] };
+    g.mesi.push(MESI[new Date(m.data).getMonth()]?.toLowerCase() ?? "");
+    gruppi.set(m.etichetta, g);
+  }
+  return [...gruppi.entries()]
+    .map(([nome, g]) => `${nome} ${euro(g.importo)} di ${elenco(g.mesi)}`)
+    .join(" · ");
+}
+
+/** «giugno, luglio e agosto»: la e prima dell'ultimo, come si dice parlando. */
+function elenco(voci: string[]): string {
+  if (voci.length <= 1) return voci[0] ?? "";
+  return `${voci.slice(0, -1).join(", ")} e ${voci[voci.length - 1]}`;
+}
 
 /**
  * LA HOME — ordine dettato da lui il 5/8/2026, parola per parola:
@@ -51,10 +79,36 @@ function Home() {
   /* I nomi veri che uno ha in mano, non una promessa generica: si capisce al
      volo che sono LE SUE categorie e che si toccano. */
   const attive = categorieAttive(stato);
+  const anteprimaFisse: string =
+    stato.fisse.length === 0
+      ? "Affitto, luce e gas, abbonamenti: segnali una volta e tornano da soli"
+      : `${stato.fisse
+          .slice(0, 3)
+          .map((f: SpesaFissa) => f.cosa)
+          .join(
+            ", ",
+          )} · ${euro(stato.fisse.filter((f: SpesaFissa) => f.attiva).reduce((t: number, f: SpesaFissa) => t + f.importo, 0))} al mese`;
+
   const anteprimaCategorie = `${attive
     .slice(0, 3)
     .map((c) => c.nome)
     .join(", ")}… rinominale, aggiungi le tue`;
+
+  /**
+   * LE SPESE FISSE SI SEGNANO QUI, all'apertura della Home.
+   *
+   * 🔑 Non c'è nessun server che possa farlo di notte: l'unico momento in cui
+   * l'app è viva è quando uno la apre. È ripetibile senza danni — un movimento
+   * per fissa e per mese — quindi tornare in Home dieci volte non segna dieci
+   * affitti.
+   * ⚠️ Quello che ha segnato **si dice**, non compare di nascosto: nel quaderno
+   * dei soldi di qualcuno non si scrivono righe in silenzio.
+   */
+  const [appenaSegnate, setAppenaSegnate] = useState<Movimento[]>([]);
+  useEffect(() => {
+    const nate = azioni.segnaLeFisse();
+    if (nate.length) setAppenaSegnate(nate);
+  }, []);
 
   const marchio = `${import.meta.env.BASE_URL}marchio/mono-orizzontale${
     stato.tema === "scuro" ? "-chiaro" : ""
@@ -209,6 +263,24 @@ function Home() {
        * sopra: è terracotta piena, larga quanto la schermata, e dice già i nomi
        * delle categorie che uno ha in mano.
        */}
+      {appenaSegnate.length > 0 && (
+        <section className="scheda mt-4 flex items-start gap-3 p-3">
+          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--azione-scheda)] text-[var(--azione-testo)]">
+            <CalendarClock className="h-4 w-4" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold">
+              {appenaSegnate.length === 1
+                ? "Ho segnato una spesa fissa"
+                : `Ho segnato ${appenaSegnate.length} spese fisse`}
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
+              {raccontaLeSegnate(appenaSegnate)}. Se una non va, cestinala come le altre.
+            </span>
+          </span>
+        </section>
+      )}
+
       <Link
         to="/categorie"
         className="mt-3 flex min-h-[64px] items-center gap-3 rounded-2xl bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-rialzata"
@@ -220,6 +292,26 @@ function Home() {
           <span className="block text-[15px] font-bold">Personalizza le tue categorie</span>
           <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
             {anteprimaCategorie}
+          </span>
+        </span>
+        <span aria-hidden className="text-[var(--secondario-su-pieno)]">
+          ›
+        </span>
+      </Link>
+
+      {/* La seconda porta della coppia: le categorie dicono COME si chiamano le
+          tue spese, le fisse dicono QUALI tornano da sole ogni mese. */}
+      <Link
+        to="/fisse"
+        className="mt-3 flex min-h-[64px] items-center gap-3 rounded-2xl bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-rialzata"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(244,236,221,0.16)]">
+          <CalendarClock className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Le spese fisse del mese</span>
+          <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
+            {anteprimaFisse}
           </span>
         </span>
         <span aria-hidden className="text-[var(--secondario-su-pieno)]">

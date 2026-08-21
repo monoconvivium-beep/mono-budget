@@ -36,9 +36,9 @@ describe("leggibilità delle pillole di categoria", () => {
   });
 
   it("il fondo si tocca solo dove serve: gli altri restano il colore di casa", () => {
-    // Undici categorie, e solo le tre a mezza via vanno scurite.
+    // Solo quelle a mezza via vanno scurite: le altre tengono il colore di casa.
     const toccate = CATEGORIE.filter((c) => pillolaDi(c).fondo !== COLORI_CATEGORIA[c]);
-    expect(toccate).toEqual(["Bar", "Ristoranti", "Altro"]);
+    expect(toccate).toEqual(["Bar e ristoranti", "Altro"]);
   });
 
   it("il colore scurito resta riconoscibile: non diventa un altro colore", () => {

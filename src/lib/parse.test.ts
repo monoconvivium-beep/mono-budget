@@ -30,7 +30,7 @@ describe("decimali italiani", () => {
   it("«quattro euro e sessanta» fa 4,60", () => {
     const [m] = interpreta("quattro euro e sessanta caffè");
     expect(m?.importo).toBe(4.6);
-    expect(m?.categoria).toBe("Bar");
+    expect(m?.categoria).toBe("Bar e ristoranti");
     expect(m?.importoSospetto).toBe(false);
   });
 
@@ -66,7 +66,7 @@ describe("due spese in una frase", () => {
     expect(m[0]?.importo).toBe(12);
     expect(m[0]?.categoria).toBe("Spesa alimentare");
     expect(m[1]?.importo).toBe(3);
-    expect(m[1]?.categoria).toBe("Bar");
+    expect(m[1]?.categoria).toBe("Bar e ristoranti");
   });
 
   it("«e» dentro un importo non spezza la spesa", () => {
@@ -86,15 +86,15 @@ describe("categorie e sinonimi", () => {
   const casi: [string, string][] = [
     ["dieci tabaccaio", "Tabacchi"],
     ["trenta supermercato", "Spesa alimentare"],
-    ["ottocento euro affitto", "Casa"],
-    ["sessanta euro bollette", "Casa"],
-    ["cinquanta benzina", "Trasporti"],
+    ["ottocento euro affitto", "Affitto"],
+    ["sessanta euro bollette", "Luce e gas"],
+    ["cinquanta benzina", "Benzina"],
     ["due biglietto autobus", "Trasporti"],
     ["dodici farmacia", "Salute"],
     ["nove netflix", "Abbonamenti"],
     ["quaranta scarpe", "Shopping"],
     ["quindici cinema", "Tempo libero"],
-    ["venticinque trattoria", "Ristoranti"],
+    ["venticinque trattoria", "Bar e ristoranti"],
   ];
   it.each(casi)("%s → %s", (frase, categoria) => {
     expect(interpreta(frase)[0]?.categoria).toBe(categoria);
@@ -109,9 +109,9 @@ describe("categorie e sinonimi", () => {
 
 describe("regole imparate", () => {
   it("applica la regola imparata prima dei sinonimi", () => {
-    const regole: RegolaImparata[] = [{ chiave: "pinco", categoria: "Bar" }];
+    const regole: RegolaImparata[] = [{ chiave: "pinco", categoria: "Bar e ristoranti" }];
     const [m] = interpreta("sette pinco", regole);
-    expect(m?.categoria).toBe("Bar");
+    expect(m?.categoria).toBe("Bar e ristoranti");
     expect(m?.categoriaIncerta).toBe(false);
   });
 });
