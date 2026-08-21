@@ -73,7 +73,7 @@ export function Iscrizione() {
         <div className="mt-6 space-y-3">
           {CAMPI.map(({ campo, etichetta, tipo, auto }) => (
             <label key={campo} className="block">
-              <span className="mb-1 block text-sm font-medium">{etichetta}</span>
+              <span className="mb-1 block text-sm font-semibold">{etichetta}</span>
               <input
                 type={tipo}
                 autoComplete={auto}

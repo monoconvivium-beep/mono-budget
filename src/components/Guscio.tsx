@@ -180,7 +180,7 @@ export function Guscio({
                   {sottotitolo && (
                     <p
                       className={`mt-1.5 truncate text-sm ${
-                        rosso ? "text-[rgba(244,236,221,0.78)]" : "text-muted-foreground"
+                        rosso ? "text-[var(--secondario-su-pieno)]" : "text-muted-foreground"
                       }`}
                     >
                       {sottotitolo}
@@ -208,7 +208,7 @@ export function Guscio({
             alto 26 px e pieno: si riconosce senza avvicinare il telefono. */}
         <p
           className={`mt-8 flex items-center justify-center gap-2 text-[11px] tracking-wide ${
-            rosso ? "text-[rgba(244,236,221,0.7)]" : "text-muted-foreground"
+            rosso ? "text-[var(--secondario-su-pieno)]" : "text-muted-foreground"
           }`}
         >
           {!rosso && (

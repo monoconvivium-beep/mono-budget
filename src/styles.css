@@ -124,6 +124,22 @@
   --azione-scheda: #a34e2e;
   --azione-testo: oklch(0.945 0.022 83.3);
   /**
+   * IL SECONDARIO SUI FONDI PIENI (terracotta e verde) — deciso il 21/8/2026.
+   *
+   * 🔴 Sul terracotta il cashmere sbiadito NON arriva mai a 4,5: misurato,
+   * 0,70 dà 3,21 · 0,80 dà 3,71 · 0,85 dà 3,98 · 0,90 dà 4,26. Il primo valore
+   * che passa è **0,95** (4,55). Non è una questione di gusto: sotto quella
+   * soglia le scritte piccole sul terracotta si leggono male, e chi legge i
+   * conti al banco di una gastronomia non ha vent'anni.
+   *
+   * 🔑 Quindi sui fondi pieni il secondario NON si fa più con la trasparenza:
+   * si fa con la **misura** e il **peso**. La trasparenza restava l'unico modo
+   * per «abbassare la voce», ed era anche l'unico che rendeva illeggibile.
+   * ⚠️ Sui bordi e sui fondi la trasparenza va benissimo: lì non c'è niente da
+   * leggere. Questo vale per il TESTO.
+   */
+  --secondario-su-pieno: rgba(244, 236, 221, 0.95);
+  /**
    * IL CASHMERE, chiamato per nome.
    * Serve alle TARGHE: i dischetti e i riquadri chiari sotto il marchio, che
    * lo tengono leggibile sui fondi pieni (verde e rosso). Prima prendevano

@@ -154,7 +154,7 @@ function Spesa() {
             />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[10px] font-bold tracking-[0.18em] text-[rgba(244,236,221,0.72)] uppercase">
+            <span className="block text-[10px] font-bold tracking-[0.18em] text-[var(--secondario-su-pieno)] uppercase">
               Il quaderno di cucina
             </span>
             <span className="mt-1 block font-[var(--font-display)] text-2xl leading-tight font-semibold">
@@ -163,7 +163,7 @@ function Spesa() {
           </span>
         </span>
 
-        <span className="mt-3.5 block text-sm leading-relaxed text-[rgba(244,236,221,0.88)]">
+        <span className="mt-3.5 block text-sm leading-relaxed text-[var(--secondario-su-pieno)]">
           {BASI.length} basi dello chef, spiegate passo per passo.
           {mie === 0
             ? " E le tue, quando vorrai dettarle."
@@ -176,7 +176,7 @@ function Spesa() {
           <span className="pillola bg-[var(--cashmere)] text-sm font-bold text-[#262321]">
             Apri il quaderno
           </span>
-          <span aria-hidden className="text-xl text-[rgba(244,236,221,0.8)]">
+          <span aria-hidden className="text-xl text-[var(--secondario-su-pieno)]">
             ›
           </span>
         </span>
@@ -194,7 +194,7 @@ function Spesa() {
           aria-hidden="true"
           className="mx-auto h-12 w-auto"
         />
-        <p className="mt-3 text-[15px] leading-relaxed font-medium">{frase}</p>
+        <p className="mt-3 text-[15px] leading-relaxed font-semibold">{frase}</p>
         <a
           href="https://app.monobottega.it/?da=mono-money"
           target="_blank"

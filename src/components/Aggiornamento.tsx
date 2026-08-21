@@ -148,7 +148,7 @@ export function RigaVersione({ chiara = false }: { chiara?: boolean }) {
   return (
     <p
       className={`mt-2 flex flex-wrap items-center justify-center gap-x-2 text-[11px] ${
-        chiara ? "text-[rgba(244,236,221,0.7)]" : "text-muted-foreground"
+        chiara ? "text-[var(--secondario-su-pieno)]" : "text-muted-foreground"
       }`}
     >
       <span>

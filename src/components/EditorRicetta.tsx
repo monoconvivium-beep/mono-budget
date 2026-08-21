@@ -117,7 +117,7 @@ export function EditorRicetta({ esistente, onFine }: { esistente?: Ricetta; onFi
         <Check className="h-5 w-5" /> Salva la ricetta
       </button>
       {!pronta && (
-        <p className="mt-1.5 text-center text-[11px] text-[rgba(244,236,221,0.8)]">
+        <p className="mt-1.5 text-center text-[11px] text-[var(--secondario-su-pieno)]">
           Serve il nome, e almeno un ingrediente o un passo.
         </p>
       )}
@@ -138,7 +138,7 @@ export function EditorRicetta({ esistente, onFine }: { esistente?: Ricetta; onFi
           className={`tocco mt-3 w-full rounded-2xl border px-4 text-sm font-semibold ${
             eliminaArmato
               ? "border-[rgba(244,236,221,0.9)] bg-[rgba(244,236,221,0.14)] text-[var(--azione-testo)]"
-              : "border-[rgba(244,236,221,0.4)] text-[rgba(244,236,221,0.85)]"
+              : "border-[rgba(244,236,221,0.4)] text-[var(--secondario-su-pieno)]"
           }`}
         >
           {eliminaArmato ? "Sicuro? Tocca ancora e la elimino" : "Elimina questa ricetta"}

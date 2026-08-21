@@ -30,7 +30,7 @@ export function Aiuto({ testo, suScuro = false }: { testo: string; suScuro?: boo
           aria-hidden
           className={`flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold ${
             suScuro
-              ? "border-[rgba(244,236,221,0.45)] text-[rgba(244,236,221,0.85)]"
+              ? "border-[rgba(244,236,221,0.45)] text-[var(--secondario-su-pieno)]"
               : "border-border text-muted-foreground"
           }`}
         >

@@ -150,7 +150,7 @@ export function RigaMovimento({
             />
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{m.etichetta || m.categoria}</p>
+            <p className="truncate text-sm font-semibold">{m.etichetta || m.categoria}</p>
             {modificabile ? (
               /**
                * LA CATEGORIA È UNA PILLOLA COL SUO COLORE, non una tendina grigia.

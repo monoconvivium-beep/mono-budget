@@ -146,11 +146,11 @@ function Mono() {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-bold">Ricette</span>
-          <span className="block truncate text-xs text-[rgba(244,236,221,0.78)]">
+          <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
             Le basi di pasticceria dello chef, e le tue dette a voce
           </span>
         </span>
-        <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+        <span aria-hidden className="text-[var(--secondario-su-pieno)]">
           ›
         </span>
       </Link>
@@ -160,10 +160,10 @@ function Mono() {
       <section className="scheda mt-4 p-4">
         <h2 className="text-lg">I tuoi conti restano tuoi</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account e
-          nessun server dove finiscano: <strong>MONO non riceve niente dei tuoi conti</strong>.
-          L'unica cosa che l'app chiede alla rete è se c'è una versione nuova di sé stessa. L'unico
-          modo per portare i conti altrove sei tu, col file di backup qui sotto.
+          Importi, categorie e saldo restano dentro questo telefono. Non c'è nessun account e nessun
+          server dove finiscano: <strong>MONO non riceve niente dei tuoi conti</strong>. L'unica
+          cosa che l'app chiede alla rete è se c'è una versione nuova di sé stessa. L'unico modo per
+          portare i conti altrove sei tu, col file di backup qui sotto.
         </p>
         <button
           type="button"

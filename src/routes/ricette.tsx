@@ -117,7 +117,7 @@ function Copertina({ ricette }: { ricette: Ricetta[] }) {
         const Icona = ICONE_FAMIGLIE[famiglia];
         return (
           <div key={famiglia}>
-            <p className="mt-4 mb-1.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.12em] text-[rgba(244,236,221,0.85)] uppercase">
+            <p className="mt-4 mb-1.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.12em] text-[var(--secondario-su-pieno)] uppercase">
               <Icona className="h-3.5 w-3.5" aria-hidden />
               {famiglia}
             </p>
@@ -191,7 +191,7 @@ function Copertina({ ricette }: { ricette: Ricetta[] }) {
           <Plus className="h-4.5 w-4.5" />
           {ricette.length ? "Un'altra ricetta" : "La tua prima ricetta"}
         </span>
-        <span className="mt-0.5 block text-[11px] text-[rgba(244,236,221,0.75)]">
+        <span className="mt-0.5 block text-[11px] text-[var(--secondario-su-pieno)]">
           A voce o a mano, una riga per volta. Resta sul tuo telefono.
         </span>
       </Link>
@@ -241,7 +241,7 @@ function VistaBase({ base }: { base: RicettaBase }) {
       >
         <Mic className="h-5 w-5" /> Segna la spesa degli ingredienti
       </Link>
-      <p className="mt-1.5 text-center text-[11px] text-[rgba(244,236,221,0.8)]">
+      <p className="mt-1.5 text-center text-[11px] text-[var(--secondario-su-pieno)]">
         Si apre l'Ascolto con «Spesa alimentare» già scelta.
       </p>
 
@@ -258,7 +258,7 @@ function VistaBase({ base }: { base: RicettaBase }) {
         ))}
       </ol>
 
-      <p className="mt-5 text-center text-sm text-[rgba(244,236,221,0.9)] italic">
+      <p className="mt-5 text-center text-sm text-[var(--secondario-su-pieno)] italic">
         Oppure passa in bottega:{" "}
         <strong className="text-[#F0DFB6] not-italic">la facciamo noi</strong>.
       </p>
@@ -275,7 +275,7 @@ function Indietro() {
       search={{}}
       /* 44 px veri anche qui: era alto 40 (misurato il 17/8). `-ml-2` si
          riprende il respiro in più, così a schermo la riga non si sposta. */
-      className="-ml-2 mb-2 inline-flex min-h-[44px] items-center gap-1 px-2 text-sm text-[rgba(244,236,221,0.85)]"
+      className="-ml-2 mb-2 inline-flex min-h-[44px] items-center gap-1 px-2 text-sm text-[var(--secondario-su-pieno)]"
     >
       ‹ Ricette
     </Link>

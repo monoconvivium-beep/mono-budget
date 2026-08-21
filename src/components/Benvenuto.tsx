@@ -104,11 +104,11 @@ export function Benvenuto() {
             La promessa MonoConvivium
           </p>
           <p className="mt-2 text-sm leading-relaxed opacity-95">
-            MONO <strong>non riceve niente dei tuoi conti</strong>: né le cifre, né le categorie,
-            né il saldo, né il metodo di pagamento. Restano dentro questo telefono, e l'unico modo
-            per portarli altrove sei tu, col file di backup. Fra un attimo ti chiediamo nome ed
-            email: quelli sì, ci arrivano — è il solo modo che abbiamo di sapere a chi stiamo
-            facendo il regalo.
+            MONO <strong>non riceve niente dei tuoi conti</strong>: né le cifre, né le categorie, né
+            il saldo, né il metodo di pagamento. Restano dentro questo telefono, e l'unico modo per
+            portarli altrove sei tu, col file di backup. Fra un attimo ti chiediamo nome ed email:
+            quelli sì, ci arrivano — è il solo modo che abbiamo di sapere a chi stiamo facendo il
+            regalo.
           </p>
         </section>
 

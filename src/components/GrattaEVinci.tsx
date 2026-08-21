@@ -167,7 +167,7 @@ export function GrattaEVinci() {
       {!scoperto && (
         <>
           <h2 className="mt-1.5 text-[21px] text-[var(--cashmere)]">Il gratta e vinci di MONO</h2>
-          <p className="mt-1.5 text-xs leading-relaxed text-[rgba(244,236,221,0.8)]">
+          <p className="mt-1.5 text-xs leading-relaxed text-[var(--secondario-su-pieno)]">
             Te lo sei guadagnato. Gratta col dito e vedi cosa c'è sotto.
           </p>
         </>
@@ -240,7 +240,7 @@ export function GrattaEVinci() {
             <p className="mt-3 text-[13px] leading-relaxed">
               Fai vedere questa schermata alla cassa: il caffè te lo offriamo noi.
             </p>
-            <p className="mt-1.5 text-[11px] text-[rgba(244,236,221,0.72)]">{PREMIO_QUANDO}</p>
+            <p className="mt-1.5 text-[11px] text-[var(--secondario-su-pieno)]">{PREMIO_QUANDO}</p>
             <a
               href="https://www.google.com/maps/search/?api=1&query=45.0479194,7.6432467"
               target="_blank"
@@ -251,7 +251,7 @@ export function GrattaEVinci() {
             </a>
           </>
         ) : (
-          <p className="mt-3 text-[13px] leading-relaxed text-[rgba(244,236,221,0.85)]">
+          <p className="mt-3 text-[13px] leading-relaxed text-[var(--secondario-su-pieno)]">
             Un biglietto su quattro vince il caffè, e stavolta non era il tuo. Il resto dell'app
             resta tutto tuo — e in bottega ti aspettiamo lo stesso.
           </p>
@@ -260,7 +260,7 @@ export function GrattaEVinci() {
         <button
           type="button"
           onClick={scopri}
-          className="mt-3 text-[11px] text-[rgba(244,236,221,0.7)] underline underline-offset-2"
+          className="mt-3 text-[11px] text-[var(--secondario-su-pieno)] underline underline-offset-2"
         >
           Non riesco a grattare, scoprilo tu
         </button>

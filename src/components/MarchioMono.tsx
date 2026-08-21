@@ -98,11 +98,11 @@ export function MarchioMono() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold">Scarica l'app di MONO</span>
-            <span className="block truncate text-xs text-[rgba(244,236,221,0.8)]">
+            <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
               Ordina, prenota, ritira: il menu del giorno in tasca
             </span>
           </span>
-          <span aria-hidden className="text-[rgba(244,236,221,0.7)]">
+          <span aria-hidden className="text-[var(--secondario-su-pieno)]">
             ›
           </span>
         </a>

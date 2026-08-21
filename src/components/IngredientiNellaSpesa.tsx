@@ -67,7 +67,10 @@ export function IngredientiNellaSpesa({ ingredienti }: { ingredienti: readonly s
       </button>
 
       {esito && (
-        <p role="status" className="mt-1.5 text-center text-[11px] text-[rgba(244,236,221,0.85)]">
+        <p
+          role="status"
+          className="mt-1.5 text-center text-[11px] text-[var(--secondario-su-pieno)]"
+        >
           {esito.messi === 0
             ? "Li avevi già tutti in lista."
             : esito.messi === 1

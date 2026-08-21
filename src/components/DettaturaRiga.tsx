@@ -184,7 +184,9 @@ export function DettaturaRiga({
       )}
 
       {supportato && fase !== "errore" && (
-        <p className="mt-1.5 text-center text-[11px] text-[rgba(244,236,221,0.8)]">{esempio}</p>
+        <p className="mt-1.5 text-center text-[11px] text-[var(--secondario-su-pieno)]">
+          {esempio}
+        </p>
       )}
 
       <form onSubmit={aMano} className="mt-2 flex gap-2">
