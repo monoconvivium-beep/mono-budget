@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
-import { CATEGORIE, coloreLibero } from "./parse";
+import { CATEGORIE, coloreCategoria, coloreLibero } from "./parse";
+import { RETE_DI_SICUREZZA } from "./categorie";
 import type { Categoria, CategoriaPersonale, Metodo, Tipo } from "./parse";
 import {
   giorno,
@@ -105,6 +106,22 @@ export interface Stato {
    * come punto di partenza, ma non sono più un recinto.
    */
   categoriePersonali: CategoriaPersonale[];
+  /**
+   * Le categorie SPENTE: restano nel programma ma non si vedono più, né nella
+   * tendina né fra quelle che la voce può scegliere. I «Tabacchi» di chi non
+   * fuma. ⚠️ Spegnere non è cancellare: si riaccendono, e nessuna spesa si
+   * perde per strada.
+   */
+  nascoste: string[];
+  /**
+   * LE RINOMINATE: «Trasporti» → «Benzina», e vale solo per le undici di casa.
+   *
+   * 🔑 Serve alla VOCE, non a quello che si vede. Le spese già scritte vengono
+   * riscritte subito col nome nuovo; ma chi detta «pullman» fa scattare i
+   * sinonimi di «Trasporti», e senza questa mappa la spesa finirebbe in una
+   * casella che sullo schermo non esiste più.
+   */
+  rinomine: Record<string, string>;
 }
 
 const CHIAVE = "mono-money-v1";
@@ -130,6 +147,8 @@ const iniziale: Stato = {
   striscia: null,
   biglietto: null,
   categoriePersonali: [],
+  nascoste: [],
+  rinomine: {},
 };
 
 let stato: Stato = iniziale;
@@ -155,6 +174,9 @@ function leggi(): Stato {
       biglietto: dati.biglietto ?? null,
       // Salvataggi nati prima delle categorie libere: la chiave non c'è.
       categoriePersonali: Array.isArray(dati.categoriePersonali) ? dati.categoriePersonali : [],
+      // Salvataggi nati prima della schermata delle categorie: le chiavi non ci sono.
+      nascoste: Array.isArray(dati.nascoste) ? dati.nascoste : [],
+      rinomine: dati.rinomine && typeof dati.rinomine === "object" ? dati.rinomine : {},
     };
   } catch {
     return iniziale;
@@ -226,8 +248,15 @@ function conUso(s: Stato): Stato {
 
 export const azioni = {
   aggiungi(m: Omit<Movimento, "id" | "data"> & { data?: string }) {
-    const mov: Movimento = { id: nuovoId(), data: m.data ?? new Date().toISOString(), ...m };
-    aggiorna((s) => conUso({ ...s, movimenti: [mov, ...s.movimenti] }));
+    let mov: Movimento = { id: nuovoId(), data: m.data ?? new Date().toISOString(), ...m };
+    aggiorna((s) => {
+      /* 🔑 Se «Trasporti» è stata rinominata «Benzina», quello che riconosce la
+         voce va portato lì: se no la spesa finirebbe in una casella che sullo
+         schermo non esiste più. */
+      const categoria = (s.rinomine[mov.categoria] ?? mov.categoria) as Categoria;
+      mov = { ...mov, categoria };
+      return conUso({ ...s, movimenti: [mov, ...s.movimenti] });
+    });
     return mov;
   },
   cestina(id: string) {
@@ -307,6 +336,79 @@ export const azioni = {
    * «Altro». Cancellare le spese di qualcuno perché ha cambiato idea sul nome
    * di una casella sarebbe un danno, non una pulizia.
    */
+  /**
+   * RINOMINA UNA CATEGORIA — anche una delle undici di casa.
+   *
+   * 🔴 Le spese di prima **si riscrivono**: se «Trasporti» diventa «Benzina» e
+   * le spese vecchie restassero «Trasporti», il bilancio di luglio parlerebbe
+   * una lingua e quello di agosto un'altra, con due fette nella torta per la
+   * stessa cosa. Rinominare non è creare una casella nuova.
+   *
+   * 🔑 Se era una di casa: la vecchia si **spegne** (sparisce dalla tendina), la
+   * nuova nasce come categoria tua **con lo stesso colore di prima** (la torta
+   * non cambia faccia da un giorno all'altro), e la mappa `rinomine` porta lì
+   * anche quello che riconoscerà la voce.
+   *
+   * Torna il nome buono, o "" se il nome non andava bene.
+   */
+  rinominaCategoria(vecchio: string, nuovo: string): string {
+    const pulito = nuovo.trim().slice(0, 24);
+    if (!pulito || pulito === vecchio) return "";
+    if (vecchio === RETE_DI_SICUREZZA) return "";
+
+    let risultato = "";
+    aggiorna((s) => {
+      const uguale = (a: string, b: string) =>
+        a.toLocaleLowerCase("it") === b.toLocaleLowerCase("it");
+      const tutte = [...CATEGORIE, ...s.categoriePersonali.map((c) => c.nome)];
+      // Un nome già in uso non fa un doppione: le spese finiscono in quello che c'è.
+      const gia = tutte.find((n) => uguale(n, pulito));
+      const finale = gia ?? pulito;
+      risultato = finale;
+
+      const diCasa = (CATEGORIE as readonly string[]).includes(vecchio);
+      const colore = coloreCategoria(vecchio as Categoria, s.categoriePersonali);
+
+      const personali = diCasa
+        ? // Nasce come sua, ma col colore che aveva prima.
+          s.categoriePersonali.some((c) => uguale(c.nome, finale))
+          ? s.categoriePersonali
+          : [...s.categoriePersonali, { nome: finale, colore }]
+        : s.categoriePersonali.map((c) => (c.nome === vecchio ? { nome: finale, colore } : c));
+
+      return {
+        ...s,
+        categoriePersonali: personali,
+        // La vecchia di casa esce di scena, ma resta riaccendibile.
+        nascoste: diCasa ? [...new Set([...s.nascoste, vecchio])] : s.nascoste,
+        rinomine: diCasa ? { ...s.rinomine, [vecchio]: finale } : s.rinomine,
+        movimenti: s.movimenti.map((m) =>
+          m.categoria === vecchio ? { ...m, categoria: finale } : m,
+        ),
+        regole: s.regole.map((r) => (r.categoria === vecchio ? { ...r, categoria: finale } : r)),
+      };
+    });
+    return risultato;
+  },
+  /**
+   * SPEGNE UNA CATEGORIA: sparisce dalla tendina e la voce non la sceglie più.
+   * ⚠️ Non è cancellare: le spese che ci stanno dentro **restano dov'erano**, e
+   * riaccendendola torna tutto come prima. «Altro» non si spegne mai: è dove
+   * finisce quello che l'app non ha capito.
+   */
+  spegniCategoria(nome: string) {
+    if (nome === RETE_DI_SICUREZZA) return;
+    aggiorna((s) => ({ ...s, nascoste: [...new Set([...s.nascoste, nome])] }));
+  },
+  riaccendiCategoria(nome: string) {
+    aggiorna((s) => {
+      const rinomine = { ...s.rinomine };
+      // Se era stata rinominata, riaccenderla vuol dire anche smettere di
+      // portare altrove quello che riconosce la voce.
+      delete rinomine[nome];
+      return { ...s, rinomine, nascoste: s.nascoste.filter((n) => n !== nome) };
+    });
+  },
   togliCategoria(nome: string) {
     aggiorna((s) => ({
       ...s,

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnoRouteImport } from './routes/anno'
 import { Route as AscoltoRouteImport } from './routes/ascolto'
+import { Route as CategorieRouteImport } from './routes/categorie'
 import { Route as ConviviumRouteImport } from './routes/convivium'
 import { Route as DafareRouteImport } from './routes/dafare'
 import { Route as DiarioRouteImport } from './routes/diario'
@@ -32,6 +33,11 @@ const AnnoRoute = AnnoRouteImport.update({
 const AscoltoRoute = AscoltoRouteImport.update({
   id: '/ascolto',
   path: '/ascolto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategorieRoute = CategorieRouteImport.update({
+  id: '/categorie',
+  path: '/categorie',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConviviumRoute = ConviviumRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/categorie': typeof CategorieRoute
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/categorie': typeof CategorieRoute
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/anno': typeof AnnoRoute
   '/ascolto': typeof AscoltoRoute
+  '/categorie': typeof CategorieRoute
   '/convivium': typeof ConviviumRoute
   '/dafare': typeof DafareRoute
   '/diario': typeof DiarioRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/anno'
     | '/ascolto'
+    | '/categorie'
     | '/convivium'
     | '/dafare'
     | '/diario'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/anno'
     | '/ascolto'
+    | '/categorie'
     | '/convivium'
     | '/dafare'
     | '/diario'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/'
     | '/anno'
     | '/ascolto'
+    | '/categorie'
     | '/convivium'
     | '/dafare'
     | '/diario'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnnoRoute: typeof AnnoRoute
   AscoltoRoute: typeof AscoltoRoute
+  CategorieRoute: typeof CategorieRoute
   ConviviumRoute: typeof ConviviumRoute
   DafareRoute: typeof DafareRoute
   DiarioRoute: typeof DiarioRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/ascolto'
       fullPath: '/ascolto'
       preLoaderRoute: typeof AscoltoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorie': {
+      id: '/categorie'
+      path: '/categorie'
+      fullPath: '/categorie'
+      preLoaderRoute: typeof CategorieRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/convivium': {
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnnoRoute: AnnoRoute,
   AscoltoRoute: AscoltoRoute,
+  CategorieRoute: CategorieRoute,
   ConviviumRoute: ConviviumRoute,
   DafareRoute: DafareRoute,
   DiarioRoute: DiarioRoute,

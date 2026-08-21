@@ -272,6 +272,8 @@ export const SINONIMI: Record<Exclude<CategoriaBase, "Altro">, string[]> = {
   Tabacchi: [
     "tabacchi",
     "tabaccaio",
+    // Torinese come lui: al banco si dice così più spesso che «tabaccaio».
+    "tabaccheria",
     "sigarette",
     "tabacco",
     "gratta e vinci",
@@ -604,16 +606,25 @@ export interface RegolaImparata {
 function trovaCategoria(
   testo: string,
   regole: RegolaImparata[],
+  /**
+   * Le categorie SPENTE da chi usa l'app: la voce non le sceglie più.
+   * 🔑 Chi ha spento «Tabacchi» perché non fuma non vuole vedersi arrivare
+   * una spesa lì dentro perché ha detto «tabaccheria»: finisce in «Altro»,
+   * che è dove sta quello che l'app non sa dove mettere.
+   */
+  spente: string[] = [],
 ): { categoria: Categoria; incerta: boolean } {
   const t = " " + normalizza(testo) + " ";
 
   for (const r of regole) {
     const k = normalizza(r.chiave);
-    if (k && t.includes(" " + k)) return { categoria: r.categoria, incerta: false };
+    if (k && t.includes(" " + k) && !spente.includes(r.categoria))
+      return { categoria: r.categoria, incerta: false };
   }
 
   let migliore: { categoria: Categoria; lunghezza: number } | null = null;
   for (const [cat, parole] of Object.entries(SINONIMI)) {
+    if (spente.includes(cat)) continue;
     for (const p of parole) {
       if (t.includes(" " + p)) {
         if (!migliore || p.length > migliore.lunghezza) {
@@ -664,7 +675,11 @@ function etichettaDa(token: string[], usati: Set<number>): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
 }
 
-function creaMovimento(frase: string, regole: RegolaImparata[]): MovimentoBozza | null {
+function creaMovimento(
+  frase: string,
+  regole: RegolaImparata[],
+  spente: string[] = [],
+): MovimentoBozza | null {
   const token = tokenizza(frase);
   if (!token.length) return null;
   const imp = estraiImporto(token);
@@ -678,7 +693,7 @@ function creaMovimento(frase: string, regole: RegolaImparata[]): MovimentoBozza 
       ? "carta"
       : null;
 
-  const { categoria, incerta } = trovaCategoria(frase, regole);
+  const { categoria, incerta } = trovaCategoria(frase, regole, spente);
 
   // Trappola misurata: il riconoscimento scrive "quattro e sessanta" come 460.
   const sospetto =
@@ -724,7 +739,12 @@ function primoNumeroPiccolo(pezzo: string): number | null {
  * Interpreta una frase dettata e restituisce i movimenti riconosciuti.
  * La parola "e" separa due spese, ma solo quando la seconda parte è una spesa.
  */
-export function interpreta(frase: string, regole: RegolaImparata[] = []): MovimentoBozza[] {
+/** `spente` = le categorie che chi usa l'app ha spento: la voce non le sceglie più. */
+export function interpreta(
+  frase: string,
+  regole: RegolaImparata[] = [],
+  spente: string[] = [],
+): MovimentoBozza[] {
   const testo = normalizza(frase);
   if (!testo) return [];
 
@@ -771,7 +791,7 @@ export function interpreta(frase: string, regole: RegolaImparata[] = []): Movime
 
   const risultati: MovimentoBozza[] = [];
   for (const g of gruppi) {
-    const m = creaMovimento(g, regole);
+    const m = creaMovimento(g, regole, spente);
     if (m) risultati.push(m);
   }
   return risultati;

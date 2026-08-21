@@ -77,7 +77,7 @@ export function Dettatura({
   avvioAutomatico?: boolean;
   categoriaPreferita?: Categoria | undefined;
 }) {
-  const { regole } = useStato();
+  const { regole, nascoste } = useStato();
   const [fase, setFase] = useState<Fase>("pronto");
   const [errore, setErrore] = useState("");
   const [ascoltato, setAscoltato] = useState("");
@@ -107,7 +107,7 @@ export function Dettatura({
 
   const analizza = useCallback(
     (testo: string) => {
-      const risultati = interpreta(testo, regole);
+      const risultati = interpreta(testo, regole, nascoste);
       setAscoltato(testo);
       if (!risultati.length) {
         setFase("errore");
@@ -125,7 +125,7 @@ export function Dettatura({
       );
       setFase("conferma");
     },
-    [regole, categoriaPreferita],
+    [regole, nascoste, categoriaPreferita],
   );
 
   const avvia = useCallback(() => {

@@ -9,6 +9,9 @@ import { InstallaApp } from "@/components/InstallaApp";
 import { RigaMovimento } from "@/components/RigaMovimento";
 import { SettimanaMono } from "@/components/SettimanaMono";
 import { SpeseCheTornano } from "@/components/SpeseCheTornano";
+import { Tags } from "lucide-react";
+
+import { categorieAttive } from "@/lib/categorie";
 import { euro } from "@/lib/parse";
 import { delMese } from "@/lib/statistiche";
 import { attivi, MESI, somma, useStato } from "@/lib/store";
@@ -44,6 +47,14 @@ function Home() {
   const oggi = movimenti
     .filter((m) => new Date(m.data).toDateString() === ora.toDateString() && m.tipo === "uscita")
     .reduce((t, m) => t + m.importo, 0);
+
+  /* I nomi veri che uno ha in mano, non una promessa generica: si capisce al
+     volo che sono LE SUE categorie e che si toccano. */
+  const attive = categorieAttive(stato);
+  const anteprimaCategorie = `${attive
+    .slice(0, 3)
+    .map((c) => c.nome)
+    .join(", ")}… rinominale, aggiungi le tue`;
 
   const marchio = `${import.meta.env.BASE_URL}marchio/mono-orizzontale${
     stato.tema === "scuro" ? "-chiaro" : ""
@@ -184,6 +195,37 @@ function Home() {
           <span className="text-xs text-muted-foreground">Mese per mese, anno per anno</span>
         </Link>
       </div>
+
+      {/**
+       * IL BOTTONE DELLE CATEGORIE — chiesto da lui il 21/8/2026, con queste
+       * parole: «lì serve proprio un bottone da scemo, sotto: personalizza le
+       * tue categorie».
+       *
+       * 🔴 Le categorie erano già libere da due versioni, ma si cambiavano solo
+       * dalla tendina dentro una riga di spesa: lui ha guardato l'app e ha
+       * detto che non erano personalizzabili. Aveva ragione — una cosa che vive
+       * dentro un menù a tendina non la trova nessuno.
+       * ⚠️ Perciò questa NON è una porta tenue come il Diario e i Bilanci qui
+       * sopra: è terracotta piena, larga quanto la schermata, e dice già i nomi
+       * delle categorie che uno ha in mano.
+       */}
+      <Link
+        to="/categorie"
+        className="mt-3 flex min-h-[64px] items-center gap-3 rounded-2xl bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-rialzata"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(244,236,221,0.16)]">
+          <Tags className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Personalizza le tue categorie</span>
+          <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
+            {anteprimaCategorie}
+          </span>
+        </span>
+        <span aria-hidden className="text-[var(--secondario-su-pieno)]">
+          ›
+        </span>
+      </Link>
 
       {/* Sta qui perché è il momento in cui uno ha appena provato la voce:
           è allora che la vuole tenere. Sparisce da sola una volta installata. */}

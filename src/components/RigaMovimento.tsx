@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { coloreCategoria, euro, CATEGORIE, type Categoria } from "@/lib/parse";
+import { categorieAttive } from "@/lib/categorie";
+import { coloreCategoria, euro, type Categoria } from "@/lib/parse";
 import { azioni, dataBreve, oraBreve, useStato, type Movimento } from "@/lib/store";
 
 import { X, RotateCcw, Trash2, ChevronDown, Check } from "lucide-react";
@@ -32,8 +33,21 @@ export function RigaMovimento({
   scheda?: boolean;
   ritardoMs?: number;
 }) {
-  const { categoriePersonali: personali } = useStato();
+  const stato = useStato();
+  const personali = stato.categoriePersonali;
   const colore = coloreCategoria(m.categoria, personali);
+
+  /**
+   * Le categorie che si possono scegliere: quelle spente non ci sono più.
+   * ⚠️ Tranne quella che questa spesa ha adesso, anche se è stata spenta: se no
+   * la tendina mostrerebbe un valore che non è fra le sue voci, e il telefono
+   * ne sceglierebbe un'altra da solo — cioè cambierebbe la categoria a una
+   * spesa senza che nessuno l'abbia toccata.
+   */
+  const scelte = categorieAttive(stato);
+  const elenco = scelte.some((c) => c.nome === m.categoria)
+    ? scelte
+    : [{ nome: m.categoria, colore, diCasa: false }, ...scelte];
 
   /**
    * `null` = la riga è normale. Una stringa = si sta battezzando una categoria
@@ -198,20 +212,11 @@ export function RigaMovimento({
                    accorge — se non il dito, che adesso prende al primo colpo. */
                     className="absolute inset-x-0 -inset-y-3 w-full opacity-0"
                   >
-                    {CATEGORIE.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                    {elenco.map((c) => (
+                      <option key={c.nome} value={c.nome}>
+                        {c.nome}
                       </option>
                     ))}
-                    {personali.length > 0 && (
-                      <optgroup label="Le tue">
-                        {personali.map((c) => (
-                          <option key={c.nome} value={c.nome}>
-                            {c.nome}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )}
                     <option value={NUOVA}>+ Nuova categoria…</option>
                   </select>
                 </span>
