@@ -6,7 +6,7 @@
  * un hosting statico qualunque e funzionano, senza niente da tenere acceso.
  * È la condizione perché l'app possa restare **gratis per sempre**.
  */
-import { copyFileSync } from "node:fs";
+import { copyFileSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -35,7 +35,25 @@ function ricadutaPerHostingStatico(): Plugin {
   };
 }
 
+/**
+ * IL NUMERO DI VERSIONE, PRESO DAL GUARDIANO.
+ *
+ * 🔑 Un posto solo: `public/sw.js`. Scriverlo anche qui vorrebbe dire due
+ * numeri che si somigliano — e il giorno che uno dei due resta indietro, l'app
+ * dice «sei all'ultima» a chi l'ultima non ce l'ha. Meglio nessun numero che un
+ * numero che mente.
+ */
+function versioneDelGuardiano(): string {
+  const testo = readFileSync(resolve(import.meta.dirname, "public/sw.js"), "utf8");
+  const trovata = /const VERSIONE = "mono-money-(v\d+)"/.exec(testo)?.[1];
+  if (!trovata) throw new Error('In public/sw.js non trovo `const VERSIONE = "mono-money-vNN"`.');
+  return trovata;
+}
+
 export default defineConfig({
+  define: {
+    __VERSIONE__: JSON.stringify(versioneDelGuardiano()),
+  },
   plugins: [
     ricadutaPerHostingStatico(),
     // Deve stare PRIMA di react(): genera `routeTree.gen.ts` dai file in src/routes.

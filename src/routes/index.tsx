@@ -190,8 +190,8 @@ function Home() {
       <InstallaApp />
 
       <p className="mt-5 px-2 text-center text-xs leading-relaxed text-muted-foreground">
-        Importi, categorie e saldo restano su questo telefono: nessun account, nessun server,
-        nessuna chiamata di rete. Un regalo di MONO, gastronomia a Torino.
+        Importi, categorie e saldo restano su questo telefono: nessun account, nessun server, non
+        escono da qui. Un regalo di MONO, gastronomia a Torino.
       </p>
     </Guscio>
   );

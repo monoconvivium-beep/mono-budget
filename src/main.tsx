@@ -67,8 +67,23 @@ if (typeof navigator !== "undefined") {
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     // Dalla radice dell'app, non da "/": funziona anche in una sottocartella.
-    void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
-      scope: import.meta.env.BASE_URL,
-    });
+    void navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`, {
+        scope: import.meta.env.BASE_URL,
+        /**
+         * 🔴 `updateViaCache: "none"` (21/8/2026): il file del guardiano si
+         * chiede sempre al sito, mai alla tasca del telefono. È il file che
+         * dice qual è la versione: se lo si legge dalla copia salvata, un
+         * telefono può restare indietro senza accorgersene — ed è successo.
+         */
+        updateViaCache: "none",
+      })
+      /**
+       * E a ogni apertura gli si chiede di guardare se c'è una versione nuova.
+       * Registrare e basta non lo fa: senza questa riga il controllo lo fa il
+       * telefono quando gli pare.
+       */
+      .then((guardiano) => guardiano.update())
+      .catch(() => undefined);
   });
 }

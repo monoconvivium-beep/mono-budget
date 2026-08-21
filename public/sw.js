@@ -8,7 +8,7 @@
  * Senza, i telefoni che hanno già l'app continuano a mostrare quella vecchia e
  * sembra che le correzioni non siano state fatte.
  */
-const VERSIONE = "mono-money-v30";
+const VERSIONE = "mono-money-v31";
 
 /**
  * Tutto si calcola dalla RADICE dove il guardiano è registrato, mai da "/".
@@ -51,12 +51,34 @@ self.addEventListener("activate", (evento) => {
   );
 });
 
+/**
+ * «NON ASPETTARE IL TUO TURNO.»
+ *
+ * Un guardiano nuovo, appena installato, resta in panchina finché tutte le
+ * schermate dell'app non sono chiuse — su un telefono può voler dire mai.
+ * Quando si tocca «Aggiorna», l'app gli manda questo e lui entra subito.
+ */
+self.addEventListener("message", (evento) => {
+  if (evento.data && evento.data.mono === "non-aspettare") void self.skipWaiting();
+});
+
 self.addEventListener("fetch", (evento) => {
   const richiesta = evento.request;
   if (richiesta.method !== "GET") return;
 
   const indirizzo = new URL(richiesta.url);
   if (indirizzo.origin !== self.location.origin) return;
+
+  /**
+   * 🔴 IL GUARDIANO NON SERVE SÉ STESSO DALLA COPIA (21/8/2026).
+   * Questo file è l'unico posto dove è scritto il numero di versione, ed è
+   * quello che l'app va a leggere per sapere se c'è qualcosa di nuovo. Se lo
+   * servisse la copia salvata, la domanda «sono aggiornato?» finirebbe per
+   * essere fatta proprio a chi è rimasto indietro, e la risposta sarebbe
+   * sempre «sì». Trovato provandolo: il numero nuovo era sul sito e l'app
+   * continuava a leggere il vecchio.
+   */
+  if (indirizzo.pathname.endsWith("/sw.js")) return;
 
   /**
    * Aprire una pagina: prima la rete, la copia solo se non c'è campo.
@@ -82,8 +104,18 @@ self.addEventListener("fetch", (evento) => {
            * subito: passati tre secondi si usa quella. Nessuno aspetta
            * mezzo minuto per segnare un caffè.
            */
+          /**
+           * 🔴 `cache: "no-cache"` (21/8/2026). Senza, la pagina la può tirare
+           * fuori il telefono dalla sua tasca — fino a dieci minuti vecchia per
+           * le regole del sito, ma soprattutto SENZA MAI CHIEDERE se è cambiata.
+           * È la pagina che dice quali pezzi di programma caricare: se resta
+           * indietro lei, resta indietro tutta l'app, e uno può girare per un
+           * giorno con la versione di ieri senza che niente glielo dica.
+           * Costa una domanda al sito su un file di sei righe — e se la
+           * risposta è «non è cambiata» non si scarica niente.
+           */
           const dallaRete = await Promise.race([
-            fetch(richiesta),
+            fetch(richiesta, { cache: "no-cache" }),
             new Promise((_, no) => setTimeout(() => no(new Error("troppo lenta")), 3000)),
           ]);
 

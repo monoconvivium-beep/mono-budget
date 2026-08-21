@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Wallet, ShoppingBasket, ChefHat, CheckSquare } from "lucide-react";
+import { AvvisoVersione, RigaVersione } from "@/components/Aggiornamento";
 import { useStato } from "@/lib/store";
 
 /**
@@ -191,6 +192,12 @@ export function Guscio({
             </>
           )}
         </header>
+
+        {/* ⚠️ In CIMA, sopra tutto il resto: un avviso in fondo alla pagina è un
+            avviso che nessuno legge. C'è solo quando c'è davvero una versione
+            nuova da prendere. */}
+        <AvvisoVersione />
+
         {children}
 
         {/* La firma, in fondo a OGNI schermata. Discreta, ma sempre lì: è così
@@ -214,6 +221,11 @@ export function Guscio({
           )}
           MONO · Bottega Gastronomica · Torino
         </p>
+
+        {/* Sotto la firma, su ogni schermata: che versione hai in mano e il
+            tocco per controllare. È la risposta alla domanda «ma ce l'ho
+            l'ultima?», che prima non aveva nessun posto dove essere fatta. */}
+        <RigaVersione chiara={rosso} />
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
