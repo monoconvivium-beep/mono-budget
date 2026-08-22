@@ -43,10 +43,19 @@ export const INDIRIZZO_APP = "https://convivium.monobottega.it";
  * nessuno ricontrolla il giorno che il sito cambia.
  */
 export const SITO = {
-  /** La presentazione del progetto: è la stessa cosa del PDF, ma si legge sul telefono. */
+  /**
+   * La presentazione del progetto — **un tocco e si legge**.
+   *
+   * 🔑 Sua scelta del 21/8/2026: «così non devono scaricare niente, schiacciano
+   * e leggono direttamente». È lo stesso identico documento del PDF, ma
+   * impaginato per il telefono: un PDF su uno schermo da 375 px si legge con
+   * due dita, e su Android spesso il telefono lo **scarica** invece di aprirlo
+   * — cioè mette un passaggio in mezzo, che è esattamente quello che qui non
+   * deve esserci.
+   * ⚠️ Per questo il collegamento al file `.pdf` è stato tolto: era il tocco in
+   * più.
+   */
   convivium: "https://monobottega.it/mono-convivium/",
-  /** Lo stesso documento come file, per chi lo vuole tenere o girare. */
-  convivumPdf: "https://monobottega.it/pdf/mono-convivium.pdf",
   /** La sezione dedicata a chi cerca lavoro. Un'altra cosa, un altro indirizzo. */
   lavoraConNoi: "https://monobottega.it/lavora-con-noi/",
 } as const;

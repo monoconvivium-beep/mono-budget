@@ -93,7 +93,12 @@ describe("gli indirizzi del sito", () => {
     for (const url of Object.values(SITO)) {
       expect(url).toMatch(/^https:\/\/monobottega\.it\//);
     }
-    expect(SITO.convivumPdf).toMatch(/\.pdf$/);
+  });
+
+  it("il progetto si apre in un tocco: niente file da scaricare in mezzo", () => {
+    // Sua scelta del 21/8: «così non devono scaricare niente». Un link a un
+    // `.pdf` qui dentro sarebbe di nuovo il passaggio in più.
+    for (const url of Object.values(SITO)) expect(url).not.toMatch(/\.pdf$/);
   });
 
   it("la schermata del Convivium li prende da qui, non li riscrive a mano", () => {

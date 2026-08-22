@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { BookOpen, FileText, HandHeart, Settings } from "lucide-react";
+import { BookOpen, HandHeart, Settings } from "lucide-react";
 
 import { GrattaEVinci } from "@/components/GrattaEVinci";
 import { Guscio } from "@/components/Guscio";
@@ -87,19 +87,6 @@ function Convivium() {
         <span aria-hidden className="text-[var(--secondario-su-pieno)]">
           ›
         </span>
-      </a>
-
-      {/* Lo stesso documento come file, per chi lo vuole tenere o girare a
-          qualcuno. Piccolo: sul telefono la presentazione si legge meglio della
-          sua fotocopia in PDF, ma il file deve restare a portata di mano. */}
-      <a
-        href={SITO.convivumPdf}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-2 flex min-h-11 items-center justify-center gap-2 text-xs font-semibold text-muted-foreground underline underline-offset-4"
-      >
-        <FileText aria-hidden className="h-4 w-4" />
-        Scarica la presentazione in PDF
       </a>
 
       <a
