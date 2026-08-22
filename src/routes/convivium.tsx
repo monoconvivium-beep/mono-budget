@@ -1,11 +1,12 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { HandHeart, Settings } from "lucide-react";
+import { BookOpen, FileText, HandHeart, Settings } from "lucide-react";
 
 import { GrattaEVinci } from "@/components/GrattaEVinci";
 import { Guscio } from "@/components/Guscio";
 import { MarchioMono } from "@/components/MarchioMono";
 import { PassalaAUnAmico } from "@/components/PassalaAUnAmico";
 import { SettimanaMono } from "@/components/SettimanaMono";
+import { SITO } from "@/lib/origine";
 
 export const Route = createFileRoute("/convivium")({
   head: () => ({
@@ -60,22 +61,63 @@ function Convivium() {
         </p>
       </section>
 
+      {/**
+       * 🔴 DUE COSE DIVERSE, DUE BOTTONI — corretto il 21/8/2026 su sua
+       * segnalazione. Qui c'era un bottone solo, «Vieni a lavorare con noi»,
+       * che però apriva la **presentazione del progetto**: chi cercava lavoro
+       * si trovava a leggere il progetto sociale, e chi voleva capire cos'è
+       * MonoConvivium non aveva nessuna porta con scritto il suo nome.
+       * ⚠️ Gli indirizzi stanno in `lib/origine.ts`, non scritti qui a mano.
+       */}
       <a
-        href="https://monobottega.it/mono-convivium/"
+        href={SITO.convivium}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-3 flex min-h-[64px] items-center gap-3 rounded-2xl bg-[var(--azione-scheda)] p-3.5 text-[var(--azione-testo)] shadow-morbida"
       >
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--cashmere)]">
-          <HandHeart className="h-5.5 w-5.5 text-[var(--azione-scheda)]" />
+          <BookOpen className="h-5.5 w-5.5 text-[var(--azione-scheda)]" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">Vieni a lavorare con noi</span>
+          <span className="block text-[15px] font-bold">Scopri il progetto</span>
           <span className="block truncate text-xs text-[var(--secondario-su-pieno)]">
-            Percorsi veri: cucina, banco, pasticceria, sala
+            La presentazione di MonoConvivium, per intero
           </span>
         </span>
         <span aria-hidden className="text-[var(--secondario-su-pieno)]">
+          ›
+        </span>
+      </a>
+
+      {/* Lo stesso documento come file, per chi lo vuole tenere o girare a
+          qualcuno. Piccolo: sul telefono la presentazione si legge meglio della
+          sua fotocopia in PDF, ma il file deve restare a portata di mano. */}
+      <a
+        href={SITO.convivumPdf}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 flex min-h-11 items-center justify-center gap-2 text-xs font-semibold text-muted-foreground underline underline-offset-4"
+      >
+        <FileText aria-hidden className="h-4 w-4" />
+        Scarica la presentazione in PDF
+      </a>
+
+      <a
+        href={SITO.lavoraConNoi}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="scheda-tenue mt-3 flex min-h-[64px] items-center gap-3 p-3.5"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--azione-scheda)]">
+          <HandHeart className="h-5.5 w-5.5 text-[var(--azione-testo)]" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">Vieni a lavorare con noi</span>
+          <span className="block truncate text-xs text-muted-foreground">
+            Percorsi veri: cucina, banco, pasticceria, sala
+          </span>
+        </span>
+        <span aria-hidden className="text-muted-foreground">
           ›
         </span>
       </a>

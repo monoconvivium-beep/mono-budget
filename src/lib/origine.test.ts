@@ -1,6 +1,8 @@
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
-import { leggiProvenienza, notaProvenienza, nuovoCodice } from "./origine";
+import { leggiProvenienza, notaProvenienza, nuovoCodice, SITO } from "./origine";
 
 describe("leggiProvenienza — le targhe nell'indirizzo", () => {
   it("legge il canale del banco", () => {
@@ -70,5 +72,40 @@ describe("nuovoCodice — il codice da dire al banco", () => {
   it("un codice generato passa il filtro dell'indirizzo senza perdere pezzi", () => {
     const codice = nuovoCodice();
     expect(leggiProvenienza(`?amico=${codice}`)).toEqual({ amico: codice });
+  });
+});
+
+/**
+ * DUE PORTE, DUE INDIRIZZI — e nessuno dei due scritto a mano in una schermata.
+ *
+ * 🔴 Da dove nasce (21/8/2026): nel Convivium c'era un bottone solo, «Vieni a
+ * lavorare con noi», che apriva la **presentazione del progetto**. Chi cercava
+ * lavoro leggeva il progetto sociale, e chi voleva capire cos'è MonoConvivium
+ * non aveva nessuna porta col suo nome. Un'etichetta che dice una cosa e ne fa
+ * un'altra è peggio di un bottone mancante: chi l'ha già toccata non ci torna.
+ */
+describe("gli indirizzi del sito", () => {
+  it("il progetto e il lavoro non finiscono nello stesso posto", () => {
+    expect(SITO.convivium).not.toBe(SITO.lavoraConNoi);
+  });
+
+  it("sono indirizzi veri del sito della bottega, non segnaposto", () => {
+    for (const url of Object.values(SITO)) {
+      expect(url).toMatch(/^https:\/\/monobottega\.it\//);
+    }
+    expect(SITO.convivumPdf).toMatch(/\.pdf$/);
+  });
+
+  it("la schermata del Convivium li prende da qui, non li riscrive a mano", () => {
+    // Un indirizzo scritto dentro una schermata è un indirizzo che nessuno
+    // ricontrolla il giorno che il sito cambia — lezione del trasloco del 15/8.
+    const schermata = readFileSync(
+      new URL("../routes/convivium.tsx", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"),
+      "utf8",
+    );
+    expect(schermata).toContain("SITO.convivium");
+    expect(schermata).toContain("SITO.lavoraConNoi");
+    expect(schermata).toContain("Scopri il progetto");
+    expect(schermata).not.toMatch(/href="https:\/\/monobottega\.it/);
   });
 });

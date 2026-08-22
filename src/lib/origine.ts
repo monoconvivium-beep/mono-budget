@@ -32,6 +32,25 @@
  */
 export const INDIRIZZO_APP = "https://convivium.monobottega.it";
 
+/**
+ * GLI INDIRIZZI DEL SITO DELLA BOTTEGA — punto unico, come quello dell'app.
+ *
+ * 🔴 Perché stanno qui e non dentro una schermata: il 21/8/2026 il bottone
+ * «Vieni a lavorare con noi» apriva la **presentazione di MonoConvivium**. Due
+ * cose diverse sotto la stessa etichetta: chi cercava lavoro leggeva il
+ * progetto sociale, e chi voleva capire il progetto non trovava dove.
+ * ⚠️ Un indirizzo scritto a mano dentro una schermata è un indirizzo che
+ * nessuno ricontrolla il giorno che il sito cambia.
+ */
+export const SITO = {
+  /** La presentazione del progetto: è la stessa cosa del PDF, ma si legge sul telefono. */
+  convivium: "https://monobottega.it/mono-convivium/",
+  /** Lo stesso documento come file, per chi lo vuole tenere o girare. */
+  convivumPdf: "https://monobottega.it/pdf/mono-convivium.pdf",
+  /** La sezione dedicata a chi cerca lavoro. Un'altra cosa, un altro indirizzo. */
+  lavoraConNoi: "https://monobottega.it/lavora-con-noi/",
+} as const;
+
 const CHIAVE_DA = "mono-money-da";
 const CHIAVE_AMICO = "mono-money-amico";
 const CHIAVE_CODICE = "mono-money-codice";
