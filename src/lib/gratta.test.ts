@@ -13,6 +13,7 @@ import {
   puoEmettere,
   registraUso,
   strisciaCompleta,
+  strisciaOggi,
   type Striscia,
 } from "./gratta";
 
@@ -56,18 +57,54 @@ describe("la striscia", () => {
   });
 
   /* La regola gentile: un giorno saltato è perdonato. */
-  it("saltare UN giorno non azzera", () => {
+  it("saltare un giorno riparte da capo", () => {
+    /* 🔴 Cambiato il 23/8/2026: prima un giorno saltato era «perdonato» e la
+       fila restava. Sua regola, ridetta: «di fila» vuol dire di fila. */
     let s = registraUso(null, "2026-08-01");
     s = registraUso(s, "2026-08-02");
     s = registraUso(s, "2026-08-03");
-    expect(registraUso(s, "2026-08-05").fila).toBe(3);
+    expect(registraUso(s, "2026-08-05").fila).toBe(1);
   });
 
-  it("saltare DUE giorni riparte da capo", () => {
+  it("saltarne due o dieci è uguale: si riparte", () => {
     let s = registraUso(null, "2026-08-01");
     s = registraUso(s, "2026-08-02");
     s = registraUso(s, "2026-08-03");
     expect(registraUso(s, "2026-08-06").fila).toBe(1);
+    expect(registraUso(s, "2026-09-30").fila).toBe(1);
+  });
+
+  describe("la fila com'è OGGI, non com'era l'ultima volta", () => {
+    /**
+     * 🔴 IL DIFETTO TROVATO DA LUI IL 23/8/2026: i giorni si aggiornavano solo
+     * quando facevi qualcosa. Chi usava l'app martedì, mercoledì e giovedì e poi
+     * si limitava ad aprirla vedeva **3 su 7 per sempre**: né avanti né
+     * azzerata, inchiodata. Queste quattro prove sono quel difetto.
+     */
+    const treGiorni = { fila: 3, ultimo: "2026-08-06" };
+
+    it("usata oggi: la fila è quella", () => {
+      expect(strisciaOggi(treGiorni, "2026-08-06")?.fila).toBe(3);
+    });
+
+    it("usata ieri: la fila è ancora viva", () => {
+      expect(strisciaOggi(treGiorni, "2026-08-07")?.fila).toBe(3);
+    });
+
+    it("saltato un giorno: la fila è FINITA, e si vede subito", () => {
+      // Prima qui si continuava a leggere 3 su 7, anche a settembre.
+      expect(strisciaOggi(treGiorni, "2026-08-08")).toBeNull();
+      expect(strisciaOggi(treGiorni, "2026-09-30")).toBeNull();
+      expect(pallini(strisciaOggi(treGiorni, "2026-08-08"))).toBe(0);
+    });
+
+    it("un orologio spostato indietro non punisce nessuno", () => {
+      expect(strisciaOggi(treGiorni, "2026-08-04")?.fila).toBe(3);
+    });
+
+    it("chi non ha mai usato l'app non ha nessuna fila", () => {
+      expect(strisciaOggi(null, "2026-08-06")).toBeNull();
+    });
   });
 
   /* Un telefono con la data spostata indietro non deve regalare niente. */

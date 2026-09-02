@@ -53,10 +53,11 @@ export interface Striscia {
 /**
  * La striscia dopo un uso dell'app.
  *
- * ⚠️ SALTARE UN GIORNO NON AZZERA: la striscia scende di uno e riprende.
- * Ripartire da capo dopo sei giorni fa smettere la gente, non la fa insistere
- * — e questo è un regalo, non una gara. Con due o più giorni saltati invece
- * si riparte davvero: altrimenti non sarebbe più «di fila» in nessun senso.
+ * 🔴 CORRETTO IL 23/8/2026, su sua segnalazione. Prima un giorno saltato era
+ * «perdonato» e la striscia restava com'era. Sua regola, ridetta chiara:
+ * **se un giorno non la usi, si riparte da zero.** «Di fila» vuol dire di fila.
+ * ⚠️ Non contano gli ingressi: contano gli usi. Aprire l'app, guardarla e
+ * chiuderla non è usarla — è la regola del 9/8, e non si tocca.
  */
 export function registraUso(s: Striscia | null, oggi: string): Striscia {
   if (!s) return { fila: 1, ultimo: oggi };
@@ -64,8 +65,32 @@ export function registraUso(s: Striscia | null, oggi: string): Striscia {
   // Già contato oggi, o un orologio che va all'indietro: non si tocca niente.
   if (salto <= 0) return s;
   if (salto === 1) return { fila: s.fila + 1, ultimo: oggi };
-  if (salto === 2) return { fila: Math.max(1, s.fila), ultimo: oggi }; // perdonato
+  // Un giorno saltato e la fila è finita: si riparte da questo.
   return { fila: 1, ultimo: oggi };
+}
+
+/**
+ * LA STRISCIA COM'È **OGGI**, non com'era l'ultima volta che l'hai usata.
+ *
+ * 🔴 IL DIFETTO CHE CURA (23/8/2026, trovato da lui): il numero dei giorni si
+ * aggiornava **solo quando facevi qualcosa**. Chi usava l'app martedì,
+ * mercoledì e giovedì e poi si limitava ad aprirla, continuava a vedere
+ * **3 su 7 per sempre** — né avanti né azzerata: inchiodata. La schermata
+ * raccontava una fila che non esisteva più, e la verità saltava fuori solo al
+ * primo uso successivo, quando i pallini crollavano a uno senza spiegazione.
+ *
+ * 🔑 Qui la fila si giudica **contro la data di oggi**: vale se l'ultimo uso è
+ * di oggi o di ieri, altrimenti è finita e si riparte. Così quello che si legge
+ * sullo schermo è vero nel momento in cui lo si legge.
+ * ⚠️ Non salva niente: è un modo di GUARDARE la striscia, non di cambiarla.
+ * Quella scritta nel telefono la riscrive il prossimo uso, e va bene così.
+ */
+export function strisciaOggi(s: Striscia | null, oggi: string): Striscia | null {
+  if (!s) return null;
+  const salto = distanzaGiorni(s.ultimo, oggi);
+  // Orologio spostato indietro: non si punisce nessuno per l'ora del telefono.
+  if (salto < 0) return s;
+  return salto <= 1 ? s : null;
 }
 
 /** I pallini da disegnare: quanti accesi su sette. */

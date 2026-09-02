@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import { GIORNI_PER_VINCERE, pallini } from "@/lib/gratta";
+import { GIORNI_PER_VINCERE, giorno, pallini, strisciaOggi } from "@/lib/gratta";
 import { useStato } from "@/lib/store";
 
 const LETTERE = ["L", "M", "M", "G", "V", "S", "D"] as const;
@@ -60,8 +60,13 @@ export function SettimanaMono({
   // Già grattato: la striscia ha finito il suo lavoro e si toglie di mezzo.
   if (biglietto) return null;
 
-  const accesi = pallini(striscia);
-  if (accesi === 0) return null;
+  /**
+   * 🔴 LA FILA SI GUARDA CONTRO OGGI (23/8/2026, difetto trovato da lui).
+   * Prima si disegnavano i pallini salvati: chi aveva usato l'app martedì,
+   * mercoledì e giovedì vedeva **3 su 7 per sempre**, anche a settembre. Adesso
+   * se l'ultimo uso non è di oggi o di ieri la fila è finita, e si vede.
+   */
+  const accesi = pallini(strisciaOggi(striscia, giorno(new Date())));
 
   const mancano = GIORNI_PER_VINCERE - accesi;
 
@@ -101,7 +106,18 @@ export function SettimanaMono({
             Ancora <strong>{mancano} giorni</strong> e sblocchi il gratta e vinci.
           </>
         )}
-        <span className="mt-1 block text-muted-foreground">Scopri il premio.</span>
+        {/**
+         * 🔑 LE REGOLE SI DICONO, se no il conto sembra rotto (23/8/2026).
+         * Una sua amica apriva l'app tutti i giorni e vedeva i pallini fermi:
+         * non era guasto, è che **aprire non è usare** — e questo, prima, non
+         * c'era scritto da nessuna parte. Un premio con una regola nascosta non
+         * è un premio, è un dispetto.
+         */}
+        <span className="mt-1 block text-muted-foreground">
+          {accesi === 0
+            ? "Segna una spesa, o spunta qualcosa nella lista: il giorno è tuo. Aprire e basta non conta, e se ne salti uno si riparte."
+            : "Il giorno conta quando fai qualcosa: una spesa, la lista, una cosa da fare. Se ne salti uno, si riparte."}
+        </span>
       </p>
       <p className="sr-only">
         {accesi} giorni su {GIORNI_PER_VINCERE}
