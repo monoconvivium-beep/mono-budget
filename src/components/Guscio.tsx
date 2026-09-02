@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Wallet, ShoppingBasket, ChefHat, CheckSquare } from "lucide-react";
 import { AvvisoVersione, RigaVersione } from "@/components/Aggiornamento";
+import { AvvisoSalvataggio } from "@/components/AvvisoSalvataggio";
 import { useStato } from "@/lib/store";
 
 /**
@@ -197,6 +198,10 @@ export function Guscio({
             avviso che nessuno legge. C'è solo quando c'è davvero una versione
             nuova da prendere. */}
         <AvvisoVersione />
+
+        {/* E sopra a quello: se il telefono non ci lascia salvare, tutto il
+            resto conta poco. Compare solo quando succede davvero. */}
+        <AvvisoSalvataggio />
 
         {children}
 

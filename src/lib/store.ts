@@ -208,8 +208,43 @@ function conCaselleNuove(s: Stato): Stato {
   };
 }
 
+/**
+ * ⚠️ IL TELEFONO CI LASCIA SCRIVERE?
+ *
+ * 🔴 Da dove nasce (23/8/2026): il salvataggio stava dentro un `try` con il
+ * ramo d'errore **vuoto**. In navigazione privata — o con i dati dei siti
+ * bloccati — l'app funzionava benissimo finché era aperta e **perdeva tutto
+ * alla chiusura, senza dire niente**. Su un'app di conti è il difetto peggiore
+ * che ci sia: uno segna la spesa, la vede scritta, si fida, e il giorno dopo non
+ * c'è più. Meglio dirlo prima di scrivere il primo euro che dopo il centesimo.
+ */
+let salvataggioRotto = false;
+
+/** La spia: `true` = quello che segni non sopravvive alla chiusura. */
+export function salvataggioNonRiuscito(): boolean {
+  return salvataggioRotto;
+}
+
+const CHIAVE_PROVA = "mono-money-prova";
+
+/**
+ * Si prova a scrivere DUE righe finte prima ancora di leggere i conti: così la
+ * spia è già accesa alla prima schermata, non dopo che uno ha segnato qualcosa.
+ * ⚠️ Mai con la chiave vera: una prova non deve poter toccare i conti di nessuno.
+ */
+function controllaSePuoiSalvare() {
+  try {
+    window.localStorage.setItem(CHIAVE_PROVA, "1");
+    window.localStorage.removeItem(CHIAVE_PROVA);
+    salvataggioRotto = false;
+  } catch {
+    salvataggioRotto = true;
+  }
+}
+
 function leggi(): Stato {
   if (typeof window === "undefined") return iniziale;
+  controllaSePuoiSalvare();
   try {
     const raw = window.localStorage.getItem(CHIAVE);
     if (!raw) return iniziale;
@@ -241,8 +276,16 @@ function salva() {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(CHIAVE, JSON.stringify(stato));
+    salvataggioRotto = false;
   } catch {
-    /* spazio esaurito: i dati restano in memoria */
+    /**
+     * 🔴 NON PIÙ IN SILENZIO (23/8/2026). Qui prima non succedeva niente: i
+     * dati restavano in memoria e sparivano alla chiusura senza un fiato.
+     * Adesso si accende la spia e l'app lo dice in cima a ogni schermata.
+     * ⚠️ Non si butta via niente: quello che c'è resta in memoria e continua a
+     * funzionare finché l'app è aperta. Si dice soltanto la verità.
+     */
+    salvataggioRotto = true;
   }
 }
 
@@ -275,6 +318,15 @@ function aggiorna(f: (s: Stato) => Stato) {
 
 export function useStato(): Stato {
   return useSyncExternalStore(iscrivi, istantanea, () => iniziale);
+}
+
+/** La spia del salvataggio, per la schermata. Si aggiorna a ogni cambiamento. */
+export function useSalvataggioRotto(): boolean {
+  return useSyncExternalStore(
+    iscrivi,
+    () => salvataggioRotto,
+    () => false,
+  );
 }
 
 function nuovoId() {
